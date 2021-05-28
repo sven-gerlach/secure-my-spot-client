@@ -2,7 +2,7 @@ version: "3.8"
 services:
   react-app:
     build:
-      context: .
+      context: secure-my-spot_client/
       dockerfile: Dockerfile.dev
 
     image: react-image-dev

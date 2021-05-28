@@ -1,9 +1,9 @@
 FROM node as build
 LABEL maintainer="svengerlach@me.com"
 WORKDIR /app
-COPY secure-my-spot_client/package*.json .
+COPY package*.json .
 RUN npm install
-COPY secure-my-spot_client/ .
+COPY . .
 RUN npm run build
 
 FROM nginx

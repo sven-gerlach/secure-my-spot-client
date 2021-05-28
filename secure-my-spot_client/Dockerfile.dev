@@ -1,8 +1,8 @@
 FROM node as dev
 LABEL maintainer="svengerlach@me.com"
 WORKDIR /app
-COPY secure-my-spot_client/package*.json .
+COPY package*.json .
 RUN npm install
-COPY secure-my-spot_client/ .
+COPY . .
 EXPOSE 3000
 CMD ["npm", "start"]
