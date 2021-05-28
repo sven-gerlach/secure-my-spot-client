@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  react-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+
+    image: react-image-dev
+
+    container_name: react-app-dev
+
+    ports:
+      - 3000:3000
+
+    volumes:
+      - type: bind
+        source: ./secure-my-spot_client/src
+        target: /app/src
