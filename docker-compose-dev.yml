@@ -1,18 +1,37 @@
+# docker-compose yml file that builds the development container
+# yml file achieves the same as the following two CLI lines
+# docker build -t react-image-dev -f secure-my-spot_client/Dockerfile.dev secure-my-spot_client/
+# docker run -d -p 3000:3000 --name react-app-dev -v $(pwd)/src:/app/src:ro react-image-dev
+# run this yml file from the CLI with: docker-compose -f docker-compose-dev.yml up -d
+
+# specifies docker-compose version
 version: "3.8"
+
 services:
+  # specify the React app service
   react-app:
+    # specify configuration options at container build-time
     build:
+      # specify build-context as the client folder
       context: secure-my-spot_client/
+      # specify the relevant dockerfile name inside the build-context
       dockerfile: Dockerfile.dev
 
+    # given the build specifications, the image line specifies the tag of the newly created image
     image: react-image-dev
 
+    # specify container name
     container_name: react-app-dev
 
+    # mapping host port 3000 to container port 3000, such that any request on host port 3000 is passed to container port 3000
     ports:
       - 3000:3000
 
+    # specify bind-mount volume such that any changes in the host's (build-context) src folder are reflected / replicated
+    # inside the container -> amendments to the website are immediately reflected in the container, avoiding the need
+    # to re-start the container after every change to the app
     volumes:
       - type: bind
         source: ./secure-my-spot_client/src
         target: /app/src
+        read_only: true
