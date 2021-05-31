@@ -2,7 +2,7 @@ version: "3.8"
 services:
   react-app:
     build:
-      context: ""
+      context: .
       dockerfile: Dockerfile.prod
     image: react-image-prod
     container_name: react-app-prod

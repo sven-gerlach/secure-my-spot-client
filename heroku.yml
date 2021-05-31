@@ -1,4 +1,4 @@
 build:
   docker:
-    web: secure-my-spot_client/Dockerfile.prod
+    web: Dockerfile.prod
 
