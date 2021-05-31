@@ -13,7 +13,7 @@ services:
     # specify configuration options at container build-time
     build:
       # specify build-context as the client folder
-      context: secure-my-spot_client/
+      context: ""
       # specify the relevant dockerfile name inside the build-context
       dockerfile: Dockerfile.dev
 
