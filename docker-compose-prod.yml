@@ -6,5 +6,3 @@ services:
       dockerfile: Dockerfile.prod
     image: react-image-prod
     container_name: react-app-prod
-#    ports:
-#      - 80:80
