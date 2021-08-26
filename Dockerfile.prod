@@ -3,6 +3,7 @@
 # https://youtu.be/3xDAU5cvi5E
 # https://dev.to/levelupkoodarit/deploying-containerized-nginx-to-heroku-how-hard-can-it-be-3g14
 
+
 # naming base build-stage as build
 FROM node:16 as build
 LABEL maintainer="svengerlach@me.com"
@@ -17,10 +18,14 @@ COPY . .
 # make React create build directory (app/build) with production build of the app at container compile-time
 RUN npm run build
 
-# replace React server with nginx server to serve key files
+# replace React server with nginx server to serve key files by utilising docker's multi-stage build functionality
+# build an nginx container from the default nginx image
 FROM nginx
+
 # make use of multi-stage build process, using the build-stage named build as dependency
 # copy the content of the /app/build folder into the nginx folder that is reserved for serving website content
+# see documentation of nginx server for the location where the build files need to be copied to
+# https://hub.docker.com/_/nginx
 COPY --from=build /app/build /usr/share/nginx/html
 
 # by default nginx listens to port 80
