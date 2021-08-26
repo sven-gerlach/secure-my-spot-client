@@ -1,4 +1,4 @@
-# docker-compose yml file that builds the development container
+# docker-compose yml file builds the development container
 # yml file achieves the same as the following two CLI lines
 # docker build -t react-image-dev -f secure-my-spot_client/Dockerfile.dev secure-my-spot_client/
 # docker run -d -p 3000:3000 --name react-app-dev -v $(pwd)/src:/app/src:ro react-image-dev
@@ -25,7 +25,7 @@ services:
 
     # mapping host port 3000 to container port 3000, such that any request on host port 3000 is passed to container port 3000
     ports:
-      - 3000:3000
+      - "3000:3000"
 
     # specify bind-mount volume such that any changes in the host's (build-context) src folder are reflected / replicated
     # inside the container -> amendments to the website are immediately reflected in the container, avoiding the need
