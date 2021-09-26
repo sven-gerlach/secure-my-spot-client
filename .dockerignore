@@ -1,8 +1,9 @@
-node_modules
-Dockerfile.dev
 .git
 .gitignore
 .dockerignore
 .env
-# todo: add Dockerfile.prod, docker-compose files, and heroku.yml?
-
+node_modules
+Dockerfile.dev
+Dockerfile.prod
+docker-compose-dev.yml
+docker-compose-prod.yml
