@@ -3,7 +3,3 @@
 .dockerignore
 .env
 node_modules
-Dockerfile.dev
-Dockerfile.prod
-docker-compose-dev.yml
-docker-compose-prod.yml
