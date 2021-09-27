@@ -26,7 +26,7 @@ jobs:
         run: docker-compose -f docker-compose-prod.yml up -d --build
       - name: Check running containers
         run: docker ps -a
-      - name: Check logs api
-        run: docker logs api
+      - name: Check logs react-app-prod
+        run: docker logs react-app-prod
       - name: Run jest test suite
         run: docker exec react-app-prod npm test
