@@ -1,2 +1,0 @@
-# Source: https://prettier.io/docs/en/install.html
-# run prettier as part of the CI pipeline: "npx prettier --check ."
