@@ -1,0 +1,33 @@
+name: test
+on: [push, pull_request]
+
+jobs:
+  # test if job is redundant
+  # https://github.com/marketplace/actions/skip-duplicate-actions
+  pre_job:
+    # continue-on-error: true # Uncomment once integration is finished
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@master
+        with:
+          paths_ignore: '["**/README.md", "**/docs/**"]'
+  test:
+    needs: pre_job
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Build the docker-compose stack
+        # https://github.community/t/how-to-use-docker-compose-with-github-actions/16850/3
+        run: docker-compose -f docker-compose-dev.yml up -d --build
+      - name: Check running containers
+        run: docker ps -a
+      - name: Check logs react-app-dev
+        run: docker logs react-app-dev
+      - name: Run jest test suite
+        # source: https://github.com/facebook/jest/issues/1456#issuecomment-787529858
+        run: docker exec react-app-dev npm run test -- --ci --watchAll=false

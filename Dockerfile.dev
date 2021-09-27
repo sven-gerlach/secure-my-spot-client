@@ -10,7 +10,7 @@ LABEL maintainer="svengerlach@me.com"
 WORKDIR /app
 
 # copy package.json and package-loc.json from build-context into the container's working directory
-COPY package*.json .
+COPY package*.json ./
 
 # install all dependencies specified inside package.json at container compile-time
 RUN npm install
