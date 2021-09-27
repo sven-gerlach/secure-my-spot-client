@@ -6,17 +6,25 @@
     "@testing-library/jest-dom": "^5.12.0",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+    "bootstrap": "^5.1.1",
     "jsmin": "^1.0.1",
     "react": "^17.0.2",
+    "react-bootstrap": "^2.0.0-rc.0",
     "react-dom": "^17.0.2",
+    "react-reveal": "^1.2.2",
+    "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
+    "styled-components": "^5.3.1",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "//": "'|| true' returns to npm a 0 exit command which is necessary to avoid npm injecting error messages",
+    "check-format": "prettier --check src/**/*.{js,jsx,ts,tsx,json,css,scss,md} || true",
+    "format": "prettier --write src/**/*.{js,jsx,ts,tsx,json,css,scss,md} || true"
   },
   "eslintConfig": {
     "extends": [
@@ -42,18 +50,15 @@
     "prettier": "^2.4.1",
     "react-test-renderer": "^17.0.2"
   },
-  "//": "husky makes it possible to use git-hooks as if they are scripts",
-  "//": "in this case, every commit is preceded by executing lint-staged",
+  "//": "this avoids having to run the prettier script on all files, including those that have not been changed",
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
     }
   },
-  "//": "lint-staged runs scripts on staged files only",
-  "//": "this avoids having to run the prettier script on all files, including those that have not been changed",
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
-      "prettier --write"
+      "prettier --check"
     ]
   }
 }
