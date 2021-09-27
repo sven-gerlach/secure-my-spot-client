@@ -2,6 +2,8 @@
 # main sources:
 # https://youtu.be/3xDAU5cvi5E
 # https://dev.to/levelupkoodarit/deploying-containerized-nginx-to-heroku-how-hard-can-it-be-3g14
+# Note: this Dockerfile should be named Dockerfile.prod but due to the "Deploy to Heroku" Github Action the naming of
+# this file must be Dockerfile instead
 
 
 # naming base build-stage as build
