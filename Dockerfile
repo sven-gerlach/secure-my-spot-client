@@ -11,9 +11,8 @@ FROM node:16 as build
 LABEL maintainer="svengerlach@me.com"
 WORKDIR /app
 
-# copy both dependency files seperately as COPY package*.json threw an error
-COPY package.json .
-COPY package-lock.json .
+# copy both dependency files
+COPY package*.json ./
 RUN npm install
 COPY . .
 

@@ -29,4 +29,5 @@ jobs:
       - name: Check logs react-app-dev
         run: docker logs react-app-dev
       - name: Run jest test suite
-        run: docker exec react-app-dev npm test
+        # source: https://github.com/facebook/jest/issues/1456#issuecomment-787529858
+        run: docker exec react-app-dev npm run test -- --ci --watchAll=false
