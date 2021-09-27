@@ -23,10 +23,10 @@ jobs:
       - uses: actions/checkout@v1
       - name: Build the docker-compose stack
         # https://github.community/t/how-to-use-docker-compose-with-github-actions/16850/3
-        run: docker-compose -f docker-compose-prod.yml up -d --build
+        run: docker-compose -f docker-compose-dev.yml up -d --build
       - name: Check running containers
         run: docker ps -a
-      - name: Check logs react-app-prod
-        run: docker logs react-app-prod
+      - name: Check logs react-app-dev
+        run: docker logs react-app-dev
       - name: Run jest test suite
-        run: docker exec react-app-prod npm test
+        run: docker exec react-app-dev npm test
