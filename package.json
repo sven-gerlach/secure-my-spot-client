@@ -23,8 +23,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "//": "'|| true' returns to npm a 0 exit command which is necessary to avoid npm injecting error messages",
-    "check-format": "prettier --check src/**/*.{js,jsx,ts,tsx,json,css,scss,md} || true",
-    "format": "prettier --write src/**/*.{js,jsx,ts,tsx,json,css,scss,md} || true"
+    "check-format": "prettier --check --ignore-unknown --no-error-on-unmatched-pattern {src/**/*}.{js,jsx,ts,tsx,json,css,scss,md} || true",
+    "format": "prettier --write --ignore-unknown --no-error-on-unmatched-pattern {src/**/*}.{js,jsx,ts,tsx,json,css,scss,md} || true"
   },
   "eslintConfig": {
     "extends": [
@@ -57,8 +57,8 @@
     }
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
-      "prettier --check"
+    "{src/**/*}.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write --ignore-unknown --no-error-on-unmatched-pattern {src/**/*}.{js,jsx,ts,tsx,json,css,scss,md}"
     ]
   }
 }

@@ -1,11 +1,9 @@
-import React, { Component } from "react"
+import React, { Component } from "react";
 
 class App extends Component {
-  render () {
-    return (
-      <p>This is a test</p>
-    )
+  render() {
+    return <p>This is a test</p>;
   }
 }
 
-export default App
+export default App;
