@@ -1,8 +1,11 @@
 import React, { Component } from "react";
+import LandingPage from "./LandingPage/LandingPage";
 
 class App extends Component {
   render() {
-    return <p>This is a test</p>;
+    return (
+      <LandingPage />
+    )
   }
 }
 
