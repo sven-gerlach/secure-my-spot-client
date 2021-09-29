@@ -2,5 +2,16 @@
 .gitignore
 .dockerignore
 .env
+.gitlab-ci.yml
+.github
+.prettierignore
+.prettierrc.json
 node_modules
 coverage
+build
+Dockerfile
+Dockerfile.dev
+docker-compose-dev.yml
+docker-compose-prod.yml
+heroku.yml
+README.md

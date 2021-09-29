@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: react-image-prod
+    image: react-app:prod
     container_name: react-app-prod
     environment:
       - PORT=3000

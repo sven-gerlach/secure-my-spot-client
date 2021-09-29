@@ -9,6 +9,11 @@ LABEL maintainer="svengerlach@me.com"
 # set working directory inside container
 WORKDIR /app
 
+# add `/app/node_modules/.bin` to $PATH
+# source: https://mherman.org/blog/dockerizing-a-react-app/
+# source: https://stackoverflow.com/questions/59275686/dockerizing-node-js-app-what-does-env-path-app-node-modules-binpath
+ENV PATH /app/node_modules/.bin:$PATH
+
 # copy package.json and package-loc.json from build-context into the container's working directory
 COPY package*.json ./
 

@@ -18,7 +18,7 @@ services:
       dockerfile: Dockerfile.dev
 
     # given the build specifications, the image line specifies the tag of the newly created image
-    image: react-image-dev
+    image: react-app:dev
 
     # specify container name
     container_name: react-app-dev
@@ -27,11 +27,15 @@ services:
     ports:
       - "3000:3000"
 
+    environment:
+      # Without this env variable hot-reloading will not work
+      # source: https://mherman.org/blog/dockerizing-a-react-app/
+      - CHOKIDAR_USEPOLLING=true
+
     # specify bind-mount volume such that any changes in the host's (build-context) src folder are reflected / replicated
     # inside the container -> amendments to the website are immediately reflected in the container, avoiding the need
     # to re-start the container after every change to the app
+    #
     volumes:
-      - type: bind
-        source: ./src
-        target: /app/src
-        read_only: true
+      - .:/app
+      - /app/node_modules
