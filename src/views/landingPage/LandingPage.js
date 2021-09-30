@@ -1,17 +1,15 @@
 import React, { Component } from "react";
-import Button from "../../components/button/button";
+import Button from "../../components/button/Button";
 
-// import assets
-
-// import styled containers
-import { H1 } from "./LandingPage.styles";
+// import containers
+import PageTitle from "../../components/pageTitle/PageTitle";
 
 class LandingPage extends Component {
 
   render() {
     return (
       <>
-        <H1>Secure-My-Spot</H1>
+        <PageTitle titleText="Secure-My-Spot" />
         <Button
           buttonText="Create Account"
           urlTarget="/create-account"

@@ -1,9 +1,12 @@
 import React, { Component } from "react";
 
+// import components
+import PageTitle from "../../../components/pageTitle/PageTitle"
+
 class SignIn extends Component {
   render() {
     return (
-      <h1>Sign In</h1>
+      <PageTitle titleText="Sign-In" />
     )
   }
 }

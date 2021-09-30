@@ -6,9 +6,9 @@ import {
 } from "react-router-dom";
 
 // import views
-import LandingPage from "./LandingPage/LandingPage";
-import CreateAccount from "./LandingPage/CreateAccount/CreateAccount";
-import SignIn from "./LandingPage/SignIn/SignIn";
+import LandingPage from "./landingPage/LandingPage";
+import CreateAccount from "./landingPage/createAccount/CreateAccount";
+import SignIn from "./landingPage/signIn/SignIn";
 
 // import styled components
 import { AppBackground } from "./app.styles";
