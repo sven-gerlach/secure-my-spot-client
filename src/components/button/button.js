@@ -1,15 +1,27 @@
+// import library modules
 import React, { Component } from "react"
+import { withRouter } from "react-router-dom";
 
 class Button extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  handleClick = () => {
+    let target = this.props.urlTarget
+    this.props.history.push(target)
+  }
+
   render() {
-    let text = this.props.text
+    let buttonText = this.props.buttonText
     return (
       <button
+        onClick={this.handleClick}
         type="button">
-        {text}
+        {buttonText}
       </button>
     )
   }
 }
 
-export default Button
+export default withRouter(Button)
