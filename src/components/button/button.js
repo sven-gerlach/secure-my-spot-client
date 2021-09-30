@@ -3,10 +3,6 @@ import React, { Component } from "react"
 import { withRouter } from "react-router-dom";
 
 class Button extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   handleClick = () => {
     let target = this.props.urlTarget
     this.props.history.push(target)

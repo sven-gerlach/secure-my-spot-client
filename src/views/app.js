@@ -18,12 +18,10 @@ class App extends Component {
     return (
       <AppBackground>
         <Switch>
-          {/*Landing page visitors see when they go to our website*/}
           <Route exact path="/">
             <LandingPage />
           </Route>
-          <Route
-            path="/create-account">
+          <Route path="/create-account">
             <CreateAccount />
           </Route>
           <Route path="/sign-in">

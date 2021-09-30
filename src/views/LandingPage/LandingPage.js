@@ -7,9 +7,6 @@ import Button from "../../components/button/button";
 import { H1 } from "./LandingPage.styles";
 
 class LandingPage extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   render() {
     return (
