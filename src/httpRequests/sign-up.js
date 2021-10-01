@@ -1,10 +1,11 @@
 import axios from "axios";
+import urlHostname from "./urlConfig";
 
-// todo: make url flexible subject to environment
+
 function signUp(data) {
   return axios({
     method: "post",
-    url: "http://localhost:8000/sign-up/",
+    url: urlHostname + "/sign-up/",
     data: {
       "credentials": {
         "email": data.email,
