@@ -7,14 +7,30 @@ import {
 
 // import views
 import LandingPage from "./landingPage/LandingPage";
-import CreateAccount from "./landingPage/createAccount/CreateAccount";
+import SignUp from "./landingPage/signUp/signUp";
 import SignIn from "./landingPage/signIn/SignIn";
 
 // import styled components
 import { AppBackground } from "./app.styles";
 
+/** class encompassing all views
+ * */
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      "user": null
+    }
+  }
+
+  setUser = (user) => {
+    this.setState({
+      "user": user
+    })
+  }
+
   render() {
+    console.log(this.state)
     return (
       <AppBackground>
         <Switch>
@@ -22,10 +38,10 @@ class App extends Component {
             <LandingPage />
           </Route>
           <Route path="/create-account">
-            <CreateAccount />
+            <SignUp />
           </Route>
           <Route path="/sign-in">
-            <SignIn />
+            <SignIn setUser={this.setUser} />
           </Route>
         </Switch>
       </AppBackground>

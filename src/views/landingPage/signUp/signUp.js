@@ -6,12 +6,12 @@ import PageTitle from "../../../components/pageTitle/PageTitle";
 import Button from "../../../components/button/Button";
 
 // import helper functions
-import signUp from "../../../httpRequests/sign-up";
+import { signUp } from "../../../httpRequests/auth";
 import getHashedPassword from "../../../utils/hash/hash";
 
 /** Class representing the create account view
  * */
-class CreateAccount extends Component {
+class SignUp extends Component {
   constructor(props) {
     super(props);
     // state-names may contravene JS camel-case but are in-line with json expected by the back-end route /sign-up
@@ -23,17 +23,16 @@ class CreateAccount extends Component {
   }
 
   handleChange = (event) => {
-    const target = event.target
-    const stateProperty = target.name
-    const value = target.value
+    const stateName = event.target.name
+    const stateValue = event.target.value
     this.setState({
-      [stateProperty]: value
+      [stateName]: stateValue
     })
   }
 
   handleSubmit = (event) => {
     event.preventDefault()
-    const data = this.state
+    const data = { ...this.state }
 
     // replace raw passwords with hashed passwords
     data.password = data.password
@@ -50,6 +49,13 @@ class CreateAccount extends Component {
       })
       .catch(error => {
         console.log(error)
+      })
+      .finally(() => {
+        this.setState({
+          "email": "",
+          "password": "",
+          "passwordConfirmation": "",
+        })
       })
   }
 
@@ -103,4 +109,4 @@ class CreateAccount extends Component {
   }
 }
 
-export default CreateAccount
+export default SignUp
