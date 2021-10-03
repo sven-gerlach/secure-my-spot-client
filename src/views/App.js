@@ -5,6 +5,7 @@ import {
   Route,
 } from "react-router-dom";
 
+
 // import views
 import LandingPage from "./landingPage/LandingPage";
 import SignUp from "./landingPage/signUp/signUp";
@@ -23,9 +24,35 @@ class App extends Component {
     }
   }
 
+  componentDidMount() {
+    // attempt to retrieve any available user state from session storage
+    try {
+      const serializedUser = sessionStorage.getItem("user")
+      if (serializedUser === null) {
+        return undefined
+      }
+      const user = JSON.parse(serializedUser)
+      this.setState({
+        "user": user
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   setUser = (user) => {
     this.setState({
       "user": user
+    }, () => {
+      try {
+        //  update session storage with current state to make token persistent beyond session
+        //  serialize state
+        const serializedUser = JSON.stringify(this.state.user)
+        //  todo: encrypt the serialized user object
+        sessionStorage.setItem("user", serializedUser)
+      } catch (e) {
+        console.log(e)
+      }
     })
   }
 
