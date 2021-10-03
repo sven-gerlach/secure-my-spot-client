@@ -32,6 +32,9 @@ services:
       # source: https://mherman.org/blog/dockerizing-a-react-app/
       - CHOKIDAR_USEPOLLING=true
 
+    env_file:
+      - .env
+
     # specify bind-mount volume such that any changes in the host's (build-context) src folder are reflected / replicated
     # inside the container -> amendments to the website are immediately reflected in the container, avoiding the need
     # to re-start the container after every change to the app

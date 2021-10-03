@@ -7,7 +7,7 @@ import Button from "../../../components/button/Button";
 
 // import helper functions
 import { signUp } from "../../../httpRequests/auth";
-import getHashedPassword from "../../../utils/hash/hash";
+import { getHashedPassword } from "../../../utils/hash/hash";
 
 /** Class representing the create account view
  * */
@@ -43,6 +43,7 @@ class SignUp extends Component {
       : ""
 
     // call http request: /sign-up
+    // todo: consider having the api issue tokens for newly signed up users automatically
     signUp(data)
       .then(response => {
         console.log(response)

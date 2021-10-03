@@ -6,7 +6,7 @@ import Button from "../../../components/button/Button";
 
 // import helper functions
 import { signIn } from "../../../httpRequests/auth";
-import getHashedPassword from "../../../utils/hash/hash";
+import { getHashedPassword } from "../../../utils/hash/hash";
 
 /**
  * Class for the sign-in view. Allows users to enter their email and password. It actions a http request to the api
@@ -40,8 +40,6 @@ class SignIn extends Component {
     // make a http request to the api with email and password
     signIn(data)
       // if authorisation is successful store the returned token in a JS object
-      // todo: consider storing the token in session storage or in a cookie instead as that would make the cookie survive
-      //  browser sessions and avoid the user having to sign-in every time they go to the client website
       .then(response => {
         // save user object (email and token) in App state
         this.props.setUser(response.data)

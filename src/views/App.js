@@ -5,14 +5,18 @@ import {
   Route,
 } from "react-router-dom";
 
-
 // import views
 import LandingPage from "./landingPage/LandingPage";
 import SignUp from "./landingPage/signUp/signUp";
 import SignIn from "./landingPage/signIn/SignIn";
 
-// import styled components
+// import components
 import { AppBackground } from "./app.styles";
+import {
+  getEncryptedObject,
+  getDecryptedObject,
+} from "../utils/hash/hash";
+
 
 /** class encompassing all views
  * */
@@ -31,7 +35,9 @@ class App extends Component {
       if (serializedUser === null) {
         return undefined
       }
-      const user = JSON.parse(serializedUser)
+      // decrypt and deserialize object
+      const user = getDecryptedObject(serializedUser)
+      // update state with current user
       this.setState({
         "user": user
       })
@@ -46,10 +52,9 @@ class App extends Component {
     }, () => {
       try {
         //  update session storage with current state to make token persistent beyond session
-        //  serialize state
-        const serializedUser = JSON.stringify(this.state.user)
-        //  todo: encrypt the serialized user object
-        sessionStorage.setItem("user", serializedUser)
+        //  serialize and encrypt the user object
+        const encryptedObj = getEncryptedObject(this.state.user)
+        sessionStorage.setItem("user", encryptedObj)
       } catch (e) {
         console.log(e)
       }
