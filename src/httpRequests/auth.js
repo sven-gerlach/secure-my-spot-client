@@ -17,7 +17,6 @@ function signUp(data) {
 }
 
 function signIn(data) {
-  console.log(data)
   return axios({
     method: "post",
     url: urlHostname + "/sign-in/",

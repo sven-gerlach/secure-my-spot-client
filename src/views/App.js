@@ -16,7 +16,7 @@ import {
   getEncryptedObject,
   getDecryptedObject,
 } from "../utils/hash/hash";
-
+import AuthenticatedRoute from "../components/authenticatedRoute/authenticatedRoute";
 
 /** class encompassing all views
  * */
@@ -74,6 +74,9 @@ class App extends Component {
           </Route>
           <Route path="/sign-in">
             <SignIn setUser={this.setUser} />
+          </Route>
+          <Route path="/test">
+            <AuthenticatedRoute user={this.state.user} />
           </Route>
         </Switch>
       </AppBackground>
