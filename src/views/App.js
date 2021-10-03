@@ -12,37 +12,20 @@ import SignIn from "./landingPage/signIn/SignIn";
 
 // import components
 import { AppBackground } from "./app.styles";
-import {
-  getEncryptedObject,
-  getDecryptedObject,
-} from "../utils/hash/hash";
 import AuthenticatedRoute from "../components/authenticatedRoute/authenticatedRoute";
+import {
+  getUserFromSessionStorage,
+  storeUserInSessionStorage,
+} from "../utils/sessionStorage/sessionStorage";
 
 /** class encompassing all views
  * */
 class App extends Component {
   constructor(props) {
     super(props);
+    // set user state to user from session storage or, failing that, to empty string
     this.state = {
-      "user": null
-    }
-  }
-
-  componentDidMount() {
-    // attempt to retrieve any available user state from session storage
-    try {
-      const serializedUser = sessionStorage.getItem("user")
-      if (serializedUser === null) {
-        return undefined
-      }
-      // decrypt and deserialize object
-      const user = getDecryptedObject(serializedUser)
-      // update state with current user
-      this.setState({
-        "user": user
-      })
-    } catch (e) {
-      console.log(e)
+      "user": getUserFromSessionStorage() || ""
     }
   }
 
@@ -50,18 +33,12 @@ class App extends Component {
     this.setState({
       "user": user
     }, () => {
-      try {
-        //  update session storage with current state to make token persistent beyond session
-        //  serialize and encrypt the user object
-        const encryptedObj = getEncryptedObject(this.state.user)
-        sessionStorage.setItem("user", encryptedObj)
-      } catch (e) {
-        console.log(e)
-      }
+      storeUserInSessionStorage(this.state.user)
     })
   }
 
   render() {
+    console.log(this.state)
     return (
       <AppBackground>
         <Switch>
