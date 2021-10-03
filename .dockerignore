@@ -1,7 +1,6 @@
 .git
 .gitignore
 .dockerignore
-.env
 .gitlab-ci.yml
 .github
 .prettierignore

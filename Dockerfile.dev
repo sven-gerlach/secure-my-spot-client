@@ -24,6 +24,8 @@ RUN npm install
 # excludes all files and directories specified in .dockerignore
 COPY . .
 
+ENV REACT_APP_SESSION_ENCRYPTION_KEY="MPs!Sp5a7x$n?4A9hjayKmsX&KCtcfFQs#9Jc#9F"
+
 # Expose container port 3000
 EXPOSE 3000
 
