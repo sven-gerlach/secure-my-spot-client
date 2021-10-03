@@ -10,6 +10,7 @@ function getHashedPassword(password) {
 
 // retrieve secrete key from environment
 const secretKey = process.env.REACT_APP_SESSION_ENCRYPTION_KEY
+console.log(secretKey && "No secret key available")
 
 function getEncryptedObject(object) {
   return CryptoJS.AES.encrypt(JSON.stringify(object), secretKey).toString()
