@@ -5,6 +5,10 @@ import './index.scss';
 import App from './views/App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from "react-router-dom";
+import dotenv from "dotenv"
+
+// execute dotenv configuration
+dotenv.config()
 
 ReactDOM.render(
   <React.StrictMode>

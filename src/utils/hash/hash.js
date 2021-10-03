@@ -8,7 +8,7 @@ function getHashedPassword(password) {
   return CryptoJS.SHA256(password).toString(CryptoJS.enc.Base64);
 }
 
-// todo: put secret key into .env
+// retrieve secrete key from environment
 const secretKey = process.env.REACT_APP_SESSION_ENCRYPTION_KEY
 
 function getEncryptedObject(object) {
