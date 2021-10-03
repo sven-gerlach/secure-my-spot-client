@@ -35,8 +35,6 @@ COPY --from=build /app/build /usr/share/nginx/html
 # replace the contents of nginx' default.conf with nginx-setup.conf
 COPY nginx-setup.conf /etc/nginx/conf.d/default.conf
 
-ENV REACT_APP_SESSION_ENCRYPTION_KEY="MPs!Sp5a7x$n?4A9hjayKmsX&KCtcfFQs#9Jc#9F"
-
 # use bash stream editor to replace PORT inside default.conf with Heroku's $PORT param at run-time
 # Since the PORT is only stipulated by Heroku at run-time and not when the container is built CMD must be used
 # -i -> in-place
