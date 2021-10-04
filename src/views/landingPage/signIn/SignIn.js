@@ -52,7 +52,7 @@ class SignIn extends Component {
         this.props.setUser(response.data)
 
         // redirect to /app
-        this.props.history.push("/app")
+        this.props.history.push("/reserve")
       })
       // if authorisation fails...
       // todo: set up meaningful alert system that can be flexibly used for all user alerts / infos

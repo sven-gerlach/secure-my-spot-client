@@ -1,7 +1,7 @@
 // import library modules
 import React, { Component } from "react";
 import {
-  Route,
+  Route
 } from "react-router-dom";
 import { withRouter } from "react-router-dom";
 
@@ -12,12 +12,14 @@ import SignIn from "./landingPage/signIn/SignIn";
 
 // import components
 import { AppBackground } from "./app.styles";
-import AuthenticatedRoute from "../components/authenticatedRoute/authenticatedRoute";
+import Header from "../components/header/Header";
+
+// Import utility functions
 import {
   getUserFromSessionStorage,
   storeUserInSessionStorage,
 } from "../utils/sessionStorage";
-import Navbar from "../components/navbar/navbar";
+
 
 /** class encompassing all views
  * */
@@ -41,6 +43,7 @@ class App extends Component {
   render() {
     return (
       <AppBackground>
+        <Header user={this.state.user} />
         <Route exact path="/">
           <LandingPage />
         </Route>
@@ -50,9 +53,6 @@ class App extends Component {
         <Route path="/sign-in">
           <SignIn setUser={this.setUser} />
         </Route>
-        <AuthenticatedRoute path="/app" user={this.state.user} render={() => (
-          <Navbar item1="Sven" item2="Gerlach" />
-          )} />
       </AppBackground>
     )
   }

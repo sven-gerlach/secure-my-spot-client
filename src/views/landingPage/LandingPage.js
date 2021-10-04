@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Button from "../../components/button/Button";
 
 // import containers
 import PageTitle from "../../components/pageTitle/PageTitle";
@@ -12,16 +11,8 @@ class LandingPage extends Component {
   render() {
     return (
       <>
-        <PageTitle titleText="Secure-My-Spot" />
+        <PageTitle titleText="[Landing Page]" />
         <P>We offer a convenient way to locate, reserve, and pay for on-street parking in New York.</P>
-        <Button
-          buttonText="Create Account"
-          urlTarget="/create-account"
-        />
-        <Button
-          buttonText="Sign In"
-          urlTarget="/sign-in"
-        />
       </>
     )
   }
