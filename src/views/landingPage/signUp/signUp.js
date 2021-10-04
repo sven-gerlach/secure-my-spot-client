@@ -7,7 +7,7 @@ import Button from "../../../components/button/Button";
 
 // import helper functions
 import { signUp } from "../../../httpRequests/auth";
-import { getHashedPassword } from "../../../utils/hash/hash";
+import { getHashedPassword } from "../../../utils/hash";
 
 /** Class representing the create account view
  * */

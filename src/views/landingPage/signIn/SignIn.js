@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
 
 // import components
 import PageTitle from "../../../components/pageTitle/PageTitle"
@@ -6,7 +7,7 @@ import Button from "../../../components/button/Button";
 
 // import helper functions
 import { signIn } from "../../../httpRequests/auth";
-import { getHashedPassword } from "../../../utils/hash/hash";
+import { getHashedPassword } from "../../../utils/hash";
 
 /**
  * Class for the sign-in view. Allows users to enter their email and password. It actions a http request to the api
@@ -41,19 +42,22 @@ class SignIn extends Component {
     signIn(data)
       // if authorisation is successful store the returned token in a JS object
       .then(response => {
+        // clear state
+        this.setState({
+          "email": "",
+          "password": "",
+        })
+
         // save user object (email and token) in App state
         this.props.setUser(response.data)
+
+        // redirect to /app
+        this.props.history.push("/app")
       })
       // if authorisation fails...
       // todo: set up meaningful alert system that can be flexibly used for all user alerts / infos
       .catch(error => {
         console.log(error.response)
-      })
-      .finally(() => {
-        this.setState({
-          "email": "",
-          "password": "",
-        })
       })
   }
 
@@ -97,4 +101,4 @@ class SignIn extends Component {
   }
 }
 
-export default SignIn
+export default withRouter(SignIn)

@@ -1,9 +1,9 @@
 // import library modules
 import React, { Component } from "react";
 import {
-  Switch,
   Route,
 } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 // import views
 import LandingPage from "./landingPage/LandingPage";
@@ -16,16 +16,17 @@ import AuthenticatedRoute from "../components/authenticatedRoute/authenticatedRo
 import {
   getUserFromSessionStorage,
   storeUserInSessionStorage,
-} from "../utils/sessionStorage/sessionStorage";
+} from "../utils/sessionStorage";
+import Navbar from "../components/navbar/navbar";
 
 /** class encompassing all views
  * */
 class App extends Component {
   constructor(props) {
     super(props);
-    // set user state to user from session storage or, failing that, to empty string
+    // set user state to user from session storage or, failing that, to null
     this.state = {
-      "user": getUserFromSessionStorage() || ""
+      "user": getUserFromSessionStorage() || null
     }
   }
 
@@ -38,26 +39,23 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       <AppBackground>
-        <Switch>
-          <Route exact path="/">
-            <LandingPage />
-          </Route>
-          <Route path="/create-account">
-            <SignUp />
-          </Route>
-          <Route path="/sign-in">
-            <SignIn setUser={this.setUser} />
-          </Route>
-          <Route path="/test">
-            <AuthenticatedRoute user={this.state.user} />
-          </Route>
-        </Switch>
+        <Route exact path="/">
+          <LandingPage />
+        </Route>
+        <Route path="/create-account">
+          <SignUp />
+        </Route>
+        <Route path="/sign-in">
+          <SignIn setUser={this.setUser} />
+        </Route>
+        <AuthenticatedRoute path="/app" user={this.state.user} render={() => (
+          <Navbar item1="Sven" item2="Gerlach" />
+          )} />
       </AppBackground>
     )
   }
 }
 
-export default App;
+export default withRouter(App);

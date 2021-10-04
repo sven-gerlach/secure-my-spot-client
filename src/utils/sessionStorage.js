@@ -4,7 +4,7 @@
 import {
   getDecryptedObject,
   getEncryptedObject,
-} from "../hash/hash";
+} from "./hash";
 
 /*
  * Retrieve object from session storage
