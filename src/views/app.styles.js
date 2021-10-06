@@ -16,6 +16,7 @@ const AppBackground = styled.div`
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
+  padding: 70px 20px 20px;
 `
 
 export { AppBackground }
