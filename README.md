@@ -1,4 +1,4 @@
-# Secure-My-Spot: Back-End
+# Secure-My-Spot: Front-End
 
 ## TLDR
 [tbd]

@@ -9,7 +9,25 @@ import { Link } from "react-router-dom";
 
 
 class Header extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      "expanded": false
+    }
+  }
+
+  handleNavbarCollapse(event) {
+    console.log("clicked")
+    event.stopPropagation()
+    this.setState({
+      "expanded": !this.state.expanded
+    }, () => console.log(this.state.expanded))
+  }
+
   render() {
+
+    const { user } = this.props
+
     // header for unauthenticated users
     const unauthenticatedHeaderJsx = (
       <>
@@ -38,21 +56,22 @@ class Header extends Component {
       </>
     )
 
-    // header used in render method is subject to whether or note the user is signed in, that is whether the user is
-    // set in state
-    const headerJsx = this.props.user
-      ? authenticatedHeaderJsx
-      : unauthenticatedHeaderJsx
-
     return (
       <>
-        <Navbar bg="light" expand="lg" collapseOnSelect="true" fixed>
+        {/* collapseOnSelect=true is not possible since the Nav.Link have been replaced with RouterDom Link items which
+        do not fire the closing signal. Hence, a manual implementation was necessary.*/}
+        <Navbar bg="light" expand="lg" fixed="top" expanded={this.state.expanded}
+        >
           <Container>
             <Navbar.Brand>Secure-My-Spot</Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Toggle
+              aria-controls="basic-navbar-nav"
+              onClick={(event) => this.handleNavbarCollapse(event)} />
             <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="me-auto">
-                {headerJsx}
+              <Nav className="ms-auto"
+                   onClick={(event) => this.handleNavbarCollapse(event)}>
+                {this.props.user && <span className="navbar-text mr-5">Welcome, {user.email}</span>}
+                {user ? authenticatedHeaderJsx : unauthenticatedHeaderJsx}
               </Nav>
             </Navbar.Collapse>
           </Container>
