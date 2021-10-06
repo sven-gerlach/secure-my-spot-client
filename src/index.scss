@@ -1,0 +1,20 @@
+/* Color theme */
+$black-coral: rgba(73, 88, 103, 1);
+$blue-yonder: rgba(87, 115, 153, 1);
+$beau-blue: rgba(189, 213, 234, 1);
+$ghost-white: rgba(247, 247, 255, 1);
+$orange-red-crayola: rgba(254, 95, 85, 1);
+
+#root {
+  width: 100vw;
+  height: 100vh;
+  background-attachment: fixed;
+  background-origin: border-box;
+  background-image: url("assets/img/car_grey.png");
+  background-color: $blue-yonder;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  padding: 70px 20px 20px;
+
+}

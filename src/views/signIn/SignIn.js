@@ -2,18 +2,18 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 
 // import components
-import PageTitle from "../../../components/pageTitle/PageTitle"
-import Button from "../../../components/button/Button";
+import PageTitle from "../../components/pageTitle/PageTitle"
+import Button from "../../components/button/Button";
 
 // import helper functions
-import { signIn } from "../../../httpRequests/auth";
-import { getHashedPassword } from "../../../utils/hash";
+import { signInRequest } from "../../httpRequests/auth";
+import { getHashedPassword } from "../../utils/hash";
 
 /**
  * Class for the sign-in view. Allows users to enter their email and password. It actions a http request to the api
  * which returns a token. The class needs to store the unique email and the associated token temporarily.
  */
-class SignIn extends Component {
+class SignInView extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -39,7 +39,7 @@ class SignIn extends Component {
       : ""
 
     // make a http request to the api with email and password
-    signIn(data)
+    signInRequest(data)
       // if authorisation is successful store the returned token in a JS object
       .then(response => {
         // clear state
@@ -101,4 +101,4 @@ class SignIn extends Component {
   }
 }
 
-export default withRouter(SignIn)
+export default withRouter(SignInView)

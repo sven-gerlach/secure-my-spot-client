@@ -2,16 +2,16 @@
 import React, { Component } from "react";
 
 // import containers
-import PageTitle from "../../../components/pageTitle/PageTitle";
-import Button from "../../../components/button/Button";
+import PageTitle from "../../components/pageTitle/PageTitle";
+import Button from "../../components/button/Button";
 
 // import helper functions
-import { signUp } from "../../../httpRequests/auth";
-import { getHashedPassword } from "../../../utils/hash";
+import { signUpRequest } from "../../httpRequests/auth";
+import { getHashedPassword } from "../../utils/hash";
 
 /** Class representing the create account view
  * */
-class SignUp extends Component {
+class SignUpView extends Component {
   constructor(props) {
     super(props);
     // state-names may contravene JS camel-case but are in-line with json expected by the back-end route /sign-up
@@ -44,7 +44,7 @@ class SignUp extends Component {
 
     // call http request: /sign-up
     // todo: consider having the api issue tokens for newly signed up users automatically
-    signUp(data)
+    signUpRequest(data)
       .then(response => {
         console.log(response)
       })
@@ -110,4 +110,4 @@ class SignUp extends Component {
   }
 }
 
-export default SignUp
+export default SignUpView

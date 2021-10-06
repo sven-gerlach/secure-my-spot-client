@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+
+// import styling elements
 import {
   Navbar,
   Container,
@@ -6,6 +8,9 @@ import {
   NavDropdown,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
+
+// import utility functions
+import { signOutRequest } from "../../httpRequests/auth";
 
 
 class Header extends Component {
@@ -17,7 +22,6 @@ class Header extends Component {
   }
 
   handleNavbarCollapse(event) {
-    console.log(event)
     event.stopPropagation()
     if (event.target.id !== "basic-nav-dropdown") {
       this.setState({
@@ -26,8 +30,19 @@ class Header extends Component {
     }
   }
 
-  render() {
+  handleSignOut(event) {
+    // call sign-out axios http request function
+    signOutRequest(this.props.user.token)
+      .then((event) => {
+        // reset user state
+        this.props.setUser(null)
+        // redirect to landing page
+        this.props.history.push("/")
+      })
+      .catch(console.error)
+  }
 
+  render() {
     const { user } = this.props
 
     // header for unauthenticated users
@@ -53,7 +68,12 @@ class Header extends Component {
           <NavDropdown.Item as={Link} to="/my-detail">My Detail</NavDropdown.Item>
           <NavDropdown.Item as={Link} to="/change-password">Change Password</NavDropdown.Item>
           <NavDropdown.Divider />
-          <NavDropdown.Item as={Link} to="/">Sign-Out</NavDropdown.Item>
+          <NavDropdown.Item
+            as={Link}
+            to="/"
+            onClick={(event) => this.handleSignOut(event)}>
+            Sign-Out
+          </NavDropdown.Item>
         </NavDropdown>
       </>
     )
@@ -72,7 +92,7 @@ class Header extends Component {
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="ms-auto"
                    onClick={(event) => this.handleNavbarCollapse(event)}>
-                {this.props.user && <span className="navbar-text mr-5">Welcome, {user.email}</span>}
+                {user && <span className="navbar-text mr-5">Welcome, {user.email}</span>}
                 {user ? authenticatedHeaderJsx : unauthenticatedHeaderJsx}
               </Nav>
             </Navbar.Collapse>

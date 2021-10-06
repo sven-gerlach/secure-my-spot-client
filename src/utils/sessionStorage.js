@@ -6,10 +6,10 @@ import {
   getEncryptedObject,
 } from "./hash";
 
-/*
+/**
  * Retrieve object from session storage
- * $param {string} objName - the name of the item that needs to be retrieved from browser session storage
- * */
+ * @return {object} userObject - contains email and token key / value pairs
+ */
 function getUserFromSessionStorage() {
   const serializedUser = sessionStorage.getItem("user")
   if (!serializedUser) {
@@ -20,9 +20,10 @@ function getUserFromSessionStorage() {
   return getDecryptedObject(serializedUser)
 }
 
-/*
+/**
  * Store object in session storage
- * */
+ * @param {object} obj - contains email and token key / value pairs
+ **/
 function storeUserInSessionStorage(obj) {
   // update session storage with current state to make token persistent beyond session
   // serialize and encrypt the user object
@@ -30,7 +31,16 @@ function storeUserInSessionStorage(obj) {
   sessionStorage.setItem("user", encryptedObj)
 }
 
+/**
+ * Delete user object from session storage
+ * @param {string} key - remove key from session storage
+ */
+function removeFromSessionStorage(key) {
+  sessionStorage.removeItem(key)
+}
+
 export {
   getUserFromSessionStorage,
   storeUserInSessionStorage,
+  removeFromSessionStorage,
 }
