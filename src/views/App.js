@@ -70,11 +70,13 @@ class App extends Component {
         <Route exact path="/" >
           <LandingPage />
         </Route>
-        <Route path="/create-account">
-          <SignUpView />
+        <Route path="/create-account" render={(props) => (
+          <SignUpView {...props} />
+        )}>
         </Route>
-        <Route path="/sign-in">
-          <SignInView setUser={this.setUser} />
+        <Route path="/sign-in" render={(props) => (
+          <SignInView {...props} setUser={this.setUser} />
+        )}>
         </Route>
       </Div>
     )

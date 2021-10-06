@@ -9,6 +9,7 @@ import Button from "../../components/button/Button";
 import { signUpRequest } from "../../httpRequests/auth";
 import { getHashedPassword } from "../../utils/hash";
 
+
 /** Class representing the create account view
  * */
 class SignUpView extends Component {
@@ -78,6 +79,7 @@ class SignUpView extends Component {
           </div>
           <div>
             <input
+              role="textbox"
               type="password"
               name="password"
               placeholder="Password"
@@ -88,6 +90,7 @@ class SignUpView extends Component {
           </div>
           <div>
             <input
+              role="textbox"
               type="password"
               name="passwordConfirmation"
               placeholder="Confirm Password"
@@ -102,6 +105,7 @@ class SignUpView extends Component {
           />
         </form>
         <Button
+          {...this.props}
           buttonText="Back"
           urlTarget="/"
         />

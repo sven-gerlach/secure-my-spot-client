@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
 
 // import components
 import PageTitle from "../../components/pageTitle/PageTitle"
@@ -93,6 +92,7 @@ class SignInView extends Component {
           />
         </form>
         <Button
+          {...this.props}
           buttonText="Back"
           urlTarget="/"
         />
@@ -101,4 +101,4 @@ class SignInView extends Component {
   }
 }
 
-export default withRouter(SignInView)
+export default SignInView

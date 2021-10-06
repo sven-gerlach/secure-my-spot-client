@@ -1,6 +1,5 @@
 // import library modules
 import React, { Component } from "react"
-import { withRouter } from "react-router-dom";
 
 /** Class representing a button
  * @param {attribute=string} buttonText - the text represented on the button
@@ -34,4 +33,4 @@ class Button extends Component {
   }
 }
 
-export default withRouter(Button)
+export default Button
