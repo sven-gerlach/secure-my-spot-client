@@ -17,11 +17,13 @@ class Header extends Component {
   }
 
   handleNavbarCollapse(event) {
-    console.log("clicked")
+    console.log(event)
     event.stopPropagation()
-    this.setState({
-      "expanded": !this.state.expanded
-    }, () => console.log(this.state.expanded))
+    if (event.target.id !== "basic-nav-dropdown") {
+      this.setState({
+        "expanded": !this.state.expanded
+      })
+    }
   }
 
   render() {
