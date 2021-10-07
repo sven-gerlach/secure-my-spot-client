@@ -23,17 +23,14 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "//": "Load all test scripts even without there being one for APP.js",
-    "//": "source: https://stackoverflow.com/questions/60604572/react-jest-no-tests-found-exiting-with-code-0",
+    "//": "'|| true' returns to npm a 0 exit command which is necessary to avoid npm injecting error messages",
     "test": "react-scripts test --watchAll --testMatch **/src/**/*.tests.js",
     "coverage": "npm test -- --coverage",
-    "//": "'|| true' returns to npm a 0 exit command which is necessary to avoid npm injecting error messages",
     "check-format": "prettier --check --ignore-unknown --no-error-on-unmatched-pattern {src/**/*}.{js,jsx,ts,tsx,json,css,scss,md} || true",
     "format": "prettier --write --ignore-unknown --no-error-on-unmatched-pattern {src/**/*}.{js,jsx,ts,tsx,json,css,scss,md} || true",
     "eject": "react-scripts eject"
   },
-  "//": "Customise jest implementation",
-  "//": "source: https://create-react-app.dev/docs/running-tests/#coverage-reporting",
+  "//": "this avoids having to run the prettier script on all files, including those that have not been changed",
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
@@ -41,7 +38,10 @@
       "!<rootDir>/path/to/dir/",
       "!src/*.js"
     ],
-    "coverageReporters": ["text", "html"]
+    "coverageReporters": [
+      "text",
+      "html"
+    ]
   },
   "eslintConfig": {
     "extends": [
@@ -65,13 +65,13 @@
     "@testing-library/jest-dom": "^5.12.0",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+    "history": "^5.0.1",
     "husky": "^7.0.2",
     "lint-staged": "^11.1.2",
     "prettier": "^2.4.1",
     "react-devtools": "^4.19.0",
     "react-test-renderer": "^17.0.2"
   },
-  "//": "this avoids having to run the prettier script on all files, including those that have not been changed",
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
