@@ -1,8 +1,6 @@
 import React from "react";
 import {
-  prettyDOM,
   render,
-  screen
 } from "@testing-library/react";
 import SignUpView from "./SignUp";
 
