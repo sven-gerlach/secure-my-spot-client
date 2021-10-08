@@ -5,14 +5,14 @@ import {
 import SignUpView from "./SignUp";
 
 describe("SignUpView", () => {
-  it("has two buttons", () => {
-    const { container, queryAllByRole } = render(<SignUpView />)
-    const buttons = queryAllByRole("button")
-    expect(buttons).toHaveLength(2)
-  })
-  it("has three input fields", () => {
-    const { container, queryAllByRole } = render(<SignUpView />)
-    const inpuFields = queryAllByRole("textbox")
-    expect(inpuFields).toHaveLength(3)
+  test.todo("back button brings the user back home")
+  describe("clicking submit", () => {
+    describe("raises an error if", () => {
+      test.todo("results in error if no email has been provided")
+      test.todo("results in error if no password has been provided")
+      test.todo("results in error if passwords don't match")
+      test.todo("results in error if no email has been provided")
+    })
+    test.todo("results in sign-up http-request function call")
   })
 })

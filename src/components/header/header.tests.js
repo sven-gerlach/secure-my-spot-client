@@ -1,15 +1,18 @@
 // import test libraries and react
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-
 // history library lets us manage session history in JS
 // https://www.npmjs.com/package/history
-import { createMemoryHistory } from 'history'
-import { BrowserRouter, Router } from "react-router-dom";
+import { createBrowserHistory, createMemoryHistory } from "history";
+import { BrowserRouter, Route, Router } from "react-router-dom";
 
 // import component that needs testing
 import Header from "./Header";
-import App from "../../views/App";
+
+// https://stackoverflow.com/questions/43500235/jest-mock-a-function-called-inside-a-react-component
+import { signOutRequest } from "../../httpRequests/auth";
+jest.mock("../../httpRequests/auth")
+
 
 describe("the header", () => {
   it("shows two links, namely \"Create Account\" and \"Sign-In\", for unauthenticated users", () => {
@@ -31,5 +34,48 @@ describe("the header", () => {
     // assertions
     expect(createAccountLink).toHaveLength(1)
     expect(signInLink).toHaveLength(1)
+  })
+  // todo: testing the logout button has proved to be too difficult for now
+  describe("for an authenticated user", () => {
+    describe("clicking the sign-out button will", () => {
+      test("invoke the axios delete request", async () => {
+        signOutRequest.mockImplementation(() => Promise.resolve())
+
+        // create browser history object which features a push method
+        const historyMock = createBrowserHistory()
+
+        // create a mock function that spies on the history object and the push method
+        const spyOnHistory = jest.spyOn(historyMock, "push")
+
+        // mock a user object
+        const userMock = {
+          email: "mock@mail.com",
+          token: "123456789ABCDEF"
+        }
+
+        // mock a setUser function
+        const setUserMock = jest.fn()
+
+        // render the header
+        render(
+          <BrowserRouter>
+            <Header
+              history={historyMock}
+              user={userMock}
+              setUser={setUserMock}
+            />
+            <Route path="/" render={() => <h1>This result only shows if redirection was successful</h1>} />
+          </BrowserRouter>
+        )
+        userEvent.click(screen.getByText("Account"))
+        userEvent.click(screen.getByText("Sign-Out"))
+
+        // click on account followed by clicking on sign-out link
+        await waitFor(() => {
+          expect(setUserMock).toHaveBeenCalledTimes(1)
+          expect(screen.getByText(/redirection was successful/)).toBeInTheDocument()
+        })
+      })
+    })
   })
 })

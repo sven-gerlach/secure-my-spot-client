@@ -78,6 +78,7 @@ class SignUpView extends Component {
             />
           </div>
           <div>
+            {/* note: the role attribute is required for the unit tests but will throw a warning in the browser console */}
             <input
               role="textbox"
               type="password"
@@ -89,6 +90,7 @@ class SignUpView extends Component {
             />
           </div>
           <div>
+            {/* note: the role attribute is required for the unit tests but will throw a warning in the browser console */}
             <input
               role="textbox"
               type="password"

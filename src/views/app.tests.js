@@ -49,8 +49,18 @@ describe("the Header", () => {
 })
 
 describe("the header on small screens", () => {
-  beforeEach(() => {
-    window = Object.assign(window, { innerWidth: 300 });
+  // current viewport width
+  let viewPortWidth = window.innerWidth
+
+  // change viewport width to ensure navbar is collapsed
+  beforeAll(() => {
+    Object.assign(window, { innerWidth: 300 });
+    global.dispatchEvent(new Event("resize"));
+  })
+
+  // change viewport width back to its original state
+  afterAll(() => {
+    Object.assign(window, { innerWidth: viewPortWidth });
     global.dispatchEvent(new Event("resize"));
   })
 
