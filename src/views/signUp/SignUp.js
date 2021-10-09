@@ -35,7 +35,7 @@ class SignUpView extends Component {
     event.preventDefault()
     const data = { ...this.state }
 
-    // replace raw passwords with hashed passwords
+    // replace raw passwords with hashed passwords before sending them to the api
     data.password = data.password
       ? getHashedPassword(data.password)
       : ""
@@ -46,12 +46,8 @@ class SignUpView extends Component {
     // call http request: /sign-up
     // todo: consider having the api issue tokens for newly signed up users automatically
     signUpRequest(data)
-      .then(response => {
-        console.log(response)
-      })
-      .catch(error => {
-        console.log(error)
-      })
+      .then(response => {})
+      .catch(error => {})
       .finally(() => {
         this.setState({
           "email": "",

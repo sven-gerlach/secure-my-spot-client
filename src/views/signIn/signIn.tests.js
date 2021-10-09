@@ -6,13 +6,15 @@ import userEvent from "@testing-library/user-event";
 // import and mock signInRequest
 import { signInRequest } from "../../httpRequests/auth";
 import { createBrowserHistory } from "history";
+
+// mock http request module
 jest.mock("../../httpRequests/auth")
 
 describe("sign-in view", () => {
   describe("if back button is clicked", () => {
     test("user is sent back to main page", () => {
       // mock setUser function
-      const setUserMock = jest.fn()
+      const setUserMock = jest.fn().mockName("setUser")
 
       render(
         <BrowserRouter>
@@ -28,9 +30,20 @@ describe("sign-in view", () => {
       expect(screen.getByText("a new page")).toBeInTheDocument()
     })
   })
+
+  describe("typing in the input fields", () => {
+    test("changes the field values", () => {
+      render(<SignIn />)
+
+      // make assertions
+      userEvent.type(screen.getByPlaceholderText("e-Mail"), "sample@email.com")
+      userEvent.type(screen.getByPlaceholderText("Password"), "some password")
+    })
+  })
+
   describe("click submit button", () => {
     // mock the setUser method here so it is accessible from within the tests
-    const setUserMock = jest.fn()
+    const setUserMock = jest.fn().mockName("setUser")
 
     // create browser history object which features a push method
     const historyMock = createBrowserHistory()
@@ -79,6 +92,15 @@ describe("sign-in view", () => {
       await waitFor(() => {
         expect(screen.getByText("Make reservations here")).toBeInTheDocument()
       })
+    })
+
+    test("reset input field values to empty string",() => {
+      // click submit button
+      userEvent.click(screen.getByRole("button", { name: "Submit" }))
+
+      // assert that all three input fields have display value of ""
+      expect(screen.getByPlaceholderText("e-Mail")).toHaveDisplayValue("")
+      expect(screen.getByPlaceholderText("Password")).toHaveDisplayValue("")
     })
   })
 })
