@@ -16,6 +16,9 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 
+# Collect and copy all environment variables
+RUN ./config.env.sh
+
 # make React create build directory (app/build) with production build of the app at container compile-time
 RUN npm run build
 
