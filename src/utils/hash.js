@@ -12,7 +12,7 @@ function getHashedPassword(password) {
 // loading Heroku's config vars does not work at the moment and trying to find a workaround proved to be more difficult
 // for now, although not ideal, the .env.dev file contains the development key whilst the production key for encrypting
 // the user object and storing it in session storage is hard-coded
-const secretKey = process.env.REACT_APP_SESSION_ENCRYPTION_KEY || "!FQt3zn3Cn3XcC$nYdxiJ9MDgRqk56YfP3@gzcg!"
+const secretKey = process.env.REACT_APP_SESSION_ENCRYPTION_KEY
 
 function getEncryptedObject(object) {
   return CryptoJS.AES.encrypt(JSON.stringify(object), secretKey).toString()
