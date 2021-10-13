@@ -22,3 +22,5 @@ env | sort
 
 echo "===> User"
 id
+
+exit 0
