@@ -10,11 +10,6 @@ on:
     types:
       - completed
 
-# set env variables
-env:
-  REACT_APP_SESSION_ENCRYPTION_KEY: ${{ secrets.REACT_APP_SESSION_ENCRYPTION_KEY }}
-  REACT_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.REACT_APP_MAPBOX_ACCESS_TOKEN }}
-
 # https://github.com/marketplace/actions/deploy-to-heroku
 jobs:
   deploy:
@@ -34,5 +29,5 @@ jobs:
             REACT_APP_SESSION_ENCRYPTION_KEY
             REACT_APP_MAPBOX_ACCESS_TOKEN
         env:
-          REACT_APP_SESSION_ENCRYPTION_KEY: ${{ secrets.REACT_APP_SESSION_ENCRYPTION_KEY }}
-          REACT_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.REACT_APP_MAPBOX_ACCESS_TOKEN }}
+          REACT_APP_SESSION_ENCRYPTION_KEY: ${{secrets.REACT_APP_SESSION_ENCRYPTION_KEY}}
+          REACT_APP_MAPBOX_ACCESS_TOKEN: ${{secrets.REACT_APP_MAPBOX_ACCESS_TOKEN}}
