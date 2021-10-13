@@ -30,3 +30,9 @@ jobs:
           usedocker: True
           docker_heroku_process_type: web
           stack: container
+          docker_build_args:
+            REACT_APP_SESSION_ENCRYPTION_KEY
+            REACT_APP_MAPBOX_ACCESS_TOKEN
+        env:
+          REACT_APP_SESSION_ENCRYPTION_KEY: ${{ secrets.REACT_APP_SESSION_ENCRYPTION_KEY }}
+          REACT_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.REACT_APP_MAPBOX_ACCESS_TOKEN }}

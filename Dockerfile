@@ -19,6 +19,12 @@ ENV PATH="./node_modules/.bin:$PATH"
 
 COPY . .
 
+ARG REACT_APP_SESSION_ENCRYPTION_KEY
+ARG REACT_APP_MAPBOX_ACCESS_TOKEN
+
+ENV REACT_APP_SESSION_ENCRYPTION_KEY $REACT_APP_SESSION_ENCRYPTION_KEY
+ENV REACT_APP_MAPBOX_ACCESS_TOKEN $REACT_APP_MAPBOX_ACCESS_TOKEN
+
 # make React create build directory (app/build) with production build of the app at container compile-time
 RUN npm run build
 
