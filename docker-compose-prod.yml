@@ -7,6 +7,11 @@ services:
     image: react-app:prod
     container_name: react-app-prod
     environment:
+      # Port defined to allow running a production container locally. When deployed to heroku the port declaration is
+      # being overwritten by Heroku at compile time.
       - PORT=3000
+      # Without this env variable hot-reloading will not work
+      # source: https://mherman.org/blog/dockerizing-a-react-app/
+      - CHOKIDAR_USEPOLLING="true"
     ports:
       - "3000:3000"
