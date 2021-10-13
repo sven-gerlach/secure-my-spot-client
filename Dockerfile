@@ -14,6 +14,9 @@ WORKDIR /app
 # copy both dependency files
 COPY package*.json ./
 RUN npm install
+
+ENV PATH="./node_modules/.bin:$PATH"
+
 COPY . .
 
 # make React create build directory (app/build) with production build of the app at container compile-time
@@ -41,4 +44,7 @@ COPY nginx-setup.conf /etc/nginx/conf.d/default.conf
 # -e -> append editing commands to the list of commands
 # replace PORT in default.conf with $PORT variable
 # "damon off" keeps nginx running in foreground and prevents container from closing down
+# alternatively to sed, envsubst apk could be used and might actually be a cleaner solution
+# https://developer.okta.com/blog/2020/06/24/heroku-docker-react#create-a-dockerfile-and-nginx-configuration
+# https://nickjanetakis.com/blog/using-envsubst-to-merge-environment-variables-into-config-files
 CMD sed -i -e 's/PORT/'"$PORT"'/g' /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'
