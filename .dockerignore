@@ -5,6 +5,7 @@
 .github
 .prettierignore
 .prettierrc.json
+.DS_Store
 node_modules
 coverage
 Dockerfile

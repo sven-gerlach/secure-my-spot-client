@@ -8,6 +8,7 @@ import {
 import LandingPage from "./landingPage/LandingPage";
 import SignUpView from "./signUp/SignUp";
 import SignInView from "./signIn/SignIn";
+import ReserveView from "./reserve/Reserve";
 
 // import components
 import Header from "../components/header/Header";
@@ -76,6 +77,10 @@ class App extends Component {
         </Route>
         <Route path="/sign-in" render={(props) => (
           <SignInView {...props} setUser={this.setUser} />
+        )}>
+        </Route>
+        <Route path={"/reserve"} render={(props) => (
+          <ReserveView {...props} />
         )}>
         </Route>
       </Div>
