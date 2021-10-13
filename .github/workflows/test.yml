@@ -1,6 +1,11 @@
 name: test
 on: [push, pull_request]
 
+# set env variables
+env:
+  REACT_APP_SESSION_ENCRYPTION_KEY: ${{ secrets.REACT_APP_SESSION_ENCRYPTION_KEY }}
+  REACT_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.REACT_APP_MAPBOX_ACCESS_TOKEN }}
+
 jobs:
   # test if job is redundant
   # https://github.com/marketplace/actions/skip-duplicate-actions
@@ -21,9 +26,6 @@ jobs:
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - env:
-          REACT_APP_SESSION_ENCRYPTION_KEY: ${{ secrets.REACT_APP_SESSION_ENCRYPTION_KEY }}
-          REACT_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.REACT_APP_MAPBOX_ACCESS_TOKEN }}
       - uses: actions/checkout@v1
       - name: Build the docker-compose stack
         # https://github.community/t/how-to-use-docker-compose-with-github-actions/16850/3
