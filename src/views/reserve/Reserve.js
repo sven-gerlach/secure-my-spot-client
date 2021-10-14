@@ -3,7 +3,7 @@ import React, {Component} from "react";
 
 // import utility components
 import PageTitle from "../../components/pageTitle/PageTitle";
-import GoogleMap from "./Map/Map";
+import Map from "./Map/Map";
 
 
 class ReserveView extends Component {
@@ -11,7 +11,7 @@ class ReserveView extends Component {
     return (
       <>
         <PageTitle titleText="Reserve Available Parking Slots Near You" />
-        <GoogleMap />
+        <Map />
       </>
     )
   }

@@ -1,36 +1,38 @@
-import { useRef, useEffect } from "react";
+import React, { Component } from "react";
+import { GoogleMap, LoadScript } from "@react-google-maps/api";
 
 
-const GoogleMap = () => {
-  const googleMapRef = useRef();
-  let googleMap;
-  useEffect(() => {
-    const googleMapScript = document.createElement("script");
-    googleMapScript.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAPS_KEY}`;
-    googleMapScript.async = true;
-    window.document.body.appendChild(googleMapScript);
-    googleMapScript.addEventListener('load', () => {
-      createGoogleMap()
-    })
-  }, []);
+class Map extends Component {
+  constructor(props) {
+    super(props);
 
-  const createGoogleMap = () => {
-    googleMap = new window.google.maps.Map(googleMapRef.current, {
-      zoom: 16,
-      center: {
-        lat: 40.760551,
-        lng: -73.997561,
-      }
-    });
-  };
+    this.containerStyle = {
+      width: '400px',
+      height: '400px'
+    };
 
-  return (
-    <div
-      id="google-map"
-      ref={googleMapRef}
-      style={{ width: "400px", height: "300px" }}
-    />
-  );
-};
+    this.center = {
+      lat: -3.745,
+      lng: -38.523
+    };
 
-export default GoogleMap
+    this.apiKey = process.env.REACT_APP_GOOGLE_MAPS_KEY
+  }
+
+  render() {
+    return (
+      <LoadScript googleMapsApiKey={this.apiKey}
+      >
+        <GoogleMap
+          mapContainerStyle={this.containerStyle}
+          center={this.center}
+          zoom={10}
+        >
+          { /* Child components, such as markers, info windows, etc. */ }
+        </GoogleMap>
+      </LoadScript>
+    )
+  }
+}
+
+export default Map
