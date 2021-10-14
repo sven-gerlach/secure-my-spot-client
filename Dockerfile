@@ -19,9 +19,17 @@ ENV PATH="./node_modules/.bin:$PATH"
 
 COPY . .
 
+# The only way I have uncovered by which env vars can be transported into the react runtime environment is as follows:
+# 1) store the env as a secure var on GitHub
+# 2) collect the env inside the GitHub actions yml using the env (either inside a job or as part of the module)
+# 3) in the GitHub actions yml pass the env var onto the docker_build_args variable provided by the Heroku deploy
+# template from akhileshns/heroku-deploy
+# 4) collect the arg inside the Dockerfile and pass the arg onto an ENV var (this must happen before the react build
+# command as react will include all env vars at build time)
 ARG REACT_APP_SESSION_ENCRYPTION_KEY
-
+ARG REACT_APP_GOOGLE_MAPS_KEY
 ENV REACT_APP_SESSION_ENCRYPTION_KEY $REACT_APP_SESSION_ENCRYPTION_KEY
+ENV REACT_APP_GOOGLE_MAPS_KEY $REACT_APP_GOOGLE_MAPS_KEY
 
 # make React create build directory (app/build) with production build of the app at container compile-time
 RUN npm run build
