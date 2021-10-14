@@ -1,38 +1,34 @@
 import React, { Component } from "react";
-import { GoogleMap, LoadScript } from "@react-google-maps/api";
 
 
 class Map extends Component {
   constructor(props) {
     super(props);
+    this.mapRef = React.createRef()
+  }
 
-    this.containerStyle = {
-      width: '400px',
-      height: '400px'
-    };
-
-    this.center = {
-      lat: -3.745,
-      lng: -38.523
-    };
-
-    this.apiKey = process.env.REACT_APP_GOOGLE_MAPS_KEY
+  componentDidMount() {
+    new window.google.maps.Map(this.mapRef.current, {
+      center: { lat: -34.397, lng: 150.644 },
+      zoom: 8,
+    })
   }
 
   render() {
+    const style = {
+      width: "100%",
+        height: "70%"
+    }
+
     return (
-      <LoadScript googleMapsApiKey={this.apiKey}
-      >
-        <GoogleMap
-          mapContainerStyle={this.containerStyle}
-          center={this.center}
-          zoom={10}
-        >
-          { /* Child components, such as markers, info windows, etc. */ }
-        </GoogleMap>
-      </LoadScript>
+      <div
+        style={style}
+        ref={this.mapRef}
+      />
     )
   }
 }
 
 export default Map
+
+
