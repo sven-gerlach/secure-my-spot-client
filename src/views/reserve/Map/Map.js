@@ -18,8 +18,19 @@ class Map extends Component {
   componentDidMount() {
     const map = new window.google.maps.Map(this.mapRef.current, {
       center: this.props.userLocation,
-      zoom: 8,
+      zoom: 17,
+      maxZoom: 20,
+      minZoom: 10,
+      clickableIcons: false,
+      mapId: "121750dd1eb03810",
+      restriction: {
+        latLngBounds: { north: 40.86, south: 40.56, west: -74.21, east: -73.746 }
+      },
+      streetViewControl: false
     })
+
+    // todo: panToBounds method with limits set by the set of most North, West, East, and South available spots
+    // todo: clicking on a marker needs to cause the opening of a Info Window which displays the reservation price and a button to reserve
 
     // store map as a property on the class instance
     this.map = map
