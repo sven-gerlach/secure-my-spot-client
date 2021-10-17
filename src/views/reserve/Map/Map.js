@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { round } from "lodash";
+import { round, isEqual } from "lodash";
 
 // import styles
 import MapDiv from "./map.styles";
@@ -11,6 +11,8 @@ import parkingSign from "../../../assets/img/parking_sign_icon.png"
 class Map extends Component {
   constructor(props) {
     super(props);
+    this.map = null
+    this.markers = []
     this.mapRef = React.createRef()
   }
   // todo: factor out location button and make it a separate button on the page
@@ -34,7 +36,6 @@ class Map extends Component {
       zoomControl: true,
       fullscreenControl: true,
     })
-
   }
 
   createMyLocationMarker() {
@@ -61,7 +62,7 @@ class Map extends Component {
     }
   }
 
-  // creates markers, info windows, and sets event listeners
+  // creates markers, info windows, and sets event listeners, and eventually stores markers in this.markers array
   createParkingSpots() {
     this.markers = []
     for (const parkingSpot of this.props.availableParkingSpots) {
@@ -81,6 +82,7 @@ class Map extends Component {
 
       // add event listener to marker
       marker.addListener("click", event => {
+        console.log("test")
         // pan to parking spot
         this.map.panTo(event.latLng)
         // open the info window
@@ -117,17 +119,7 @@ class Map extends Component {
     })
   }
 
-  componentDidMount() {
-    // create the map
-    this.createMap()
-
-    // create my location marker
-    this.createMyLocationMarker()
-
-    // todo: panToBounds method with limits set by the set of most North, West, East, and South available spots
-    // todo: clicking on a marker needs to cause the opening of a Info Window which displays the reservation price and a button to reserve
-
-    // retrieve all currently available parking spots only upon loading of the map from the api and store them in state of the parent component
+  retrieveParkingSpotsFromAPI = () => {
     getAllAvailableParkingSpots()
       .then(res => {
         this.props.setAvailableParkingSpots(res.data)
@@ -137,19 +129,42 @@ class Map extends Component {
       })
   }
 
+  componentDidMount() {
+    // create the map
+    this.createMap()
+
+    // create my location marker
+    this.createMyLocationMarker()
+
+    // create markerClusterer
+    const map = this.map
+    const markers = this.markers
+    this.markerClusterer = new MarkerClusterer({ map, markers })
+
+    // todo: panToBounds method with limits set by the set of most North, West, East, and South available spots
+    // todo: clicking on a marker needs to cause the opening of a Info Window which displays the reservation price and a button to reserve
+
+    // retrieve all currently available parking spots only upon loading of the map from the api and store them in state
+    // of the parent component. Do this repeatedly every 5 seconds to always ensure having the latest availability
+    // displayed
+    this.retrieveParkingSpotsFromAPI()
+    this.retrieveParkingSpotsIntervalID = setInterval(this.retrieveParkingSpotsFromAPI, 10000)
+  }
+
   componentDidUpdate = (prevProps) => {
     // set a marker for all available parking spots
-    // todo: change api nomenclature "long" to "lng"
-    if (this.props.availableParkingSpots !== prevProps.availableParkingSpots) {
+    if (!isEqual(this.props.availableParkingSpots, prevProps.availableParkingSpots)) {
       this.createParkingSpots()
 
       // Add marker cluster to manage the markers
-      const markers = this.markers
-      const map = this.map
-      new MarkerClusterer({ markers, map })
+      this.markerClusterer.clearMarkers()
+      this.markerClusterer.addMarkers(this.markers)
+      this.markerClusterer.render()
     }
 
-    // updates the map with the current user location
+    // updates the map with the current user location; put this logic inside componentDidUpdate as opposed to Mount
+    // since it is not possible to be 100% certain that the user location is determined by the time the Mount method is
+    // invoked
     if (this.props.userLocation !== prevProps.userLocation) {
       this.map.setCenter(this.props.userLocation)
     }
@@ -159,6 +174,7 @@ class Map extends Component {
     this.markers.forEach((marker) => {
       window.google.maps.event.clearListeners(marker, "click")
       window.google.maps.event.clearListeners(marker, "mouseover")
+      clearInterval(this.retrieveParkingSpotsIntervalID)
     })
   }
 
