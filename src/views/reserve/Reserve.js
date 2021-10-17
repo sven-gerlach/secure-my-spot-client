@@ -10,7 +10,6 @@ import { Wrapper } from "@googlemaps/react-wrapper";
 import PageTitle from "../../components/pageTitle/PageTitle";
 // import Map from "./Map/Map";
 import Map from "./Map/Map";
-import { getAllAvailableParkingSpots } from "../../httpRequests/parkingSpots";
 import { round } from "lodash";
 
 
@@ -22,7 +21,7 @@ class ReserveView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userLocation: { lat: 40.722212, lng: -74.017749 },
+      userLocation: { lat: 40.754287, lng: -73.988412 },
       availableParkingSpots: null
     }
   }
