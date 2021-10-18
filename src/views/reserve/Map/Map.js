@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { round, isEqual } from "lodash";
+import { Redirect } from "react-router-dom";
 
 // import styles
 import MapDiv from "./map.styles";
@@ -15,10 +16,10 @@ class Map extends Component {
     this.markers = []
     this.mapRef = React.createRef()
   }
-  // todo: factor out location button and make it a separate button on the page
-  // todo: load current location automatically at the time of mounting the map
-  // todo: make sure location is controlled by state
 
+  /**
+   * Create the map and store it on the object so it is accessible from other methods
+   */
   createMap() {
     this.map = new window.google.maps.Map(this.mapRef.current, {
       center: this.props.userLocation,
@@ -38,7 +39,30 @@ class Map extends Component {
     })
   }
 
-  createMyLocationMarker() {
+  /**
+   * Get the current user's location and return a resolved or rejected promise
+   * @returns {Promise<unknown>}
+   */
+  getMyLocation = () => {
+    return new Promise((resolve, reject) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((pos) => {
+          const location = new window.google.maps.LatLng(pos.coords.latitude, pos.coords.longitude)
+          resolve(location);
+        }, (error) => {
+          reject(error)
+        });
+      }
+      else {
+        reject("Geo location data is not supported")
+      }
+    })
+  }
+
+  /**
+   * Create the location marker, retrieve the user's location and set the location marker accordingly
+   */
+  createMyLocationMarker = () => {
     const myLocationMarker = new window.google.maps.Marker({
       clickable: false,
       icon: new window.google.maps.MarkerImage('//maps.gstatic.com/mapfiles/mobile/mobileimgs2.png',
@@ -52,17 +76,20 @@ class Map extends Component {
 
     // todo: what if user doesn't allow location data inside their browser
     // todo: what if the user does allow location services but is not located in NYC
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(pos) {
-        const myPosition = new window.google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
-        myLocationMarker.setPosition(myPosition);
-      }, function(error) {
-        console.error(error)
-      });
-    }
+    // retrieve user's current location and set location marker
+    this.getMyLocation()
+      .then((location) => {
+        myLocationMarker.setPosition(location);
+      })
+      .catch(e => {
+        console.error(e)
+      })
   }
 
-  // creates markers, info windows, and sets event listeners, and eventually stores markers in this.markers array
+  /**
+   * creates markers, info windows, creates click event listeners, and eventually stores markers as an instance
+   * attribute
+   */
   createParkingSpots() {
     this.markers = []
     for (const parkingSpot of this.props.availableParkingSpots) {
@@ -82,7 +109,6 @@ class Map extends Component {
 
       // add event listener to marker
       marker.addListener("click", event => {
-        console.log("test")
         // pan to parking spot
         this.map.panTo(event.latLng)
         // open the info window
@@ -93,12 +119,17 @@ class Map extends Component {
     }
   }
 
+  /**
+   * Open info window when marker is clicked
+   * @param marker
+   * @param parkingSpot
+   */
   openInfoWindow(marker, parkingSpot) {
     const htmlString = `
       <div>
         <p><b>Price ($/hr):</b>&nbsp;${round(parkingSpot.rate, 2).toFixed(2)}</p>
         <p><b>Price ($/min):</b>&nbsp;${round(parkingSpot.rate / 60, 2).toFixed(2)}</p>
-        <button>Reserve</button>
+        <button id="reserve-button">Reserve</button>
       </div>
     `
 
@@ -113,6 +144,18 @@ class Map extends Component {
       shouldFocus: true
     })
 
+    // add reserve button event listener
+    // https://dev.to/usaidpeerzada/adding-a-button-with-onclick-on-infowindow-google-maps-api-1ne6
+    window.google.maps.event.addListener(infoWindow, "domready", () => {
+      const reserveButton = document.getElementById("reserve-button")
+      if (reserveButton) {
+        window.google.maps.event.addDomListener(reserveButton, "click", () => {
+          const href = `reserve/${parkingSpot.id}`
+          this.props.history.push(href)
+        })
+      }
+    })
+
     // add click listener to map which closes the infoWindow and removes itself after one click
     new window.google.maps.event.addListenerOnce(this.map, "click", () => {
       infoWindow.close()
@@ -120,18 +163,69 @@ class Map extends Component {
   }
 
   retrieveParkingSpotsFromAPI = () => {
-    getAllAvailableParkingSpots()
-      .then(res => {
-        this.props.setAvailableParkingSpots(res.data)
-      })
-      .catch(error => {
-        console.error(error)
-      })
+    return new Promise((resolve, reject) => {
+      getAllAvailableParkingSpots()
+        .then(res => {
+          this.props.setAvailableParkingSpots(res.data)
+          resolve()
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
+  }
+
+  /**
+   * The myLocationControl adds a control to the map that centers the map on
+   * the user's location. This constructor takes the control DIV as an argument.
+   * @constructor
+   */
+  myLocationControl(myLocationControlDiv, map) {
+    // Set CSS for the control border.
+    const controlUI = document.createElement("div");
+
+    controlUI.style.backgroundColor = "#fff";
+    controlUI.style.border = "2px solid #fff";
+    controlUI.style.borderRadius = "3px";
+    controlUI.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
+    controlUI.style.cursor = "pointer";
+    controlUI.style.marginTop = "8px";
+    controlUI.style.marginBottom = "22px";
+    controlUI.style.textAlign = "center";
+    controlUI.title = "Click to center the map around my current location";
+    myLocationControlDiv.appendChild(controlUI);
+
+    // Set CSS for the control interior.
+    const controlText = document.createElement("div");
+
+    controlText.style.color = "rgb(25,25,25)";
+    controlText.style.fontFamily = "Roboto,Arial,sans-serif";
+    controlText.style.fontSize = "16px";
+    controlText.style.lineHeight = "38px";
+    controlText.style.paddingLeft = "5px";
+    controlText.style.paddingRight = "5px";
+    controlText.innerHTML = "My Location";
+    controlUI.appendChild(controlText);
+    // Setup the click event listeners: simply set the map to Chicago.
+    controlUI.addEventListener("click", () => {
+      this.getMyLocation()
+        .then(location => {
+          map.panTo(location);
+        })
+        .catch(e => console.error)
+    });
   }
 
   componentDidMount() {
     // create the map
     this.createMap()
+
+    // Create the DIV to hold the myLocation button control and call the CenterControl()
+    // constructor passing in this DIV.
+    const myLocationControlDiv = document.createElement("div");
+
+    this.myLocationControl(myLocationControlDiv, this.map);
+    this.map.controls[window.google.maps.ControlPosition.TOP_CENTER].push(myLocationControlDiv);
 
     // create my location marker
     this.createMyLocationMarker()
@@ -148,11 +242,20 @@ class Map extends Component {
     // of the parent component. Do this repeatedly every 5 seconds to always ensure having the latest availability
     // displayed
     this.retrieveParkingSpotsFromAPI()
+      .then(() => {
+        this.createParkingSpots()
+        // Add marker cluster to manage the markers
+        this.markerClusterer.clearMarkers()
+        this.markerClusterer.addMarkers(this.markers)
+        this.markerClusterer.render()
+      })
     this.retrieveParkingSpotsIntervalID = setInterval(this.retrieveParkingSpotsFromAPI, 10000)
   }
 
   componentDidUpdate = (prevProps) => {
     // set a marker for all available parking spots
+    console.log(this.props.availableParkingSpots)
+    console.log(prevProps.availableParkingSpots)
     if (!isEqual(this.props.availableParkingSpots, prevProps.availableParkingSpots)) {
       this.createParkingSpots()
 

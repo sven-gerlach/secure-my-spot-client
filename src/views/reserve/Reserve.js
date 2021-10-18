@@ -1,13 +1,16 @@
 // import React components
 import React, {Component} from "react";
+import { Route } from "react-router-dom";
+
+// import components
+import PageTitle from "../../components/pageTitle/PageTitle";
+import ReserveSummary from "../reserveSummary/reserveSummary";
 
 // https://cloud.google.com/blog/products/maps-platform/loading-google-maps-platform-javascript-modern-web-applications
 // https://www.npmjs.com/package/@googlemaps/js-api-loader
 // This wrapper loads the Loader and makes google.maps accessible in the child component's namespace
 import { Wrapper } from "@googlemaps/react-wrapper";
 
-// import utility components
-import PageTitle from "../../components/pageTitle/PageTitle";
 // import Map from "./Map/Map";
 import Map from "./Map/Map";
 import { round } from "lodash";
@@ -51,14 +54,20 @@ class ReserveView extends Component {
   render() {
     return (
       <>
-        <PageTitle titleText="Reserve Available Parking Slots Near You" />
-        <Wrapper apiKey={process.env.REACT_APP_GOOGLE_MAPS_KEY}>
-          <Map
-            availableParkingSpots={this.state.availableParkingSpots}
-            userLocation={this.state.userLocation}
-            setAvailableParkingSpots={this.setAvailableParkingSpots}
-          />
-        </Wrapper>
+        <Route exact path="/reserve">
+          <PageTitle titleText="Reserve Available Parking Slots Near You" />
+          <Wrapper apiKey={process.env.REACT_APP_GOOGLE_MAPS_KEY}>
+            <Map
+              availableParkingSpots={this.state.availableParkingSpots}
+              userLocation={this.state.userLocation}
+              setAvailableParkingSpots={this.setAvailableParkingSpots}
+              history={this.props.history}
+            />
+          </Wrapper>
+        </Route>
+        <Route path="/reserve/:id" render={(props) => (
+          <ReserveSummary {...props} />
+        )} />
       </>
     )
   }

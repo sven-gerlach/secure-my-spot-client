@@ -73,16 +73,13 @@ class App extends Component {
         </Route>
         <Route path="/create-account" render={(props) => (
           <SignUpView {...props} />
-        )}>
-        </Route>
+        )}/>
         <Route path="/sign-in" render={(props) => (
           <SignInView {...props} setUser={this.setUser} />
-        )}>
-        </Route>
-        <Route path={"/reserve"} render={(props) => (
+        )}/>
+        <Route path="/reserve" render={(props) => (
           <ReserveView {...props} />
-        )}>
-        </Route>
+        )}/>
       </Div>
     )
   }
