@@ -7,6 +7,7 @@ import Button from "../../components/button/Button";
 // import helper functions
 import { signInRequest } from "../../httpRequests/auth";
 import { getHashedPassword } from "../../utils/hash";
+import { logUser } from "../../config";
 
 /**
  * Class for the sign-in view. Allows users to enter their email and password. It actions a http request to the api
@@ -50,7 +51,10 @@ class SignInView extends Component {
         // save user object (email and token) in App state
         this.props.setUser(response.data)
 
-        // redirect to /app
+        // log user with LogRocket
+        logUser(response.data)
+
+        // redirect to /reserve
         this.props.history.push("/reserve")
       })
       // if authorisation fails...
