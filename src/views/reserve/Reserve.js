@@ -14,6 +14,7 @@ import { Wrapper } from "@googlemaps/react-wrapper";
 // import Map from "./Map/Map";
 import Map from "./Map/Map";
 import { round } from "lodash";
+import { getAllAvailableParkingSpots } from "../../httpRequests/parkingSpots";
 
 
 /**
@@ -43,12 +44,23 @@ class ReserveView extends Component {
         })
       })
     }
+    this.setAvailableParkingSpotsIntervalID = setInterval(this.setAvailableParkingSpots, 5000)
   }
 
   setAvailableParkingSpots = availableParkingSpots => {
-    this.setState({
-      availableParkingSpots: availableParkingSpots
-    })
+    getAllAvailableParkingSpots()
+      .then(res => {
+        this.setState({
+          availableParkingSpots: res.data
+        })
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.setAvailableParkingSpotsIntervalID)
   }
 
   render() {
@@ -60,13 +72,15 @@ class ReserveView extends Component {
             <Map
               availableParkingSpots={this.state.availableParkingSpots}
               userLocation={this.state.userLocation}
-              setAvailableParkingSpots={this.setAvailableParkingSpots}
               history={this.props.history}
             />
           </Wrapper>
         </Route>
         <Route path="/reserve/:id" render={(props) => (
-          <ReserveSummary {...props} />
+          <ReserveSummary
+            {...props}
+            availableParkingSpots={this.state.availableParkingSpots}
+          />
         )} />
       </>
     )

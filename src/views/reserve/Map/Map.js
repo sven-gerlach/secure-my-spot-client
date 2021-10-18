@@ -91,7 +91,6 @@ class Map extends Component {
    * attribute
    */
   createParkingSpots() {
-    this.markers = []
     for (const parkingSpot of this.props.availableParkingSpots) {
       // create marker
       const marker = new window.google.maps.Marker({
@@ -107,72 +106,53 @@ class Map extends Component {
         }
       })
 
+      // create infowindow
+      const infoWindow = new window.google.maps.InfoWindow()
+
+      // string content of infowindow
+      const htmlString = `
+        <div>
+          <p><b>Price ($/hr):</b>&nbsp;${round(parkingSpot.rate, 2).toFixed(2)}</p>
+          <p><b>Price ($/min):</b>&nbsp;${round(parkingSpot.rate / 60, 2).toFixed(2)}</p>
+          <button id="reserve-button-${parkingSpot.id}">Reserve</button>
+        </div>
+      `
+
       // add event listener to marker
-      marker.addListener("click", event => {
+      window.google.maps.event.addListener(marker, "click", event => {
+
         // pan to parking spot
         this.map.panTo(event.latLng)
         // open the info window
-        this.openInfoWindow(marker, parkingSpot)
+        infoWindow.setContent(htmlString)
+        infoWindow.open({
+          anchor: marker,
+          map: this.map,
+          shouldFocus: true
+        })
+      })
+
+      // add reserve button event listener
+      // https://dev.to/usaidpeerzada/adding-a-button-with-onclick-on-infowindow-google-maps-api-1ne6
+      window.google.maps.event.addListener(infoWindow, "domready", () => {
+        const reserveButton = document.getElementById(`reserve-button-${parkingSpot.id}`)
+        if (reserveButton) {
+          window.google.maps.event.addDomListener(reserveButton, "click", () => {
+            const href = `reserve/${parkingSpot.id}`
+            this.props.history.push(href)
+          })
+        }
+      })
+
+      // add click listener to map which closes the infoWindow and removes itself after one click
+      window.google.maps.event.addListener(this.map, "click", () => {
+        if (infoWindow) {
+          infoWindow.close()
+        }
       })
 
       this.markers.push(marker)
     }
-  }
-
-  /**
-   * Open info window when marker is clicked
-   * @param marker
-   * @param parkingSpot
-   */
-  openInfoWindow(marker, parkingSpot) {
-    const htmlString = `
-      <div>
-        <p><b>Price ($/hr):</b>&nbsp;${round(parkingSpot.rate, 2).toFixed(2)}</p>
-        <p><b>Price ($/min):</b>&nbsp;${round(parkingSpot.rate / 60, 2).toFixed(2)}</p>
-        <button id="reserve-button">Reserve</button>
-      </div>
-    `
-
-    const infoWindow = new window.google.maps.InfoWindow({
-      content: htmlString,
-      maxWidth: 400
-    })
-
-    infoWindow.open({
-      anchor: marker,
-      map: this.map,
-      shouldFocus: true
-    })
-
-    // add reserve button event listener
-    // https://dev.to/usaidpeerzada/adding-a-button-with-onclick-on-infowindow-google-maps-api-1ne6
-    window.google.maps.event.addListener(infoWindow, "domready", () => {
-      const reserveButton = document.getElementById("reserve-button")
-      if (reserveButton) {
-        window.google.maps.event.addDomListener(reserveButton, "click", () => {
-          const href = `reserve/${parkingSpot.id}`
-          this.props.history.push(href)
-        })
-      }
-    })
-
-    // add click listener to map which closes the infoWindow and removes itself after one click
-    new window.google.maps.event.addListenerOnce(this.map, "click", () => {
-      infoWindow.close()
-    })
-  }
-
-  retrieveParkingSpotsFromAPI = () => {
-    return new Promise((resolve, reject) => {
-      getAllAvailableParkingSpots()
-        .then(res => {
-          this.props.setAvailableParkingSpots(res.data)
-          resolve()
-        })
-        .catch(error => {
-          reject(error)
-        })
-    })
   }
 
   /**
@@ -230,32 +210,26 @@ class Map extends Component {
     // create my location marker
     this.createMyLocationMarker()
 
+    // retrieve all currently available parking spots only upon loading of the map from the api and store them in state
+    // of the parent component. Do this repeatedly every 5 seconds to always ensure having the latest availability
+    // displayed
+
     // create markerClusterer
     const map = this.map
     const markers = this.markers
     this.markerClusterer = new MarkerClusterer({ map, markers })
 
-    // todo: panToBounds method with limits set by the set of most North, West, East, and South available spots
-    // todo: clicking on a marker needs to cause the opening of a Info Window which displays the reservation price and a button to reserve
-
-    // retrieve all currently available parking spots only upon loading of the map from the api and store them in state
-    // of the parent component. Do this repeatedly every 5 seconds to always ensure having the latest availability
-    // displayed
-    this.retrieveParkingSpotsFromAPI()
-      .then(() => {
+    if (this.props.availableParkingSpots) {
         this.createParkingSpots()
         // Add marker cluster to manage the markers
         this.markerClusterer.clearMarkers()
         this.markerClusterer.addMarkers(this.markers)
         this.markerClusterer.render()
-      })
-    this.retrieveParkingSpotsIntervalID = setInterval(this.retrieveParkingSpotsFromAPI, 10000)
+      }
   }
 
   componentDidUpdate = (prevProps) => {
     // set a marker for all available parking spots
-    console.log(this.props.availableParkingSpots)
-    console.log(prevProps.availableParkingSpots)
     if (!isEqual(this.props.availableParkingSpots, prevProps.availableParkingSpots)) {
       this.createParkingSpots()
 
@@ -277,7 +251,6 @@ class Map extends Component {
     this.markers.forEach((marker) => {
       window.google.maps.event.clearListeners(marker, "click")
       window.google.maps.event.clearListeners(marker, "mouseover")
-      clearInterval(this.retrieveParkingSpotsIntervalID)
     })
   }
 
