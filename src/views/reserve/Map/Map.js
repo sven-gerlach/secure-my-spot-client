@@ -237,6 +237,10 @@ class Map extends Component {
   componentDidUpdate = (prevProps) => {
     // set a marker for all available parking spots
     if (!isEqual(this.props.availableParkingSpots, prevProps.availableParkingSpots)) {
+      // first clear all markers to prevent double-counting
+      this.markers = []
+
+      // then create markers with the new set of available parking spots retreieved from the api
       this.createParkingSpots()
 
       // Add marker cluster to manage the markers
