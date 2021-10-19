@@ -7,7 +7,7 @@ import Button from "../../components/button/Button";
 // import helper functions
 import { signInRequest } from "../../httpRequests/auth";
 import { getHashedPassword } from "../../utils/hash";
-import { logUser } from "../../config";
+import { logUser } from "../../config/configLogRocket";
 
 /**
  * Class for the sign-in view. Allows users to enter their email and password. It actions a http request to the api

@@ -1,4 +1,5 @@
-import "./config"
+import { initialiseLogRocket } from "./config/configLogRocket";
+import "./config/configLogRocket"
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.css'
@@ -6,6 +7,11 @@ import './index.scss';
 import App from './views/App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from "react-router-dom";
+
+
+// initialise Log Rocket -> enclosing the initialisation inside a function is necessary to avoid the test suite
+// initialising a XMLHTTPRequest every time the configLogRocket module is loaded
+initialiseLogRocket()
 
 
 ReactDOM.render(

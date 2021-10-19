@@ -40,7 +40,6 @@
     "format": "prettier --write --ignore-unknown --no-error-on-unmatched-pattern {src/**/*}.{js,jsx,ts,tsx,json,css,scss,md} || true",
     "eject": "react-scripts eject"
   },
-  "//": "this avoids having to run the prettier script on all files, including those that have not been changed",
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
@@ -90,6 +89,7 @@
       "pre-commit": "lint-staged"
     }
   },
+  "//": "this avoids having to run the prettier script on all files, including those that have not been changed",
   "lint-staged": {
     "{src/**/*}.{js,jsx,ts,tsx,json,css,scss,md}": [
       "prettier --write --ignore-unknown --no-error-on-unmatched-pattern {src/**/*}.{js,jsx,ts,tsx,json,css,scss,md}"

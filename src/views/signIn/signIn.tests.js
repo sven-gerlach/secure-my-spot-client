@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { prettyDOM, render, screen, waitFor } from "@testing-library/react";
 import { BrowserRouter, Route } from "react-router-dom";
 import SignIn from "./SignIn";
 import userEvent from "@testing-library/user-event";
@@ -9,6 +9,7 @@ import { createBrowserHistory } from "history";
 
 // mock http request module
 jest.mock("../../httpRequests/auth")
+
 
 describe("sign-in view", () => {
   describe("if back button is clicked", () => {
@@ -35,9 +36,12 @@ describe("sign-in view", () => {
     test("changes the field values", () => {
       render(<SignIn />)
 
-      // make assertions
       userEvent.type(screen.getByPlaceholderText("e-Mail"), "sample@email.com")
       userEvent.type(screen.getByPlaceholderText("Password"), "some password")
+
+      // make assertions
+      expect(screen.getByPlaceholderText("e-Mail")).toHaveDisplayValue("sample@email.com")
+      expect(screen.getByPlaceholderText("Password")).toHaveDisplayValue("some password")
     })
   })
 
@@ -56,12 +60,11 @@ describe("sign-in view", () => {
         })
       })
 
-
       // render signIn with setUserMock
       render(
         <BrowserRouter>
           <SignIn setUser={setUserMock} history={historyMock} />
-          <Route path="/reserve" render={() => <p>Make reservations here</p>} />
+          <Route path="/reserve" render={() => <p>reservations</p>} />
         </BrowserRouter>
       )
 
@@ -69,7 +72,6 @@ describe("sign-in view", () => {
       userEvent.type(screen.getByPlaceholderText("Password"), "mockPassword")
       userEvent.click(screen.getByText("Submit"))
     })
-
 
     afterEach(() => {
       jest.restoreAllMocks()
@@ -90,7 +92,7 @@ describe("sign-in view", () => {
 
     test("redirect user to /reserve path", async () => {
       await waitFor(() => {
-        expect(screen.getByText("Make reservations here")).toBeInTheDocument()
+        expect(screen.getByText("reservations")).toBeInTheDocument()
       })
     })
 
