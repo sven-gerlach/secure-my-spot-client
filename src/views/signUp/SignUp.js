@@ -3,7 +3,7 @@ import React, { Component } from "react";
 
 // import containers
 import PageTitle from "../../components/pageTitle/PageTitle";
-import Button from "../../components/button/Button";
+import CustomButton from "../../components/button/CustomButton";
 
 // import helper functions
 import { signUpRequest } from "../../httpRequests/auth";
@@ -97,12 +97,12 @@ class SignUpView extends Component {
               onChange={this.handleChange}
             />
           </div>
-          <Button
+          <CustomButton
             buttonText="Submit"
             handleSubmit={this.handleSubmit}
           />
         </form>
-        <Button
+        <CustomButton
           {...this.props}
           buttonText="Back"
           urlTarget="/"

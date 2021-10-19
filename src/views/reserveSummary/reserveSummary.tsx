@@ -3,7 +3,8 @@ import PageTitle from "../../components/pageTitle/PageTitle";
 import { RouteComponentProps } from "react-router-dom";
 
 // import components
-import Button from "../../components/button/Button";
+import CustomButton from "../../components/button/CustomButton";
+import { Button, Modal } from "react-bootstrap";
 
 // import utils
 import { isEqual, round } from "lodash";
@@ -13,12 +14,18 @@ import { getObjectFromStorage, storeObjectInStorage } from "../../utils/sessionS
 import { ParkingSpot } from "../../types";
 
 // Interfaces
-interface Props {
+interface IProps {
   availableParkingSpots: ParkingSpot[],
 }
-interface RouteParams {
+
+interface IRouteParams {
   id: string,
 }
+
+interface IState {
+  showModal: boolean
+}
+
 
 /**
  * This component summarises the anticipated reservation and asks the user to provide some additional reservation
@@ -26,16 +33,18 @@ interface RouteParams {
  * Booking confirmation: parkingSpotId, whatThreeWords, gpsCoordinates, rates (/hour, /min)
  * User input: reservationLength, alertSubscription
  */
-class ReserveSummary extends Component<Props & RouteComponentProps<RouteParams>> {
+class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams>, IState> {
   parkingSpot: ParkingSpot
 
-  // todo: need to deal with the case where another user reserves this particular parking spot first
-  constructor(props: Props & RouteComponentProps<RouteParams>) {
+  constructor(props: IProps & RouteComponentProps<IRouteParams>) {
     super(props);
     this.parkingSpot = getObjectFromStorage("parkingSpot", "session") as ParkingSpot
+    this.state = {
+      showModal: false
+    }
   }
 
-  componentDidUpdate(prevProps: Readonly<Props & RouteComponentProps<RouteParams>>) {
+  componentDidUpdate(prevProps: Readonly<IProps & RouteComponentProps<IRouteParams>>) {
     // if available parking spots have changed
     if (!isEqual(prevProps.availableParkingSpots, this.props.availableParkingSpots)) {
       if (this.props.availableParkingSpots.some(parkingSpot => parkingSpot.id === this.parkingSpot.id)) {
@@ -45,22 +54,26 @@ class ReserveSummary extends Component<Props & RouteComponentProps<RouteParams>>
           return parkingSpot.id === this.parkingSpot.id
         })
 
-        // and update session storage parking spot and this parking spot
+        // and update session storage parking spot and instance variable parking spot
         this.parkingSpot = updatedParkingSpot as ParkingSpot
         storeObjectInStorage(this.parkingSpot, "parkingSpot", "session")
       }
       else {
         // if currently viewed parking spot id is not amongst the available parking spots (i.e. it is already reserved)
-        // todo: create a pop-up window alerting the user that this particular parking spot is no longer available and clicking any button will route the user back to /reserve
-        this.props.history.push("/reserve")
+        // open modal
+        this.toggleModal()
       }
     }
   }
 
+  toggleModal = () => {
+    this.setState( state => {
+      return {showModal: !state.showModal}
+    })
+  }
+
   render() {
     const parkingSpotGps = `Latitude: ${this.parkingSpot.lat} / Longitude: ${this.parkingSpot.lng}`
-
-    
 
     return (
       <>
@@ -79,9 +92,28 @@ class ReserveSummary extends Component<Props & RouteComponentProps<RouteParams>>
           <p>{round(Number(this.parkingSpot.rate) / 60, 2)}</p>
         </div>
         <div>
-          <Button history={this.props.history} buttonText="Back" urlTarget="/reserve" />
-          <Button history={this.props.history} buttonText="Payment" urlTarget="/payment" />
+          <CustomButton history={this.props.history} buttonText="Back" urlTarget="/reserve" />
+          <CustomButton history={this.props.history} buttonText="Payment" urlTarget="/payment" />
         </div>
+        <Modal
+          show={this.state.showModal}
+          /*onHide={() => this.setState({ showModal: false })}*/
+          backdrop={"static"}
+          centered={true}
+          keyboard={false}
+          /*redirect user back to the /reserve route*/
+          onExiting={() => this.props.history.push("/reserve")}
+        >
+          <Modal.Header>
+            <Modal.Title>Somebody was faster...</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>We are sorry! This parking spot is no longer available. You will be redirected to the map.</Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" onClick={this.toggleModal}>
+              Find Alternative Parking
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </>
     )
   }

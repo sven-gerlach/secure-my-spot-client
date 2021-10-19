@@ -6,7 +6,7 @@ import React, { Component } from "react"
  * @param {attribute=url} urlTarget - the url target redirected to upon clicking the button
  * @param {attribute=method} handleSubmit() - a method that handles the collection and submission of data
  */
-class Button extends Component {
+class CustomButton extends Component {
   handleClick = (event) => {
     event.preventDefault()
     const buttonText = event.target.innerHTML
@@ -33,4 +33,4 @@ class Button extends Component {
   }
 }
 
-export default Button
+export default CustomButton
