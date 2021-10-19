@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { round, isEqual } from "lodash";
-import { Redirect } from "react-router-dom";
+
+// import util functions
+import { storeObjectInStorage } from "../../../utils/sessionStorage";
 
 // import styles
 import MapDiv from "./map.styles";
@@ -120,7 +122,6 @@ class Map extends Component {
 
       // add event listener to marker
       window.google.maps.event.addListener(marker, "click", event => {
-
         // pan to parking spot
         this.map.panTo(event.latLng)
         // open the info window
@@ -132,12 +133,17 @@ class Map extends Component {
         })
       })
 
-      // add reserve button event listener
+      // add reserve button event listener -> clicking this button will redirect the user to the reservation summary
+      // page and store the parkingSpot data in session storage such that a refresh on the reserve page can reload page
+      // with stored parking spot data
       // https://dev.to/usaidpeerzada/adding-a-button-with-onclick-on-infowindow-google-maps-api-1ne6
       window.google.maps.event.addListener(infoWindow, "domready", () => {
         const reserveButton = document.getElementById(`reserve-button-${parkingSpot.id}`)
         if (reserveButton) {
           window.google.maps.event.addDomListener(reserveButton, "click", () => {
+            // store parking spot data in session storage
+            storeObjectInStorage(parkingSpot, "parkingSpot", "session")
+            // redirect user to /reserve:id page
             const href = `reserve/${parkingSpot.id}`
             this.props.history.push(href)
           })
@@ -264,5 +270,3 @@ class Map extends Component {
 }
 
 export default Map
-
-
