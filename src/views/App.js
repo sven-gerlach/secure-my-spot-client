@@ -15,9 +15,9 @@ import Header from "../components/header/Header";
 
 // Import utility functions
 import {
-  getUserFromSessionStorage,
-  storeUserInSessionStorage,
-  removeFromSessionStorage,
+  getObjectFromStorage,
+  storeObjectInStorage,
+  removeObjectFromStorage,
 } from "../utils/sessionStorage";
 
 // import styles
@@ -31,7 +31,7 @@ class App extends Component {
     super(props);
     // set user state to user from session storage or, failing that, to null
     this.state = {
-      "user": getUserFromSessionStorage() || null
+      "user": getObjectFromStorage("user", "local") || null
     }
     this.headerRef = React.createRef()
   }
@@ -42,9 +42,10 @@ class App extends Component {
     }, () => {
       this.state.user
         // add user to session storage if user object is not null
-        ? storeUserInSessionStorage(this.state.user)
-        // otherwise remove user from session storage
-        : removeFromSessionStorage("user")
+        ? storeObjectInStorage(this.state.user, "user", "local")
+        // otherwise remove user from session storage -> log-out automatically leads to deletion of user object in
+        // storage
+        : removeObjectFromStorage("user")
     })
   }
 

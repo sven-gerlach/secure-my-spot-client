@@ -34,7 +34,7 @@ class Header extends Component {
     // call sign-out axios http request function
     signOutRequest(this.props.user.token)
       .then((event) => {
-        // reset user state
+        // reset user state to null which then automatically deletes the hashed user object from local storage
         this.props.setUser(null)
         // redirect to landing page
         this.props.history.push("/")
