@@ -42,13 +42,15 @@ class SignInView extends Component {
     signInRequest(data)
       // if authorisation is successful store the returned token in a JS object
       .then(response => {
-        // clear state
+        // clear state of sign-in form
         this.setState({
           "email": "",
           "password": "",
         })
 
-        // save user object (email and token) in App state
+        // todo: change from session to local storage to make sessions survive closed windows
+        // todo: refactor session / local storage out of setUser method into a standalone component / function so it can be used for storing other things too (e.g. reserved but not yet paid for parking spot)
+        // save user object (email and token) in App state and store user token in session storage
         this.props.setUser(response.data)
 
         // log user with LogRocket

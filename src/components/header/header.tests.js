@@ -35,7 +35,7 @@ describe("the header", () => {
     expect(createAccountLink).toHaveLength(1)
     expect(signInLink).toHaveLength(1)
   })
-  // todo: testing the logout button has proved to be too difficult for now
+
   describe("for an authenticated user", () => {
     describe("clicking the sign-out button will", () => {
       test("invoke the axios delete request", async () => {
