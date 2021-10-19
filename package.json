@@ -40,9 +40,10 @@
     "format": "prettier --write --ignore-unknown --no-error-on-unmatched-pattern {src/**/*}.{js,jsx,ts,tsx,json,css,scss,md} || true",
     "eject": "react-scripts eject"
   },
+  "//": "exclude jsx files",
   "jest": {
     "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
+      "src/**/*.{js,ts,tsx}",
       "!<rootDir>/node_modules/",
       "!<rootDir>/path/to/dir/",
       "!src/*.js"
