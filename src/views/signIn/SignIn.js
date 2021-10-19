@@ -59,7 +59,7 @@ class SignInView extends Component {
       })
       // if authorisation fails...
       // todo: set up meaningful alert system that can be flexibly used for all user alerts / infos
-      .catch(error => {})
+      .catch(e => console.log(e))
   }
 
   render() {

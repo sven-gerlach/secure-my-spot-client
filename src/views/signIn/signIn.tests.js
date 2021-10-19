@@ -6,9 +6,14 @@ import userEvent from "@testing-library/user-event";
 // import and mock signInRequest
 import { signInRequest } from "../../httpRequests/auth";
 import { createBrowserHistory } from "history";
+import { logUser } from "../../config/configLogRocket";
 
 // mock http request module
 jest.mock("../../httpRequests/auth")
+
+// mock configLogRocket module in order to mock the logUser function
+// https://stackoverflow.com/questions/43500235/jest-mock-a-function-called-inside-a-react-component
+jest.mock("../../config/configLogRocket", () => ({ logUser: jest.fn() }))
 
 
 describe("sign-in view", () => {
@@ -52,6 +57,11 @@ describe("sign-in view", () => {
     // create browser history object which features a push method
     const historyMock = createBrowserHistory()
 
+    // mock logUser method since original function in configLogRocket module doesn't work since logRocket is not
+    // initialised during the test phase. LogRocket must not be initialised since it makes XMLHTTPRequest calls, a
+    // library that only exists inside the browser environment
+    logUser.mockImplementation(() => true)
+
     beforeEach(() => {
       signInRequest.mockImplementation((data) => {
         return Promise.resolve({
@@ -92,6 +102,7 @@ describe("sign-in view", () => {
 
     test("redirect user to /reserve path", async () => {
       await waitFor(() => {
+        expect(logUser).toHaveBeenCalled()
         expect(screen.getByText("reservations")).toBeInTheDocument()
       })
     })
