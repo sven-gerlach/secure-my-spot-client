@@ -11,11 +11,11 @@ import { isEqual, round } from "lodash";
 import { getObjectFromStorage, storeObjectInStorage } from "../../utils/sessionStorage";
 
 // Import interfaces
-import { ParkingSpot } from "../../types";
+import { IParkingSpot } from "../../types";
 
 // Interfaces
 interface IProps {
-  availableParkingSpots: ParkingSpot[],
+  availableParkingSpots: IParkingSpot[],
 }
 
 interface IRouteParams {
@@ -34,11 +34,11 @@ interface IState {
  * User input: reservationLength, alertSubscription
  */
 class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams>, IState> {
-  parkingSpot: ParkingSpot
+  parkingSpot: IParkingSpot
 
   constructor(props: IProps & RouteComponentProps<IRouteParams>) {
     super(props);
-    this.parkingSpot = getObjectFromStorage("parkingSpot", "session") as ParkingSpot
+    this.parkingSpot = getObjectFromStorage("parkingSpot", "session") as IParkingSpot
     this.state = {
       showModal: false
     }
@@ -55,7 +55,7 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
         })
 
         // and update session storage parking spot and instance variable parking spot
-        this.parkingSpot = updatedParkingSpot as ParkingSpot
+        this.parkingSpot = updatedParkingSpot as IParkingSpot
         storeObjectInStorage(this.parkingSpot, "parkingSpot", "session")
       }
       else {
