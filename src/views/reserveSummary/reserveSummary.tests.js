@@ -5,7 +5,6 @@
 // import testing modules
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { createBrowserHistory } from "history";
 import { parkingSpotFixture } from "../../utils/fixtures";
 import { getObjectFromStorage } from "../../utils/sessionStorage";
 import { BrowserRouter, Route } from "react-router-dom";
@@ -27,19 +26,18 @@ describe("Test the reserve summary component", () => {
       parkingSpot2
     ]
 
-    // mock history object
-    const history = createBrowserHistory()
-
     // mock getObjectFromStorage
     getObjectFromStorage.mockImplementation(() => parkingSpot1)
 
     // render the page
     render(
       <BrowserRouter>
-        <ReserveSummary
-          availableParkingSpots={availableParkingSpots}
-          history={history}
-        />
+        <Route render={props => (
+          <ReserveSummary
+            availableParkingSpots={availableParkingSpots}
+            history={props.history}
+          />
+        )} />
         <Route path="/reserve" render={() => <h1>Reservation Page</h1>} />
         <Route path="/payment" render={() => <h1>Payment Page</h1>} />
       </BrowserRouter>
@@ -47,11 +45,10 @@ describe("Test the reserve summary component", () => {
   })
 
   test("Back button returns user to the map page", () => {
-    userEvent.click(screen.getByText("Back"))
+    userEvent.click(screen.getByRole("button", { name: "Payment" }))
 
-    screen.debug()
     // assertions
-    expect(screen.getByText("Reservation Page")).toBeInTheDocument()
+    expect(screen.getByText("Payment Page")).toBeInTheDocument()
   })
 
   test.todo("Payment button redirects user to the /payment route")
