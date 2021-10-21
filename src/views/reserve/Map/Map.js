@@ -6,7 +6,6 @@ import { storeObjectInStorage } from "../../../utils/sessionStorage";
 
 // import styles
 import MapDiv from "./map.styles";
-import { getAllAvailableParkingSpots } from "../../../httpRequests/parkingSpots";
 import { MarkerClusterer } from "@googlemaps/markerclusterer"
 import parkingSign from "../../../assets/img/parking_sign_icon.png"
 

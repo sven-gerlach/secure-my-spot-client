@@ -3,12 +3,14 @@ import React, { Component } from "react";
 import {
   Route
 } from "react-router-dom";
+import { v4 as uuid } from "uuid";
 
 // import views
 import LandingPage from "./landingPage/LandingPage";
 import SignUpView from "./signUp/SignUp";
 import SignInView from "./signIn/SignIn";
 import ReserveView from "./reserve/Reserve";
+import CustomAlert from "./customAlert/CustomAlert";
 
 // import components
 import Header from "../components/header/Header";
@@ -31,7 +33,8 @@ class App extends Component {
     super(props);
     // set user state to user from session storage or, failing that, to null
     this.state = {
-      "user": getObjectFromStorage("user", "local") || null
+      user: getObjectFromStorage("user", "local") || null,
+      alertQueue: []
     }
     this.headerRef = React.createRef()
   }
@@ -57,10 +60,58 @@ class App extends Component {
     }
   }
 
+  /**
+   * Enqueues a new alert and returns undefined
+   * @param {string} variant - type of button styling
+   * @param {string} heading - heading text
+   * @param {string} message - message text
+   * @return
+   */
+  enqueueNewAlert = (variant, heading, message) => {
+    const newAlert = {
+      variant: variant,
+      heading: heading,
+      message: message,
+      key: uuid()
+    }
+    this.setState(prevState => {
+      return { alertQueue: [...prevState.alertQueue, newAlert] }
+    })
+  }
+
+  /**
+   *
+   * @returns {Object} dequeuedAlert - returns the next alert to be displayed and removes it from the queue
+   */
+  dequeueAlert = () => {
+    let dequeuedAlert
+    this.setState(prevState => {
+      dequeuedAlert = prevState.alertQueue.shift()
+      return { alertQueue: [...prevState.alertQueue] }
+    })
+    return dequeuedAlert
+  }
+
   render() {
     return (
+      // this div captures any click events and closes the header if it was in an open state
       <Div onClick={(event) => this.handleBackgroundClick(event)}>
-        {/* only reason Header is wrapped inside a Route is so that Header has access to props.history */}
+
+        {/* Custom alert depletes all alerts in the queue in order */}
+        {this.state.alertQueue.map((alert) => {
+          return (
+            <CustomAlert
+              key={alert.key}
+              variant={alert.variant}
+              heading={alert.heading}
+              message={alert.message}
+              dequeueAlert={this.dequeueAlert}
+            />
+          )
+        })}
+
+        {/* Header: wrapped inside a Route so that it has access to props.history. ref is used so that a click-event on
+            the surface outside the header can effect the closing of the header */}
         <Route render={(props) => (
           <Header
             {...props}
@@ -69,15 +120,25 @@ class App extends Component {
             ref={this.headerRef}
           />
         )}/>
-        <Route exact path="/" >
-          <LandingPage />
-        </Route>
+
+        {/* Landing page */}
+        <Route exact path="/" render={() => <LandingPage enqueueNewAlert={this.enqueueNewAlert} />} />
+
+        {/* Sign-up view */}
         <Route path="/create-account" render={(props) => (
           <SignUpView {...props} />
         )}/>
+
+        {/* Sign-in view */}
         <Route path="/sign-in" render={(props) => (
-          <SignInView {...props} setUser={this.setUser} />
+          <SignInView
+            {...props}
+            setUser={this.setUser}
+            enqueueNewAlert={this.enqueueNewAlert}
+          />
         )}/>
+
+        {/* Reserve view also comprises the map view and the reservation summary view */}
         <Route path="/reserve" render={(props) => (
           <ReserveView {...props} />
         )}/>

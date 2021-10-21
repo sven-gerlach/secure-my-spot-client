@@ -8,6 +8,8 @@ import CustomButton from "../../components/button/CustomButton";
 import { signInRequest } from "../../httpRequests/auth";
 import { getHashedPassword } from "../../utils/hash";
 import { logUser } from "../../config/configLogRocket";
+import messages from "../../utils/alertMessages";
+
 
 /**
  * Class for the sign-in view. Allows users to enter their email and password. It actions a http request to the api
@@ -20,6 +22,13 @@ class SignInView extends Component {
       "email": "",
       "password": "",
     }
+  }
+
+  clearSignInForm = () => {
+    this.setState({
+      "email": "",
+      "password": "",
+    })
   }
 
   handleChange = (event) => {
@@ -43,10 +52,7 @@ class SignInView extends Component {
       // if authorisation is successful store the returned token in a JS object
       .then(response => {
         // clear state of sign-in form
-        this.setState({
-          "email": "",
-          "password": "",
-        })
+        this.clearSignInForm()
 
         // save user object (email and token) in App state and store user token in session storage
         this.props.setUser(response.data)
@@ -58,8 +64,11 @@ class SignInView extends Component {
         this.props.history.push("/reserve")
       })
       // if authorisation fails...
-      // todo: set up meaningful alert system that can be flexibly used for all user alerts / infos
-      .catch(e => console.log(e))
+      .catch(e => {
+        this.props.enqueueNewAlert(...messages.failedSignIn)
+        this.clearSignInForm()
+        console.log(e);
+      })
   }
 
   render() {
