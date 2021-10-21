@@ -51,6 +51,8 @@ class Header extends Component {
         {/* change all Nav.Link components to react-router Link components to avoid a page reload upon clicking the
         clink */}
         <Nav.Link as={Link} to="/">Home</Nav.Link>
+        <Nav.Link as={Link} to="/reserve">Reserve</Nav.Link>
+        <Nav.Link as={Link} to="/reservations">My Reservations</Nav.Link>
         <NavDropdown title="Account" id="basic-nav-dropdown">
           <NavDropdown.Item as={Link} to="/create-account">Create Account</NavDropdown.Item>
           <NavDropdown.Item as={Link} to="/sign-in">Sign-In</NavDropdown.Item>

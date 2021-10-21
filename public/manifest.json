@@ -1,6 +1,7 @@
 {
-  "name":"",
-  "short_name":"",
+  "name":"Secure-My-Spot",
+  "short_name":"Secure-My-Spot",
+  "description": "Users can find, reserve, and pay for on-street parking space in New York City.",
   "icons": [
     {
       "src":"/android-chrome-192x192.png",
@@ -13,7 +14,8 @@
       "type":"image/png"
     }
   ],
-  "theme_color":"#ffffff",
-  "background_color":"#ffffff",
-  "display":"standalone"
+  "theme_color":"#465f87",
+  "background_color":"#465f87",
+  "display":"standalone",
+  "start_url": "https://secure-my-spot-client.herokuapp.com/reserve"
 }
