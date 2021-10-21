@@ -1,9 +1,9 @@
-export interface ParkingSpot {
+export interface IParkingSpot {
   id: string,
   lat: string,
   lng: string,
   rate: string,
   reserved: boolean,
-  created_at: string,
-  updated_at: string,
+  created_at?: string,
+  updated_at?: string,
 }

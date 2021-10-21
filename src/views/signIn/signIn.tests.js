@@ -1,11 +1,18 @@
-import { prettyDOM, render, screen, waitFor } from "@testing-library/react";
-import { BrowserRouter, Route } from "react-router-dom";
-import SignIn from "./SignIn";
-import userEvent from "@testing-library/user-event";
+/**
+ * Test SignIn components
+ */
 
-// import and mock signInRequest
-import { signInRequest } from "../../httpRequests/auth";
+// import testing modules
+import { render, screen, waitFor } from "@testing-library/react";
+import { BrowserRouter, Route } from "react-router-dom";
+import userEvent from "@testing-library/user-event";
 import { createBrowserHistory } from "history";
+
+// import components
+import SignIn from "./SignIn";
+
+// import utils
+import { signInRequest } from "../../httpRequests/auth";
 import { logUser } from "../../config/configLogRocket";
 
 // mock http request module

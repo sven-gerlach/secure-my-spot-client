@@ -78,7 +78,7 @@ class ReserveView extends Component {
         </Route>
         <Route path="/reserve/:id" render={(props) => (
           <ReserveSummary
-            {...props}
+            history={this.props.history}
             availableParkingSpots={this.state.availableParkingSpots}
           />
         )} />
