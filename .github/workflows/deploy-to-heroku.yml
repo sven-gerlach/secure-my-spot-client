@@ -30,4 +30,4 @@ jobs:
             REACT_APP_GOOGLE_MAPS_KEY
         env:
           REACT_APP_SESSION_ENCRYPTION_KEY: ${{ secrets.REACT_APP_SESSION_ENCRYPTION_KEY }}
-          REACT_APP_GOOGLE_MAPS_KEY: ${{ secrets.GOOGLE_MAPS_KEY }}
+          REACT_APP_GOOGLE_MAPS_KEY: ${{ secrets.REACT_APP_GOOGLE_MAPS_KEY }}
