@@ -1,9 +1,9 @@
 name: test
-on: [push]
-#  workflow_run:
-#    workflows: ["CodeQL"]
-#    branches: [main]
-#    types: [completed]
+on:
+  workflow_run:
+    workflows: ["CodeQL"]
+    branches: [main]
+    types: [completed]
 
 # set env variables
 env:
@@ -16,7 +16,7 @@ jobs:
     # continue-on-error: true # Uncomment once integration is finished
     runs-on: ubuntu-latest
     # only runs if CodeQL workflow was successful
-#    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     # Map a step output to a job output
     outputs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}
@@ -39,8 +39,8 @@ jobs:
         run: docker ps -a
       - name: Check logs react-app-dev
         run: docker logs react-app-dev
-      - name: Check logs react-app-dev
-        run: docker logs react-app-dev
+      - name: Check running containers
+        run: docker ps -a
       - name: Run jest test suite
         # source: https://github.com/facebook/jest/issues/1456#issuecomment-787529858
         run: docker exec react-app-dev npm run test -- --ci --watchAll=false --passWithNoTests
