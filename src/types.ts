@@ -7,3 +7,9 @@ export interface IParkingSpot {
   created_at?: string,
   updated_at?: string,
 }
+
+export interface IAlert {
+  variant: string,
+  heading: string,
+  message: string,
+}

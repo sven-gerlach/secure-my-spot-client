@@ -140,7 +140,10 @@ class App extends Component {
 
         {/* Reserve view also comprises the map view and the reservation summary view */}
         <Route path="/reserve" render={(props) => (
-          <ReserveView {...props} />
+          <ReserveView
+            {...props}
+            enqueueNewAlert={this.enqueueNewAlert}
+          />
         )}/>
       </Div>
     )

@@ -16,6 +16,7 @@ import { IParkingSpot } from "../../types";
 // Interfaces
 interface IProps {
   availableParkingSpots: IParkingSpot[],
+  enqueueNewAlert(variant: string, heading: string, message: string): void
 }
 
 interface IRouteParams {
@@ -23,13 +24,14 @@ interface IRouteParams {
 }
 
 interface IState {
-  showModal: boolean
+  showModal: boolean,
+  reservationLength: string,
 }
 
 
 /**
- * This component summarises the anticipated reservation and asks the user to provide some additional reservation
- * details.
+ * This component summarises the anticipated reservation details and asks the user to provide some additional
+ * reservation details.
  * Booking confirmation: parkingSpotId, whatThreeWords, gpsCoordinates, rates (/hour, /min)
  * User input: reservationLength, alertSubscription
  */
@@ -40,13 +42,19 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
     super(props);
     this.parkingSpot = getObjectFromStorage("parkingSpot", "session") as IParkingSpot
     this.state = {
-      showModal: false
+      showModal: false,
+      reservationLength: "",
     }
   }
 
   componentDidUpdate(prevProps: Readonly<IProps & RouteComponentProps<IRouteParams>>) {
-    // if available parking spots have changed
-    if (!isEqual(prevProps.availableParkingSpots, this.props.availableParkingSpots)) {
+    // if available parking spots are not none and if they have changed
+    // note: first condition is needed to avoid an alert showing upon reloading of the page (reload sets
+    // prevProps.availableParkingSpots to null
+    if (
+      prevProps.availableParkingSpots &&
+      !isEqual(prevProps.availableParkingSpots, this.props.availableParkingSpots
+      )) {
       if (this.props.availableParkingSpots.some(parkingSpot => parkingSpot.id === this.parkingSpot.id)) {
         // if currently viewed parking spot id is still amongst the available parking spots (i.e. not reserved yet)
         // find updated parking spot with id of parkingSpot amongst currently available parking spots
@@ -54,9 +62,19 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
           return parkingSpot.id === this.parkingSpot.id
         })
 
+        // save old rate for usage in the alert (see enqueueNewAlert a few rows down)
+        const oldRate = this.parkingSpot.rate
+
         // and update session storage parking spot and instance variable parking spot
         this.parkingSpot = updatedParkingSpot as IParkingSpot
         storeObjectInStorage(this.parkingSpot, "parkingSpot", "session")
+
+        // display alert that tells the user that the rate of their selected parking spot has changed
+        this.props.enqueueNewAlert(
+          "info",
+          "Rate Change!",
+          `The rate has changed from $${oldRate} to $${updatedParkingSpot?.rate}.`
+          )
       }
       else {
         // if currently viewed parking spot id is not amongst the available parking spots (i.e. it is already reserved)
@@ -67,13 +85,28 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
   }
 
   toggleModal = () => {
+    // If currently viewed parking spot id not amongst the currently available parking spots, display the modal which
+    // has one button that leads the user back to the /reserve view where they will have to find another parking spot
+    // that is available
     this.setState( state => {
       return {showModal: !state.showModal}
     })
   }
 
+  /**
+   * Handle change of reservation length input field
+   */
+  handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    this.setState({ reservationLength: value })
+  }
+
   render() {
     const parkingSpotGps = `Latitude: ${this.parkingSpot.lat} / Longitude: ${this.parkingSpot.lng}`
+    const ratePerHour = Number(this.parkingSpot.rate)
+    const ratePerMinute = Number(this.parkingSpot.rate) / 60
+    const ratePerMinuteRounded = round(ratePerMinute, 2)
+    const totalReservationCost = round(Number(this.state.reservationLength) * ratePerMinute, 2)
 
     return (
       <>
@@ -86,15 +119,26 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
           <h3>What Three Words</h3>
           {/* todo: action API call to WTW to convert GPS to whatthreewords */}
           <p>[to come]</p>
-          <h3>Rate ($ / hour)</h3>
-          <p>{this.parkingSpot.rate}</p>
-          <h3>Rate ($ / min)</h3>
-          <p>{round(Number(this.parkingSpot.rate) / 60, 2)}</p>
+          <h3>Rate / hour</h3>
+          <p>${ratePerHour.toFixed(2)}</p>
+          <h3>Rate / min</h3>
+          <p>${ratePerMinuteRounded.toFixed(2)}</p>
+          <h3>Reservation Length (minutes)</h3>
+          <input
+            type="number"
+            required
+            value={this.state.reservationLength}
+            onChange={this.handleChange}
+          />
+          <h3>Estimated Total Cost ($)</h3>
+          <p>${totalReservationCost.toFixed(2)}</p>
         </div>
         <div>
           <CustomButton history={this.props.history} buttonText="Back" urlTarget="/reserve" />
           <CustomButton history={this.props.history} buttonText="Payment" urlTarget="/payment" />
         </div>
+        {/* Modal: displays an alert that currently viewed modal can no longer be reserved, leading the user back to
+        the /reserve route  */}
         <Modal
           show={this.state.showModal}
           /*onHide={() => this.setState({ showModal: false })}*/

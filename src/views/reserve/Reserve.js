@@ -80,6 +80,7 @@ class ReserveView extends Component {
           <ReserveSummary
             history={this.props.history}
             availableParkingSpots={this.state.availableParkingSpots}
+            enqueueNewAlert={this.props.enqueueNewAlert}
           />
         )} />
       </>

@@ -12,7 +12,8 @@ const messages: IMessages = {
     "warning",
     "Failed Authorization",
     "Wrong authentication details. Please try again.",
-  ]
+  ],
+
 }
 
 export default messages
