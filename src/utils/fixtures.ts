@@ -5,7 +5,7 @@ import { round } from "lodash";
 
 export function parkingSpotFixture(): IParkingSpot {
   return {
-    id: faker.datatype.uuid(),
+    id: String(faker.datatype.number()),
     lat: faker.address.latitude(),
     lng: faker.address.longitude(),
     rate: String(round(faker.datatype.float(), 2)),

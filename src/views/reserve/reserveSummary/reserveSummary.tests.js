@@ -7,18 +7,19 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { parkingSpotFixture } from "../../../utils/fixtures";
 import { getObjectFromStorage } from "../../../utils/sessionStorage";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, MemoryRouter, Route } from "react-router-dom";
 
 // import components
 import ReserveSummary from "./reserveSummary";
 
 // mock getObjectFromStorage function that retrieves the considered parking spot from session storage
-jest.mock("../../utils/sessionStorage", () => ({ getObjectFromStorage: jest.fn() }))
+jest.mock("../../../utils/sessionStorage", () => ({ getObjectFromStorage: jest.fn() }))
 
 // sandbox variable which needs to be accessed within test scopes
 let sandboxParkingSpot1
 let sandboxParkingSpot2
 let sandboxRerender
+
 
 describe("Test the reserve summary component", () => {
   beforeEach(() => {
@@ -39,16 +40,17 @@ describe("Test the reserve summary component", () => {
 
     // render the page
     const { rerender } = render(
-      <BrowserRouter>
+      <MemoryRouter initialEntries={[`/reserve/${parkingSpot1.id}`]}>
         <Route render={props => (
           <ReserveSummary
             availableParkingSpots={availableParkingSpots}
-            history={props.history}
+            {...props}
+            enqueueNewAlert={jest.fn()}
           />
         )} />
         <Route path="/reserve" render={() => <h1>Reservation Page</h1>} />
         <Route path="/payment" render={() => <h1>Payment Page</h1>} />
-      </BrowserRouter>
+      </MemoryRouter>
     )
 
     //  assign rerender to sandbox variable
@@ -79,7 +81,7 @@ describe("Test the reserve summary component", () => {
 
     // re-render the view
     sandboxRerender(
-      <BrowserRouter>
+      <MemoryRouter initialEntries={[`/reserve/${sandboxParkingSpot1.id}`]}>
         <Route render={props => (
           <ReserveSummary
             availableParkingSpots={availableParkingSpots}
@@ -88,8 +90,9 @@ describe("Test the reserve summary component", () => {
         )} />
         <Route path="/reserve" render={() => <h1>Reservation Page</h1>} />
         <Route path="/payment" render={() => <h1>Payment Page</h1>} />
-      </BrowserRouter>
+      </MemoryRouter>
     )
+
 
     // assert that the screen has a button with text "Find Alternative Parking"
     expect(screen.getByRole("button", { name: "Find Alternative Parking" })).toBeInTheDocument()
@@ -111,7 +114,7 @@ describe("Test the reserve summary component", () => {
 
     // rerender the component
     sandboxRerender(
-      <BrowserRouter>
+      <MemoryRouter initialEntries={[`/reserve/${sandboxParkingSpot1.id}`]}>
         <Route render={props => (
           <ReserveSummary
             availableParkingSpots={availableParkingSpots}
@@ -120,11 +123,12 @@ describe("Test the reserve summary component", () => {
         )} />
         <Route path="/reserve" render={() => <h1>Reservation Page</h1>} />
         <Route path="/payment" render={() => <h1>Payment Page</h1>} />
-      </BrowserRouter>
+      </MemoryRouter>
     )
 
     // assertions
-    expect(oldParkingSpot1Rate).not.toBe(newParkingSpot1Rate)
-    expect(screen.getByText(newParkingSpot1Rate)).toBeInTheDocument()
+    console.log(newParkingSpot1Rate)
+    expect(`$${oldParkingSpot1Rate}`).not.toBe(newParkingSpot1Rate)
+    expect(screen.getByText(`$${newParkingSpot1Rate}.00`)).toBeInTheDocument()
   })
 })

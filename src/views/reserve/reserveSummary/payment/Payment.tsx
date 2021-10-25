@@ -3,6 +3,8 @@ import { RouteComponentProps } from "react-router-dom";
 
 // import utils
 import { createParkingSpotReservation } from "../../../../httpRequests/parkingSpots";
+import CustomButton from "../../../../components/button/CustomButton";
+import PageTitle from "../../../../components/pageTitle/PageTitle";
 
 interface IProps {
   reservationLength: string,
@@ -50,6 +52,7 @@ class Payment extends Component<RouteComponentProps & IProps, IState> {
   render() {
     return (
       <>
+        <PageTitle titleText="Payment Page" />
         <input
           value={this.state.email}
           onChange={this.handleChange}
