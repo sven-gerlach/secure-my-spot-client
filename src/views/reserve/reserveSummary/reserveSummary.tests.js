@@ -6,14 +6,21 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { parkingSpotFixture } from "../../../utils/fixtures";
-import { getObjectFromStorage } from "../../../utils/sessionStorage";
-import { BrowserRouter, MemoryRouter, Route } from "react-router-dom";
+import { getObjectFromStorage, storeObjectInStorage } from "../../../utils/sessionStorage";
+import { MemoryRouter, Route } from "react-router-dom";
+
+// import utils
+import { cloneDeep } from "lodash";
 
 // import components
 import ReserveSummary from "./reserveSummary";
 
-// mock getObjectFromStorage function that retrieves the considered parking spot from session storage
-jest.mock("../../../utils/sessionStorage", () => ({ getObjectFromStorage: jest.fn() }))
+// mock getObjectFromStorage and storeObjectInStorage function that retrieve and store the considered parking spot
+// from/to session storage
+jest.mock("../../../utils/sessionStorage", () => ({
+  getObjectFromStorage: jest.fn(),
+  storeObjectInStorage: jest.fn()
+}))
 
 // sandbox variable which needs to be accessed within test scopes
 let sandboxParkingSpot1
@@ -73,7 +80,8 @@ describe("Test the reserve summary component", () => {
     expect(screen.getByText("Payment Page")).toBeInTheDocument()
   })
 
-  test("If parking spot becomes unavailable a modal with text and one button is rendered to the DOM", () => {
+  test("If parking spot becomes unavailable a modal with a button is rendered, where clicking the button takes " +
+    "the user back to the reservation view", () => {
     // remove parkingSpot1 from availableParkingSpots
     const availableParkingSpots = [
       sandboxParkingSpot2
@@ -93,24 +101,37 @@ describe("Test the reserve summary component", () => {
       </MemoryRouter>
     )
 
-
     // assert that the screen has a button with text "Find Alternative Parking"
     expect(screen.getByRole("button", { name: "Find Alternative Parking" })).toBeInTheDocument()
+
+    // click the button
+    userEvent.click(screen.getByRole("button", { name: "Find Alternative Parking"}))
+
+    // assert that pressing the rendered button will redirect the user to the /reserve route
+    expect(screen.getByText("Reservation Page")).toBeInTheDocument()
   })
 
-  test("If parking spot details change (e.g. rate) then this change renders to the DOM", () => {
+  test("If parking spot details change (e.g. rate) then this change renders to the DOM and the custom alert " +
+    "function is invoked", () => {
     // parking spot rates
     const oldParkingSpot1Rate = sandboxParkingSpot1.rate
-    const newParkingSpot1Rate = oldParkingSpot1Rate === 20 ? 30 : 20
+    const newParkingSpot1Rate = oldParkingSpot1Rate === "20.00" ? "30.00" : "20.00"
 
     // create new parkingSpot1
-    sandboxParkingSpot1.rate = 20
+    const newParkingSpot1 = cloneDeep(sandboxParkingSpot1)
+    newParkingSpot1.rate = newParkingSpot1Rate
 
     // change parkingSpot1 details
     const availableParkingSpots = [
-      sandboxParkingSpot1,
+      newParkingSpot1,
       sandboxParkingSpot2
     ]
+
+    // Create mock function for enqueueNewAlert
+    const enqueueNewAlertMock = jest.fn()
+
+    // mock storeObjectInStorage
+    storeObjectInStorage.mockImplementation(() => undefined)
 
     // rerender the component
     sandboxRerender(
@@ -118,7 +139,8 @@ describe("Test the reserve summary component", () => {
         <Route render={props => (
           <ReserveSummary
             availableParkingSpots={availableParkingSpots}
-            history={props.history}
+            {...props}
+            enqueueNewAlert={enqueueNewAlertMock}
           />
         )} />
         <Route path="/reserve" render={() => <h1>Reservation Page</h1>} />
@@ -127,8 +149,9 @@ describe("Test the reserve summary component", () => {
     )
 
     // assertions
-    console.log(newParkingSpot1Rate)
     expect(`$${oldParkingSpot1Rate}`).not.toBe(newParkingSpot1Rate)
-    expect(screen.getByText(`$${newParkingSpot1Rate}.00`)).toBeInTheDocument()
+    expect(screen.getByText(`$${newParkingSpot1Rate}`)).toBeInTheDocument()
+    expect(storeObjectInStorage).toHaveBeenCalled()
+    expect(enqueueNewAlertMock).toHaveBeenCalled()
   })
 })

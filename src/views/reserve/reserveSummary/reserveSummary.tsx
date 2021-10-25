@@ -27,6 +27,7 @@ interface IRouteParams {
 interface IState {
   showModal: boolean,
   reservationLength: string,
+  parkingSpot: IParkingSpot
 }
 
 
@@ -37,14 +38,14 @@ interface IState {
  * User input: reservationLength, alertSubscription
  */
 class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams>, IState> {
-  parkingSpot: IParkingSpot
+  // parkingSpot: IParkingSpot
 
   constructor(props: IProps & RouteComponentProps<IRouteParams>) {
     super(props);
-    this.parkingSpot = getObjectFromStorage("parkingSpot", "session") as IParkingSpot
     this.state = {
       showModal: false,
       reservationLength: "",
+      parkingSpot: getObjectFromStorage("parkingSpot", "session") as IParkingSpot
     }
   }
 
@@ -56,19 +57,19 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
       prevProps.availableParkingSpots &&
       !isEqual(prevProps.availableParkingSpots, this.props.availableParkingSpots
       )) {
-      if (this.props.availableParkingSpots.some(parkingSpot => parkingSpot.id === this.parkingSpot.id)) {
+      if (this.props.availableParkingSpots.some(parkingSpot => parkingSpot.id === this.state.parkingSpot.id)) {
         // if currently viewed parking spot id is still amongst the available parking spots (i.e. not reserved yet)
         // find updated parking spot with id of parkingSpot amongst currently available parking spots
         const updatedParkingSpot = this.props.availableParkingSpots.find(parkingSpot => {
-          return parkingSpot.id === this.parkingSpot.id
+          return parkingSpot.id === this.state.parkingSpot.id
         })
 
         // save old rate for usage in the alert (see enqueueNewAlert a few rows down)
-        const oldRate = this.parkingSpot.rate
+        const oldRate = this.state.parkingSpot.rate
 
         // and update session storage parking spot and instance variable parking spot
-        this.parkingSpot = updatedParkingSpot as IParkingSpot
-        storeObjectInStorage(this.parkingSpot, "parkingSpot", "session")
+        this.setState({ parkingSpot: updatedParkingSpot as IParkingSpot })
+        storeObjectInStorage(updatedParkingSpot as IParkingSpot, "parkingSpot", "session")
 
         // display alert that tells the user that the rate of their selected parking spot has changed
         this.props.enqueueNewAlert(
@@ -103,9 +104,10 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
   }
 
   render() {
-    const parkingSpotGps = `Latitude: ${this.parkingSpot.lat} / Longitude: ${this.parkingSpot.lng}`
-    const ratePerHour = Number(this.parkingSpot.rate)
-    const ratePerMinute = Number(this.parkingSpot.rate) / 60
+    const parkingSpot = this.state.parkingSpot
+    const parkingSpotGps = `Latitude: ${parkingSpot.lat} / Longitude: ${parkingSpot.lng}`
+    const ratePerHour = Number(parkingSpot.rate)
+    const ratePerMinute = Number(parkingSpot.rate) / 60
     const ratePerMinuteRounded = round(ratePerMinute, 2)
     const totalReservationCost = round(Number(this.state.reservationLength) * ratePerMinute, 2)
 
@@ -115,7 +117,7 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
           <div>
             <PageTitle titleText="Reservation Summary" />
             <h3>Parking Spot ID</h3>
-            <p>{this.parkingSpot.id}</p>
+            <p>{parkingSpot.id}</p>
             <h3>GPS Coordinates</h3>
             <p>{parkingSpotGps}</p>
             <h3>What Three Words</h3>
@@ -137,7 +139,7 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
           </div>
           <div>
             <CustomButton history={this.props.history} buttonText="Back" urlTarget="/reserve" />
-            <CustomButton history={this.props.history} buttonText="Payment" urlTarget={`/reserve/${this.parkingSpot.id}/payment`} />
+            <CustomButton history={this.props.history} buttonText="Payment" urlTarget={`/reserve/${parkingSpot.id}/payment`} />
           </div>
         </Route>
         <Route path="/reserve/:id/payment">
@@ -146,7 +148,7 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
             match={this.props.match}
             location={this.props.location}
             reservationLength={this.state.reservationLength}
-            parkingSpotId={this.parkingSpot.id}
+            parkingSpotId={parkingSpot.id}
           />
         </Route>
         {/* Modal: displays an alert that currently viewed modal can no longer be reserved, leading the user back to
