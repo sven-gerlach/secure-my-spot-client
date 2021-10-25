@@ -1,17 +1,18 @@
 import React, { Component } from "react";
-import PageTitle from "../../components/pageTitle/PageTitle";
-import { RouteComponentProps } from "react-router-dom";
+import PageTitle from "../../../components/pageTitle/PageTitle";
+import { Route, RouteComponentProps } from "react-router-dom";
 
 // import components
-import CustomButton from "../../components/button/CustomButton";
+import CustomButton from "../../../components/button/CustomButton";
 import { Button, Modal } from "react-bootstrap";
+import Payment from "./payment/Payment";
 
 // import utils
 import { isEqual, round } from "lodash";
-import { getObjectFromStorage, storeObjectInStorage } from "../../utils/sessionStorage";
+import { getObjectFromStorage, storeObjectInStorage } from "../../../utils/sessionStorage";
 
 // Import interfaces
-import { IParkingSpot } from "../../types";
+import { IParkingSpot } from "../../../types";
 
 // Interfaces
 interface IProps {
@@ -110,38 +111,48 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
 
     return (
       <>
-        <div>
-          <PageTitle titleText="Reservation Summary" />
-          <h3>Parking Spot ID</h3>
-          <p>{this.parkingSpot.id}</p>
-          <h3>GPS Coordinates</h3>
-          <p>{parkingSpotGps}</p>
-          <h3>What Three Words</h3>
-          {/* todo: action API call to WTW to convert GPS to whatthreewords */}
-          <p>[to come]</p>
-          <h3>Rate / hour</h3>
-          <p>${ratePerHour.toFixed(2)}</p>
-          <h3>Rate / min</h3>
-          <p>${ratePerMinuteRounded.toFixed(2)}</p>
-          <h3>Reservation Length (minutes)</h3>
-          <input
-            type="number"
-            required
-            value={this.state.reservationLength}
-            onChange={this.handleChange}
+        <Route exact path="/reserve/:id">
+          <div>
+            <PageTitle titleText="Reservation Summary" />
+            <h3>Parking Spot ID</h3>
+            <p>{this.parkingSpot.id}</p>
+            <h3>GPS Coordinates</h3>
+            <p>{parkingSpotGps}</p>
+            <h3>What Three Words</h3>
+            {/* todo: action API call to WTW to convert GPS to whatthreewords */}
+            <p>[to come]</p>
+            <h3>Rate / hour</h3>
+            <p>${ratePerHour.toFixed(2)}</p>
+            <h3>Rate / min</h3>
+            <p>${ratePerMinuteRounded.toFixed(2)}</p>
+            <h3>Reservation Length (minutes)</h3>
+            <input
+              type="number"
+              required
+              value={this.state.reservationLength}
+              onChange={this.handleChange}
+            />
+            <h3>Estimated Total Cost ($)</h3>
+            <p>${totalReservationCost.toFixed(2)}</p>
+          </div>
+          <div>
+            <CustomButton history={this.props.history} buttonText="Back" urlTarget="/reserve" />
+            <CustomButton history={this.props.history} buttonText="Payment" urlTarget={`/reserve/${this.parkingSpot.id}/payment`} />
+          </div>
+        </Route>
+        <Route path="/reserve/:id/payment">
+          <Payment
+            history={this.props.history}
+            match={this.props.match}
+            location={this.props.location}
+            reservationLength={this.state.reservationLength}
+            parkingSpotId={this.parkingSpot.id}
           />
-          <h3>Estimated Total Cost ($)</h3>
-          <p>${totalReservationCost.toFixed(2)}</p>
-        </div>
-        <div>
-          <CustomButton history={this.props.history} buttonText="Back" urlTarget="/reserve" />
-          <CustomButton history={this.props.history} buttonText="Payment" urlTarget="/payment" />
-        </div>
+        </Route>
         {/* Modal: displays an alert that currently viewed modal can no longer be reserved, leading the user back to
         the /reserve route  */}
         <Modal
           show={this.state.showModal}
-          /*onHide={() => this.setState({ showModal: false })}*/
           backdrop={"static"}
           centered={true}
           keyboard={false}

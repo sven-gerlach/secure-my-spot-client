@@ -9,6 +9,20 @@ function getAllAvailableParkingSpots() {
   })
 }
 
+function createParkingSpotReservation(parkingSpotId, data) {
+  return axios({
+    method: "post",
+    url: urlConfig + "/reservation/" + parkingSpotId,
+    data: {
+      "reservation": {
+        "email": data.email,
+        "reservation_length": data.reservationLength
+      }
+    }
+  })
+}
+
 export {
-  getAllAvailableParkingSpots
+  getAllAvailableParkingSpots,
+  createParkingSpotReservation
 }

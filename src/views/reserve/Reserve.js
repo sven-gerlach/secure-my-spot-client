@@ -4,7 +4,7 @@ import { Route } from "react-router-dom";
 
 // import components
 import PageTitle from "../../components/pageTitle/PageTitle";
-import ReserveSummary from "../reserveSummary/reserveSummary";
+import ReserveSummary from "./reserveSummary/reserveSummary";
 
 // https://cloud.google.com/blog/products/maps-platform/loading-google-maps-platform-javascript-modern-web-applications
 // https://www.npmjs.com/package/@googlemaps/js-api-loader
@@ -78,9 +78,8 @@ class ReserveView extends Component {
         </Route>
         <Route path="/reserve/:id" render={(props) => (
           <ReserveSummary
-            history={this.props.history}
+            {...this.props}
             availableParkingSpots={this.state.availableParkingSpots}
-            enqueueNewAlert={this.props.enqueueNewAlert}
           />
         )} />
       </>

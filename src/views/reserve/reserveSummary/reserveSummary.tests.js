@@ -5,8 +5,8 @@
 // import testing modules
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { parkingSpotFixture } from "../../utils/fixtures";
-import { getObjectFromStorage } from "../../utils/sessionStorage";
+import { parkingSpotFixture } from "../../../utils/fixtures";
+import { getObjectFromStorage } from "../../../utils/sessionStorage";
 import { BrowserRouter, Route } from "react-router-dom";
 
 // import components

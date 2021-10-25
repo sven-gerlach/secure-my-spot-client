@@ -16,7 +16,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = require("react");
-var PageTitle_1 = require("../../components/pageTitle/PageTitle");
+var PageTitle_1 = require("../../../components/pageTitle/PageTitle");
 var ReserveSummary = /** @class */ (function (_super) {
     __extends(ReserveSummary, _super);
     function ReserveSummary() {

@@ -113,8 +113,8 @@ class Map extends Component {
       // string content of infowindow
       const htmlString = `
         <div>
-          <p><b>Price ($/hr):</b>&nbsp;${round(parkingSpot.rate, 2).toFixed(2)}</p>
-          <p><b>Price ($/min):</b>&nbsp;${round(parkingSpot.rate / 60, 2).toFixed(2)}</p>
+          <p><b>Price ($ / hour):</b>&nbsp$${round(parkingSpot.rate, 2).toFixed(2)}</p>
+          <p><b>Price ($ / min):</b>&nbsp$${round(parkingSpot.rate / 60, 2).toFixed(2)}</p>
           <button id="reserve-button-${parkingSpot.id}">Reserve</button>
         </div>
       `
