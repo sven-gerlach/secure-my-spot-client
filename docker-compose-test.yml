@@ -37,4 +37,4 @@ services:
     # to re-start the container after every change to the app
     volumes:
       - .:/app
-      - ./node_modules:/app/node_modules
+      - /app/node_modules
