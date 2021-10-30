@@ -12,7 +12,7 @@ function getAllAvailableParkingSpots() {
 function createParkingSpotReservation(parkingSpotId, data) {
   return axios({
     method: "post",
-    url: urlConfig + "/reservation/" + parkingSpotId,
+    url: urlConfig + "/reservation/" + parkingSpotId + "/",
     data: {
       "reservation": {
         "email": data.email,

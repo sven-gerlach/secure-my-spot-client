@@ -35,6 +35,8 @@ services:
     # specify bind-mount volume such that any changes in the host's (build-context) src folder are reflected / replicated
     # inside the container -> amendments to the website are immediately reflected in the container, avoiding the need
     # to re-start the container after every change to the app
+    # for some reason ./node_modules:/app/node_modules causes the container on GitHub actions to close early during the
+    # execution of a test run
     volumes:
       - .:/app
       - /app/node_modules
