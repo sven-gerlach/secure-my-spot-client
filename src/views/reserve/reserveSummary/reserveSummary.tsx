@@ -9,7 +9,7 @@ import Payment from "./payment/Payment";
 
 // import utils
 import { isEqual, round } from "lodash";
-import { getObjectFromStorage, storeObjectInStorage } from "../../../utils/sessionStorage";
+import { getObjectFromStorage, storeObjectInStorage } from "../../../utils/storage";
 
 // Import interfaces
 import { IParkingSpot } from "../../../types";
@@ -17,7 +17,9 @@ import { IParkingSpot } from "../../../types";
 // Interfaces
 interface IProps {
   availableParkingSpots: IParkingSpot[],
-  enqueueNewAlert(variant: string, heading: string, message: string): void
+  user: { email: string, token: string },
+  enqueueNewAlert(variant: string, heading: string, message: string): void,
+  setReservation(reservation: object): void
 }
 
 interface IRouteParams {
@@ -144,9 +146,7 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
         </Route>
         <Route path="/reserve/:id/payment">
           <Payment
-            history={this.props.history}
-            match={this.props.match}
-            location={this.props.location}
+            {...this.props}
             reservationLength={this.state.reservationLength}
             parkingSpotId={parkingSpot.id}
           />

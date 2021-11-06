@@ -6,7 +6,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { parkingSpotFixture } from "../../../utils/fixtures";
-import { getObjectFromStorage, storeObjectInStorage } from "../../../utils/sessionStorage";
+import { getObjectFromStorage, storeObjectInStorage } from "../../../utils/storage";
 import { MemoryRouter, Route } from "react-router-dom";
 
 // import utils

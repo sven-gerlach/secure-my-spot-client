@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { round, isEqual } from "lodash";
 
 // import util functions
-import { storeObjectInStorage } from "../../../utils/sessionStorage";
+import { storeObjectInStorage } from "../../../utils/storage";
 
 // import styles
 import MapDiv from "./map.styles";

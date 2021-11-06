@@ -2,13 +2,18 @@ import React, { Component } from "react";
 import { RouteComponentProps } from "react-router-dom";
 
 // import utils
-import { createParkingSpotReservation } from "../../../../httpRequests/parkingSpots";
-import CustomButton from "../../../../components/button/CustomButton";
+import {
+  createParkingSpotReservationUnauthUser,
+  createParkingSpotReservationAuthUser
+} from "../../../../httpRequests/parkingSpots";
 import PageTitle from "../../../../components/pageTitle/PageTitle";
+import { storeObjectInStorage } from "../../../../utils/storage";
 
 interface IProps {
   reservationLength: string,
-  parkingSpotId: string
+  parkingSpotId: string,
+  user: { email: string, token: string },
+  setReservation(reservation: object): void
 }
 
 interface IState {
@@ -29,37 +34,66 @@ class Payment extends Component<RouteComponentProps & IProps, IState> {
     this.setState({ email: value })
   }
 
-  handlePayment = (e: React.MouseEvent<HTMLButtonElement>) => {
+  handlePaymentUnauthUser = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
 
     // construct data sent to API
     const data = {
-      email: this.state.email,
-      reservationLength: this.props.reservationLength
+      "reservation": {
+        "email": this.state.email,
+        "reservation_length": this.props.reservationLength
+      }
     }
 
     // send http post request to api to create a new reservation resource
-    createParkingSpotReservation(this.props.parkingSpotId, data)
+    createParkingSpotReservationUnauthUser(this.props.parkingSpotId, data)
       .then(res => {
-        // todo: implement logic once parking spot has been reserved
-        // need to received a reservation ID
-        // combination of email and reservation id should allow the user to amend the reservation under My Reservations
-        console.log(res)
+        // set reservation state in App view
+        console.log(res.data)
+        this.props.setReservation(res.data)
+
+        // forward user to the my reservations view
+        this.props.history.push("/reservations")
+      })
+      .catch(e => console.log(e))
+  }
+
+  handlePaymentAuthUser = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+
+    const data = {
+      "reservation": {
+        "reservation_length": this.props.reservationLength
+      }
+    }
+
+    // send http post request to create new reservation resource
+    createParkingSpotReservationAuthUser(this.props.parkingSpotId, this.props.user.token, data)
+      .then(res => {
+        // forward user to my reservations view where authenticated API request needs to retrieve and display all
+        // current and past reservations
+        this.props.history.push("/reservations")
       })
       .catch(e => console.log(e))
   }
 
   render() {
-    return (
-      <>
-        <PageTitle titleText="Payment Page" />
+    let inputJSX = <></>
+    if (!this.props.user) {
+      inputJSX = (
         <input
           value={this.state.email}
           onChange={this.handleChange}
           placeholder="e-Mail"
         />
+      )
+    }
+    return (
+      <>
+        <PageTitle titleText="Payment Page" />
+        {inputJSX}
         <button
-          onClick={this.handlePayment}
+          onClick={this.props.user ? this.handlePaymentAuthUser : this.handlePaymentUnauthUser}
         >Confirm Payment</button>
       </>
     )
