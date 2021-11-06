@@ -1,8 +1,5 @@
 name: test
-on:
-  workflow_run:
-    workflows: ["CodeQL"]
-    types: [completed]
+on: [push, pull_request]
 
 # set env variables
 env:
@@ -14,8 +11,6 @@ jobs:
   pre_job:
     # continue-on-error: true # Uncomment once integration is finished
     runs-on: ubuntu-latest
-    # only runs if CodeQL workflow was successful
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     # Map a step output to a job output
     outputs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}
