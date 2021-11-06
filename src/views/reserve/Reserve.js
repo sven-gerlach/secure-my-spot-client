@@ -44,6 +44,9 @@ class ReserveView extends Component {
         })
       })
     }
+    // retrieve available parking spots from API immediately
+    this.setAvailableParkingSpots()
+    // and set up an interval api request to retrieve available parking spots every 5 seconds
     this.setAvailableParkingSpotsIntervalID = setInterval(this.setAvailableParkingSpots, 5000)
   }
 

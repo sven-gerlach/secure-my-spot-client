@@ -9,20 +9,27 @@ function getAllAvailableParkingSpots() {
   })
 }
 
-function createParkingSpotReservation(parkingSpotId, data) {
+function createParkingSpotReservationUnauthUser(parkingSpotId, data) {
   return axios({
     method: "post",
     url: urlConfig + "/reservation/" + parkingSpotId + "/",
-    data: {
-      "reservation": {
-        "email": data.email,
-        "reservation_length": data.reservationLength
-      }
-    }
+    data: data
+  })
+}
+
+function createParkingSpotReservationAuthUser(parkingSpotId, token, data) {
+  return axios({
+    method: "post",
+    url: urlConfig + "/reservation/" + parkingSpotId + "/",
+    headers: {
+      "Authorization": `Token ${token}`
+    },
+    data: data
   })
 }
 
 export {
   getAllAvailableParkingSpots,
-  createParkingSpotReservation
+  createParkingSpotReservationUnauthUser,
+  createParkingSpotReservationAuthUser,
 }

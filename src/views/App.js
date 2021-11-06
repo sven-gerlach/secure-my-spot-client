@@ -20,7 +20,7 @@ import {
   getObjectFromStorage,
   storeObjectInStorage,
   removeObjectFromStorage,
-} from "../utils/sessionStorage";
+} from "../utils/storage";
 
 // import styles
 import Div from "./app.styles"
@@ -34,7 +34,8 @@ class App extends Component {
     // set user state to user from session storage or, failing that, to null
     this.state = {
       user: getObjectFromStorage("user", "local") || null,
-      alertQueue: []
+      alertQueue: [],
+      reservation: null
     }
     this.headerRef = React.createRef()
   }
@@ -48,7 +49,19 @@ class App extends Component {
         ? storeObjectInStorage(this.state.user, "user", "local")
         // otherwise remove user from session storage -> log-out automatically leads to deletion of user object in
         // storage
-        : removeObjectFromStorage("user")
+        : removeObjectFromStorage("user", "local")
+    })
+  }
+
+  setReservation = (reservation) => {
+    this.setState({
+      "reservation": reservation
+    }, () => {
+      this.state.reservation
+        // add / update reservation to local storage if reservation state is not null
+        ? storeObjectInStorage(this.state.reservation, "reservation", "local")
+        // else, remove reservation from local storage
+        : removeObjectFromStorage("reservation", "local")
     })
   }
 
@@ -143,6 +156,17 @@ class App extends Component {
           <ReserveView
             {...props}
             enqueueNewAlert={this.enqueueNewAlert}
+            user={this.state.user}
+            setReservation={this.setReservation}
+          />
+        )}/>
+
+        {/* Reservation summary displays current and past reservations */}
+        <Route path="/reservations" render={(props) => (
+          <ReservationsView
+            {...props}
+            reservation={this.state.reservation}
+            user={this.state.user}
           />
         )}/>
       </Div>

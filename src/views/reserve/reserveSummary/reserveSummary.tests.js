@@ -6,7 +6,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { parkingSpotFixture } from "../../../utils/fixtures";
-import { getObjectFromStorage, storeObjectInStorage } from "../../../utils/sessionStorage";
+import { getObjectFromStorage, storeObjectInStorage } from "../../../utils/storage";
 import { MemoryRouter, Route } from "react-router-dom";
 
 // import utils
@@ -17,7 +17,7 @@ import ReserveSummary from "./reserveSummary";
 
 // mock getObjectFromStorage and storeObjectInStorage function that retrieve and store the considered parking spot
 // from/to session storage
-jest.mock("../../../utils/sessionStorage", () => ({
+jest.mock("../../../utils/storage", () => ({
   getObjectFromStorage: jest.fn(),
   storeObjectInStorage: jest.fn()
 }))
