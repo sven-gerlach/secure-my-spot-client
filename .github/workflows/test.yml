@@ -1,9 +1,5 @@
 name: test
-on:
-  workflow_run:
-    workflows: ["CodeQL"]
-    types: [completed]
-    on: [push, pull_request]
+on: [push, pull_request]
 
 # set env variables
 env:
