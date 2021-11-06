@@ -2,7 +2,6 @@ name: test
 on:
   workflow_run:
     workflows: ["CodeQL"]
-    branches: [main]
     types: [completed]
 
 # set env variables
