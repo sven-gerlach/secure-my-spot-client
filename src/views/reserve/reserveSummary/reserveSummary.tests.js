@@ -17,7 +17,7 @@ import ReserveSummary from "./reserveSummary";
 
 // mock getObjectFromStorage and storeObjectInStorage function that retrieve and store the considered parking spot
 // from/to session storage
-jest.mock("../../../utils/sessionStorage", () => ({
+jest.mock("../../../utils/storage", () => ({
   getObjectFromStorage: jest.fn(),
   storeObjectInStorage: jest.fn()
 }))
