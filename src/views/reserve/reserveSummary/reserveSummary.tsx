@@ -12,14 +12,19 @@ import { isEqual, round } from "lodash";
 import { getObjectFromStorage, storeObjectInStorage } from "../../../utils/storage";
 
 // Import interfaces
-import { IParkingSpot } from "../../../types";
+import {
+  IParkingSpot,
+  Ireservation,
+} from "../../../types";
 
 // Interfaces
 interface IProps {
   availableParkingSpots: IParkingSpot[],
   user: { email: string, token: string },
   enqueueNewAlert(variant: string, heading: string, message: string): void,
-  setReservation(reservation: object): void
+  setReservation(reservation: object): void,
+  clearSetAvailableParkingSpotsInterval(): void,
+  reservation: Ireservation
 }
 
 interface IRouteParams {
@@ -29,7 +34,7 @@ interface IRouteParams {
 interface IState {
   showModal: boolean,
   reservationLength: string,
-  parkingSpot: IParkingSpot
+  parkingSpot: IParkingSpot,
 }
 
 
@@ -88,10 +93,12 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
     }
   }
 
+  /**
+   * If currently viewed parking spot id not amongst the currently available parking spots, display the modal which
+   * has one button that leads the user back to the /reserve view where they will have to find another parking spot
+   * that is available
+   */
   toggleModal = () => {
-    // If currently viewed parking spot id not amongst the currently available parking spots, display the modal which
-    // has one button that leads the user back to the /reserve view where they will have to find another parking spot
-    // that is available
     this.setState( state => {
       return {showModal: !state.showModal}
     })
@@ -151,8 +158,8 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
             parkingSpotId={parkingSpot.id}
           />
         </Route>
-        {/* Modal: displays an alert that currently viewed modal can no longer be reserved, leading the user back to
-        the /reserve route  */}
+        {/* Modal: displays an alert that currently viewed parking spot can no longer be reserved, leading the user back
+        to the /reserve route */}
         <Modal
           show={this.state.showModal}
           backdrop={"static"}

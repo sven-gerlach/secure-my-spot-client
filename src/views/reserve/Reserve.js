@@ -62,8 +62,12 @@ class ReserveView extends Component {
       })
   }
 
-  componentWillUnmount() {
+  clearSetAvailableParkingSpotsInterval = () => {
     clearInterval(this.setAvailableParkingSpotsIntervalID)
+  }
+
+  componentWillUnmount() {
+    this.clearSetAvailableParkingSpotsInterval()
   }
 
   render() {
@@ -83,6 +87,7 @@ class ReserveView extends Component {
           <ReserveSummary
             {...this.props}
             availableParkingSpots={this.state.availableParkingSpots}
+            clearSetAvailableParkingSpotsInterval={this.clearSetAvailableParkingSpotsInterval}
           />
         )} />
       </>
