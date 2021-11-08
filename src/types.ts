@@ -13,3 +13,14 @@ export interface IAlert {
   heading: string,
   message: string,
 }
+
+export interface Ireservation {
+  id: number,
+  user?: number,
+  email: string,
+  parking_spot: number,
+  rate: string,
+  paid: boolean,
+  start_time: string,
+  end_time: string
+}

@@ -1,23 +1,31 @@
 import React, { Component } from "react";
 import { RouteComponentProps } from "react-router-dom";
 
+// import components
+import PageTitle from "../../../../components/pageTitle/PageTitle";
+import { Button, Modal } from "react-bootstrap";
+
 // import utils
 import {
   createParkingSpotReservationUnauthUser,
   createParkingSpotReservationAuthUser
 } from "../../../../httpRequests/parkingSpots";
-import PageTitle from "../../../../components/pageTitle/PageTitle";
-import { storeObjectInStorage } from "../../../../utils/storage";
+
+// import interfaces
+import { Ireservation } from "../../../../types";
 
 interface IProps {
   reservationLength: string,
   parkingSpotId: string,
   user: { email: string, token: string },
-  setReservation(reservation: object): void
+  setReservation(reservation: object): void,
+  clearSetAvailableParkingSpotsInterval(): void,
+  reservation: Ireservation,
 }
 
 interface IState {
-  email: string
+  email: string,
+  showModal: boolean,
 }
 
 
@@ -25,7 +33,8 @@ class Payment extends Component<RouteComponentProps & IProps, IState> {
   constructor(props: RouteComponentProps & IProps) {
     super(props)
     this.state = {
-      email: ""
+      email: "",
+      showModal: false
     }
   }
 
@@ -36,6 +45,10 @@ class Payment extends Component<RouteComponentProps & IProps, IState> {
 
   handlePaymentUnauthUser = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
+
+    // stop getting and setting available parking spots to prevent the reservation of a parking spot causing the
+    // "unavailable parking-spot" modal to pop up
+    this.props.clearSetAvailableParkingSpotsInterval()
 
     // construct data sent to API
     const data = {
@@ -48,18 +61,21 @@ class Payment extends Component<RouteComponentProps & IProps, IState> {
     // send http post request to api to create a new reservation resource
     createParkingSpotReservationUnauthUser(this.props.parkingSpotId, data)
       .then(res => {
-        // set reservation state in App view
-        console.log(res.data)
+        // call setReservation in App view, which stores reservation in App state and stores it in local storage
         this.props.setReservation(res.data)
 
-        // forward user to the my reservations view
-        this.props.history.push("/reservations")
+        // show successful payment modal
+        this.setState({showModal: true})
       })
       .catch(e => console.log(e))
   }
 
   handlePaymentAuthUser = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
+
+    // stop getting and setting available parking spots to prevent the reservation of a parking spot causing the
+    // "unavailable parking-spot" modal to pop up
+    this.props.clearSetAvailableParkingSpotsInterval()
 
     const data = {
       "reservation": {
@@ -70,16 +86,23 @@ class Payment extends Component<RouteComponentProps & IProps, IState> {
     // send http post request to create new reservation resource
     createParkingSpotReservationAuthUser(this.props.parkingSpotId, this.props.user.token, data)
       .then(res => {
-        // forward user to my reservations view where authenticated API request needs to retrieve and display all
-        // current and past reservations
-        this.props.history.push("/reservations")
+        // show successful payment modal
+        this.setState({showModal: true})
       })
       .catch(e => console.log(e))
   }
 
+  toggleModal = () => {
+    this.setState( state => {
+      return {showModal: !state.showModal}
+    })
+  }
+
   render() {
+    const { reservation, user } = this.props
+
     let inputJSX = <></>
-    if (!this.props.user) {
+    if (!user) {
       inputJSX = (
         <input
           value={this.state.email}
@@ -88,6 +111,34 @@ class Payment extends Component<RouteComponentProps & IProps, IState> {
         />
       )
     }
+
+    // this JSX element drives the body content of the reservation confirmation modal
+    let reservationModalBodyJSX = <></>
+    if (reservation) {
+      reservationModalBodyJSX = (
+        <>
+          <p>
+            Congratulations! Your reservation was successful. We have sent you an email with your reservation details,
+            including the reservation ID. Please do make sure to check your spam folder if you have not received an
+            email by now.
+          </p>
+          <p>
+            {
+              user
+                ? ""
+                : "Since you do not have an account with us, we encourage you take note of the reservation ID below."
+            }
+          </p>
+          <hr/>
+          <p>Reservation ID: {reservation.id}</p>
+          <p>Parking Spot: {reservation.parking_spot}</p>
+        </>
+      )
+    }
+    else {
+      reservationModalBodyJSX = <p>Please wait...</p>
+    }
+
     return (
       <>
         <PageTitle titleText="Payment Page" />
@@ -95,6 +146,27 @@ class Payment extends Component<RouteComponentProps & IProps, IState> {
         <button
           onClick={this.props.user ? this.handlePaymentAuthUser : this.handlePaymentUnauthUser}
         >Confirm Payment</button>
+        {/* Payment Success Modal: displays the reservation confirmation */}
+        <Modal
+          show={this.state.showModal}
+          backdrop={"static"}
+          centered={true}
+          keyboard={false}
+          /*redirect user to my reservations summary view */
+          onExiting={() => this.props.history.push("/reservations")}
+        >
+          <Modal.Header>
+            <Modal.Title>Booking Confirmation</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {reservationModalBodyJSX}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" onClick={this.toggleModal}>
+              My Reservations
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </>
     )
   }

@@ -11,6 +11,7 @@ import SignUpView from "./signUp/SignUp";
 import SignInView from "./signIn/SignIn";
 import ReserveView from "./reserve/Reserve";
 import CustomAlert from "./customAlert/CustomAlert";
+import ReservationsView from "./reservations/reservations";
 
 // import components
 import Header from "../components/header/Header";
@@ -158,6 +159,7 @@ class App extends Component {
             enqueueNewAlert={this.enqueueNewAlert}
             user={this.state.user}
             setReservation={this.setReservation}
+            reservation={this.state.reservation}
           />
         )}/>
 
