@@ -9,7 +9,7 @@ import MapDiv from "./map.styles";
 import { MarkerClusterer } from "@googlemaps/markerclusterer"
 import parkingSign from "../../../assets/img/parking_sign_icon.png"
 
-
+// todo: No api keys warning in deployed app
 class Map extends Component {
   constructor(props) {
     super(props);

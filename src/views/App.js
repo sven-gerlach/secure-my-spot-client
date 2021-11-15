@@ -33,12 +33,38 @@ class App extends Component {
   constructor(props) {
     super(props);
     // set user state to user from session storage or, failing that, to null
+    this.reservationTimeOutQueue = []
     this.state = {
       user: getObjectFromStorage("user", "local") || null,
       alertQueue: [],
-      reservation: null
+      reservation: getObjectFromStorage("reservation", "local") || null,
     }
     this.headerRef = React.createRef()
+  }
+
+  componentDidMount() {
+    // if reservation is not null, set a timeout and enqueue it
+    if (this.state.reservation) {
+      // create timeout to remove reservation from local storage
+      const now = Date.now()
+      const end_time = Date.parse(this.state.reservation.end_time)
+      const delay = end_time - now
+
+      // set timeout
+      const timeoutID = setTimeout(() => {
+        this.setReservation(null)
+      }, delay)
+
+      // enqueue timeoutID
+      this.reservationTimeOutQueue.push(timeoutID)
+    }
+  }
+
+  componentWillUnmount() {
+    // dequeue any remaining timeouts from reservationTimeOutQueue and clear timeout
+    while (this.reservationTimeOutQueue.length > 0) {
+      clearTimeout(this.reservationTimeOutQueue.shift())
+    }
   }
 
   setUser = (user) => {
@@ -58,11 +84,43 @@ class App extends Component {
     this.setState({
       "reservation": reservation
     }, () => {
-      this.state.reservation
-        // add / update reservation to local storage if reservation state is not null
-        ? storeObjectInStorage(this.state.reservation, "reservation", "local")
+      // if reservation state is not null, that is a new reservation was made or an old one updated
+      if (this.state.reservation) {
+        // add or update reservation to local storage
+        storeObjectInStorage(this.state.reservation, "reservation", "local")
+
+        // check if reservationTimeoutQueue has an entry, dequeue it, and clear timeout
+        if (this.reservationTimeOutQueue.length !== 0) {
+          let timeoutID = this.reservationTimeOutQueue.shift()
+          clearTimeout(timeoutID)
+        }
+
+        // create the delay time for the timeout
+        const now = Date.now()
+        const end_time = Date.parse(reservation.end_time)
+        const delay = end_time - now
+
+        // create timeout to remove reservation from local storage if, and only if, the delay is strictly positive
+        let timeoutID
+        if (delay > 0) {
+          timeoutID = setTimeout(() => {
+            this.setReservation(null)
+            // todo: add an alert or a modal that informs the user that the current reservation has expired
+          }, delay)
+        }
+
+        // add timeoutID to reservationTimeoutQueue
+        this.reservationTimeOutQueue.push(timeoutID)
+      }
+      else {
         // else, remove reservation from local storage
-        : removeObjectFromStorage("reservation", "local")
+        removeObjectFromStorage("reservation", "local")
+
+        // dequeue any remaining timeouts from reservationTimeOutQueue and clear timeout
+        while (this.reservationTimeOutQueue.length > 0) {
+          clearTimeout(this.reservationTimeOutQueue.shift())
+        }
+      }
     })
   }
 
@@ -168,6 +226,7 @@ class App extends Component {
           <ReservationsView
             {...props}
             reservation={this.state.reservation}
+            setReservation={this.setReservation}
             user={this.state.user}
           />
         )}/>

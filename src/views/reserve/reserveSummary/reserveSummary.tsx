@@ -14,7 +14,7 @@ import { getObjectFromStorage, storeObjectInStorage } from "../../../utils/stora
 // Import interfaces
 import {
   IParkingSpot,
-  Ireservation,
+  IReservation,
 } from "../../../types";
 
 // Interfaces
@@ -24,7 +24,7 @@ interface IProps {
   enqueueNewAlert(variant: string, heading: string, message: string): void,
   setReservation(reservation: object): void,
   clearSetAvailableParkingSpotsInterval(): void,
-  reservation: Ireservation
+  reservation: IReservation
 }
 
 interface IRouteParams {

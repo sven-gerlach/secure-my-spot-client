@@ -13,9 +13,9 @@ describe("button component", () => {
     expect(button).toHaveTextContent("Click Me")
   })
 
-  it("calls a handleSubmit function if button text is \"Submit\"", () => {
+  it("calls a handleSubmit function if handleSubmit callback has been provided", () => {
     const callBack = jest.fn()
-    render(<CustomButton handleSubmit={callBack} buttonText="Submit" />)
+    render(<CustomButton handleSubmit={callBack} />)
     const button = screen.getByRole("button")
     userEvent.click(button)
     expect(callBack).toBeCalledTimes(1)
@@ -31,7 +31,7 @@ describe("button component", () => {
     const pushSpy = jest.spyOn(history, 'push');
 
     render(
-      <CustomButton buttonText="Redirect Me" history={history} />
+      <CustomButton buttonText="Redirect Me" history={history} urlTarget="/path" />
     )
 
     // assert that clicking the button leads to the mock pushSpy function have been called
