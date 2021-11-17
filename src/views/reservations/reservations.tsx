@@ -114,9 +114,8 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
     }
     else {
       this.setState({ formValidated: true })
-      console.log("call change reservation API")
 
-      // set the end_time on data object
+      // set the end_time in local time
       const end_time = DateTime.fromObject(
         {
           hour: Number(reservationEndTimeForModal.substr(0,2)),
@@ -126,6 +125,7 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
           zone: "America/New_York"
         })
 
+      // construct the data object with the end_time converted to UTC and stringified
       const data = {
         "reservation": {
           "end_time": JSON.stringify(end_time.toUTC())
@@ -135,7 +135,7 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
       // call the api to update the reservation with the new end_time, api end-point is subject to whether the user is
       // authenticated
       let updatedReservationPromise
-      if (this.props.user) {
+      if (user) {
         updatedReservationPromise = updateReservationAuth(reservationForModal?.id, user?.token, data)
       }
       else {
@@ -156,8 +156,40 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
    * @param e
    */
   handleEndReservation = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    console.log("call end reservation API")
+    const { user } = this.props
+    const { reservationForModal } = this.state
+
+    // set the end_time to now
+    const end_time = DateTime.now()
+
+    // convert end_time to UTC
+    const end_time_UTC = end_time.toUTC()
+
+    // construct the data object
+    const data = {
+      "reservation": {
+        "end_time": JSON.stringify(end_time_UTC)
+      }
+    }
+
+    // call the api to update the reservation with the new end_time, api end-point is subject to whether the user is
+    // authenticated
+    let updatedReservationPromise
+
+    if (user) {
+      updatedReservationPromise = updateReservationAuth(reservationForModal?.id, user?.token, data)
+    }
+    else {
+      updatedReservationPromise = updateReservationUnauth(reservationForModal?.id, reservationForModal?.email, data)
+    }
+
+    updatedReservationPromise
+      .then((res: any) => {
+        console.log(res)
+      })
+      .catch((e: any) => {
+        console.error(e)
+      })
   }
 
   /**
@@ -348,7 +380,10 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
 
     const endReservationModalBodyJSX = (
       <>
-        <p>[to come]</p>
+        <p>
+          If you confirm to end your reservation, your reservation will expire immediately. You will not be charged for
+          any unused time.
+        </p>
       </>
     )
 
@@ -399,7 +434,7 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="warning" onClick={this.handleEndReservation}>
-              End Reservation
+              Confirm
             </Button>
             <Button variant="secondary" onClick={this.toggleEndReservationModal}>
               Back
