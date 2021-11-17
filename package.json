@@ -37,7 +37,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --watchAll --testMatch **/src/**/*.tests.js",
-    "coverage": "npm test -- --coverage",
+    "test:coverage": "CI=true react-scripts test --env=jsdom --coverage --testMatch **/src/**/*.tests.js",
     "//": "'|| true' returns to npm a 0 exit command which is necessary to avoid npm injecting error messages",
     "check-format": "prettier --check --ignore-unknown --no-error-on-unmatched-pattern {src/**/*}.{js,jsx,ts,tsx,json,css,scss,md} || true",
     "format": "prettier --write --ignore-unknown --no-error-on-unmatched-pattern {src/**/*}.{js,jsx,ts,tsx,json,css,scss,md} || true",
