@@ -7,9 +7,9 @@ import { Button, Modal } from "react-bootstrap";
 
 // import utils
 import {
-  createParkingSpotReservationUnauthUser,
-  createParkingSpotReservationAuthUser
-} from "../../../../httpRequests/parkingSpots";
+  createReservationUnauthUser,
+  createReservationAuthUser
+} from "../../../../httpRequests/reservation";
 
 // import interfaces
 import { IReservation } from "../../../../types";
@@ -63,8 +63,8 @@ class Payment extends Component<RouteComponentProps & IProps, IState> {
     }
 
     // send http post request to api to create a new reservation resource
-    createParkingSpotReservationUnauthUser(this.props.parkingSpotId, data)
-      .then(res => {
+    createReservationUnauthUser(this.props.parkingSpotId, data)
+      .then((res: { data: object; }) => {
         // call setReservation in App view, which stores reservation in App state and stores it in local storage
         this.props.setReservation(res.data)
         // reset the email field
@@ -72,7 +72,7 @@ class Payment extends Component<RouteComponentProps & IProps, IState> {
         // show successful payment modal
         this.setState({showSuccessModal: true})
       })
-      .catch(e => {
+      .catch((e: { response: { data: { [x: string]: any[]; }; }; }) => {
         this.setState({
           paymentErrorMessage: e.response.data["email"][0]
         }, () => {
@@ -98,14 +98,14 @@ class Payment extends Component<RouteComponentProps & IProps, IState> {
     }
 
     // send http post request to create new reservation resource
-    createParkingSpotReservationAuthUser(this.props.parkingSpotId, this.props.user.token, data)
-      .then(res => {
+    createReservationAuthUser(this.props.parkingSpotId, this.props.user.token, data)
+      .then((res: { data: object; }) => {
         // call setReservation in App view, which stores reservation in App state and stores it in local storage
         this.props.setReservation(res.data)
         // show successful payment modal
         this.setState({showSuccessModal: true})
       })
-      .catch(e => {
+      .catch((e: { response: { data: { [x: string]: any[]; }; }; }) => {
         this.setState({
           paymentErrorMessage: e.response.data["email"][0]
         }, () => {

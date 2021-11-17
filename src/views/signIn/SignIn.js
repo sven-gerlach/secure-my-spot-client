@@ -80,6 +80,7 @@ class SignInView extends Component {
             <input
               type="email"
               name="email"
+              autoComplete="username"
               placeholder="e-Mail"
               required
               autoFocus
@@ -91,6 +92,7 @@ class SignInView extends Component {
             <input
               type="password"
               name="password"
+              autoComplete="current-password"
               placeholder="Password"
               required
               value={this.state.password}

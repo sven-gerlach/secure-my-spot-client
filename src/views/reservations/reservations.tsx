@@ -13,6 +13,7 @@
 // Import
 import React, { Component } from "react";
 import { RouteComponentProps } from "react-router-dom";
+import { DateTime } from "luxon";
 
 // import custom components
 import PageTitle from "../../components/pageTitle/PageTitle";
@@ -27,6 +28,8 @@ import {
   getReservation,
   getActiveReservationsAuth,
   getExpiredReservationsAuth,
+  updateReservationAuth,
+  updateReservationUnauth,
 } from "../../httpRequests/reservation";
 import Reservation from "./reservation/reservation";
 
@@ -42,21 +45,30 @@ interface IProps {
 
 interface IState {
   reservations: IReservation[],
+  reservationForModal: IReservation | null,
+  reservationEndTimeForModal: string,
   showChangeEndTimeModal: boolean,
+  formValidated: boolean,
   showEndReservationModal: boolean,
-  email: string,
-  reservationID: string,
+  emailField: string,
+  reservationIdField: string,
 }
 
 class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
+  formRef: React.RefObject<HTMLFormElement>
+
   constructor(props: RouteComponentProps & IProps) {
     super(props);
+    this.formRef = React.createRef()
     this.state = {
       reservations: [],
+      reservationForModal: null,
+      reservationEndTimeForModal: "",
       showChangeEndTimeModal: false,
+      formValidated: false,
       showEndReservationModal: false,
-      email: "",
-      reservationID: "",
+      emailField: "",
+      reservationIdField: "",
     }
   }
 
@@ -67,13 +79,76 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
     }
   }
 
+  setReservationForModalState = (reservation: IReservation) => {
+    // set the redervation relevant for the model
+    this.setState({ reservationForModal: reservation }, () => {
+      // set the time string in state, using format "hh:mm". This is needed for the modal that offers the user the option
+      // to change the end-time of the reservation
+      // parse end_time and generate string in format hh:mm
+      let endTimeString = ""
+      if (this.state.reservationForModal) {
+        const parsedEndTime = DateTime.fromISO(this.state.reservationForModal.end_time)
+        endTimeString = parsedEndTime.toLocaleString({ hour: "numeric", minute: "2-digit" })
+      }
+      this.setState({ reservationEndTimeForModal: endTimeString })
+    })
+  }
+
   /**
    * Make api call to change the end-time of a reservation
    * @param e
    */
   handleChangeEndTime = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    console.log("call change reservation API")
+    const {
+      reservationForModal,
+      reservationEndTimeForModal
+    } = this.state
+
+    const { user } = this.props
+
+    // grab the form element from the formRef and check for validation
+    const form = this.formRef.current
+    if (form?.checkValidity() === false) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+    else {
+      this.setState({ formValidated: true })
+      console.log("call change reservation API")
+
+      // set the end_time on data object
+      const end_time = DateTime.fromObject(
+        {
+          hour: Number(reservationEndTimeForModal.substr(0,2)),
+          minute: Number(reservationEndTimeForModal.substr(3,2))
+        },
+        {
+          zone: "America/New_York"
+        })
+
+      const data = {
+        "reservation": {
+          "end_time": JSON.stringify(end_time.toUTC())
+        }
+      }
+
+      // call the api to update the reservation with the new end_time, api end-point is subject to whether the user is
+      // authenticated
+      let updatedReservationPromise
+      if (this.props.user) {
+        updatedReservationPromise = updateReservationAuth(reservationForModal?.id, user?.token, data)
+      }
+      else {
+        updatedReservationPromise = updateReservationUnauth(reservationForModal?.id, reservationForModal?.email, data)
+      }
+      updatedReservationPromise
+        .then((res: any) => {
+          console.log(res)
+        })
+        .catch((e: any) => {
+          console.error(e)
+        })
+    }
   }
 
   /**
@@ -93,18 +168,20 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
     e.preventDefault()
 
     // call API
-    getReservation(this.state.reservationID, this.state.email)
-      .then(res => {
+    getReservation(this.state.reservationIdField, this.state.emailField)
+      .then((res: { data: IReservation | null; }) => {
         console.log(res)
         this.props.setReservation(res.data)
       })
-      .catch(e => console.error(e))
+      .catch((e: any) => console.error(e))
   }
 
   handleInputValueChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     const key = e.target.name
     const value = e.target.value
-    this.setState({ [key]: value } as Pick<IState, "email" | "reservationID">)
+    this.setState(
+      { [key]: value } as Pick<IState, "emailField" | "reservationIdField" | "reservationEndTimeForModal">
+    )
   }
 
   /**
@@ -135,10 +212,10 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
 
       // retrieve active reservations from API
       getActiveReservationsAuth(this.props.user.token)
-        .then(res => {
+        .then((res: { data: any; }) => {
           this.setState({ reservations: res.data })
         })
-        .catch(e => {
+        .catch((e: any) => {
           console.error(e)
         })
     }
@@ -150,10 +227,10 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
   handleExpiredReservationsAuth = () => {
     if (this.props.user) {
       getExpiredReservationsAuth(this.props.user.token)
-        .then(res => {
+        .then((res: { data: any; }) => {
           this.setState({ reservations: res.data })
         })
-        .catch(e => {
+        .catch((e: any) => {
           console.error(e)
         })
     }
@@ -175,6 +252,7 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
             reservation={reservation}
             toggleChangeEndTimeModal={this.toggleChangeEndTimeModal}
             toggleEndReservationModal={this.toggleEndReservationModal}
+            setReservationForModalState={this.setReservationForModalState}
           />
         </>
       )
@@ -190,6 +268,7 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
                 reservation={reservation}
                 toggleChangeEndTimeModal={this.toggleChangeEndTimeModal}
                 toggleEndReservationModal={this.toggleEndReservationModal}
+                setReservationForModalState={this.setReservationForModalState}
               />
             ))
           )
@@ -205,12 +284,14 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
     if (user) {
       authUserButtonJSX = (
         <>
+          <h3>Not what you are looking for?</h3>
+          <p>Alternatively, you can display all of your active or expired reservations.</p>
           <CustomButton
-            buttonText="Active Reservations"
+            buttonText="Active"
             handleSubmit={this.handleActiveReservationsAuth}
           />
           <CustomButton
-            buttonText="Expired Reservations"
+            buttonText="Expired"
             handleSubmit={this.handleExpiredReservationsAuth}
           />
         </>
@@ -251,7 +332,17 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
 
     const changeEndTimeModalBodyJSX = (
       <>
-        <p>[to come]</p>
+        <Form noValidate validated={this.state.formValidated} ref={this.formRef} >
+          <Form.Label>End-Time</Form.Label>
+          <Form.Control
+            type="time"
+            name="reservationEndTimeForModal"
+            min={DateTime.now().toLocaleString({ hour: "numeric", minute: "2-digit" })}
+            value={this.state.reservationEndTimeForModal}
+            onChange={this.handleInputValueChange}
+          />
+          <Form.Control.Feedback type="invalid">Enter a time that lies in the future</Form.Control.Feedback>
+        </Form>
       </>
     )
 

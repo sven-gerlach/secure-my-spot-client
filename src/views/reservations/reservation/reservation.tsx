@@ -16,6 +16,7 @@ interface IProps {
   reservation: IReservation,
   toggleChangeEndTimeModal: () => void,
   toggleEndReservationModal: () => void,
+  setReservationForModalState: (reservation: IReservation) => void,
 }
 
 class Reservation extends Component<IProps> {
@@ -35,7 +36,12 @@ class Reservation extends Component<IProps> {
       <>
         <CustomButton
           buttonText="Change End-Time"
-          handleSubmit={this.props.toggleChangeEndTimeModal}
+          handleSubmit={() => {
+            // set the relevant reservation for the modal to use
+            this.props.setReservationForModalState(reservation)
+            // toggle modal
+            this.props.toggleChangeEndTimeModal()
+          }}
         />
         <CustomButton
           buttonText="End Reservation"
@@ -43,8 +49,6 @@ class Reservation extends Component<IProps> {
         />
       </>
     )
-
-    this.isReservationActive()
 
     return (
       <>
