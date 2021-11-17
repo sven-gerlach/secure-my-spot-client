@@ -13,7 +13,7 @@ import { string } from "yup";
 function createReservationUnauthUser(parkingSpotId, data) {
   return axios({
     method: "post",
-    url: urlConfig + "/reservation/" + parkingSpotId + "/",
+    url: urlConfig + "/reservation-unauth/" + parkingSpotId + "/",
     data: data
   })
 }
@@ -28,7 +28,7 @@ function createReservationUnauthUser(parkingSpotId, data) {
 function createReservationAuthUser(parkingSpotId, token, data) {
   return axios({
     method: "post",
-    url: urlConfig + "/reservation/" + parkingSpotId + "/",
+    url: urlConfig + "/reservation-auth/" + parkingSpotId + "/",
     headers: {
       "Authorization": `Token ${token}`
     },
@@ -42,10 +42,10 @@ function createReservationAuthUser(parkingSpotId, token, data) {
  * @param email
  * @return {AxiosPromise}
  */
-function getReservation(reservationID, email) {
+function getReservationUnauth(reservationID, email) {
   return axios({
     method: "get",
-    url: urlHostname + "/reservation/" + reservationID + "/" + email + "/"
+    url: urlHostname + "/reservation-unauth/" + reservationID + "/" + email + "/"
   })
 }
 
@@ -57,7 +57,7 @@ function getReservation(reservationID, email) {
 function getActiveReservationsAuth(token) {
   return axios({
     method: "get",
-    url: urlHostname + "/active-reservations/",
+    url: urlHostname + "/reservation-auth/",
     headers: {
       "Authorization": `Token ${token}`
     },
@@ -72,7 +72,7 @@ function getActiveReservationsAuth(token) {
 function getExpiredReservationsAuth(token) {
   return axios({
     method: "get",
-    url: urlHostname + "/expired-reservations",
+    url: urlHostname + "/expired-reservations-auth",
     headers: {
       "Authorization": `Token ${token}`
     },
@@ -117,7 +117,7 @@ function updateReservationUnauth(reservationID, email, data) {
 export {
   createReservationUnauthUser,
   createReservationAuthUser,
-  getReservation,
+  getReservationUnauth,
   getActiveReservationsAuth,
   getExpiredReservationsAuth,
   updateReservationAuth,

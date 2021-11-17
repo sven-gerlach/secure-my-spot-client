@@ -25,7 +25,7 @@ import {
   Form
 } from "react-bootstrap";
 import {
-  getReservation,
+  getReservationUnauth,
   getActiveReservationsAuth,
   getExpiredReservationsAuth,
   updateReservationAuth,
@@ -197,10 +197,8 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
    * @param e
    */
   handleRetrieveReservationUnauth = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-
     // call API
-    getReservation(this.state.reservationIdField, this.state.emailField)
+    getReservationUnauth(this.state.reservationIdField, this.state.emailField)
       .then((res: { data: IReservation | null; }) => {
         console.log(res)
         this.props.setReservation(res.data)
@@ -342,7 +340,7 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
           >
             <Form.Control
               type="email"
-              name="email"
+              name="emailField"
               placeholder="a"
               onChange={this.handleInputValueChange}
             />
@@ -351,7 +349,7 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
             <Form.Control
               type="text"
               placeholder="a"
-              name="reservationID"
+              name="reservationIdField"
               onChange={this.handleInputValueChange}
             />
           </FloatingLabel>
