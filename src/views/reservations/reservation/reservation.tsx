@@ -45,7 +45,12 @@ class Reservation extends Component<IProps> {
         />
         <CustomButton
           buttonText="End Reservation"
-          handleSubmit={this.props.toggleEndReservationModal}
+          handleSubmit={() => {
+            // set the relevant reservation for the modal to use
+            this.props.setReservationForModalState(reservation)
+            // toggle modal
+            this.props.toggleEndReservationModal()
+          }}
         />
       </>
     )

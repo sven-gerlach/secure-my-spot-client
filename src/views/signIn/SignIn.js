@@ -9,6 +9,7 @@ import { signInRequest } from "../../httpRequests/auth";
 import { getHashedPassword } from "../../utils/hash";
 import { logUser } from "../../config/configLogRocket";
 import messages from "../../utils/alertMessages";
+import { removeObjectFromStorage } from "../../utils/storage";
 
 
 /**
@@ -56,6 +57,10 @@ class SignInView extends Component {
 
         // save user object (email and token) in App state and store user token in session storage
         this.props.setUser(response.data)
+
+        // clear the local storage from any previous reservations (this is relevant if an unauthenticated user makes a
+        // reservation followed by an authenticated user on the same device / client
+        removeObjectFromStorage("reservation", "local")
 
         // log user with LogRocket
         logUser(response.data)

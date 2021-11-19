@@ -80,7 +80,7 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
   }
 
   setReservationForModalState = (reservation: IReservation) => {
-    // set the redervation relevant for the model
+    // set the reservation relevant for the model
     this.setState({ reservationForModal: reservation }, () => {
       // set the time string in state, using format "hh:mm". This is needed for the modal that offers the user the option
       // to change the end-time of the reservation
@@ -125,10 +125,10 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
           zone: "America/New_York"
         })
 
-      // construct the data object with the end_time converted to UTC and stringified
+      // construct the data object with the end_time converted to UTC
       const data = {
         "reservation": {
-          "end_time": JSON.stringify(end_time.toUTC())
+          "end_time": end_time.toUTC()
         }
       }
 
@@ -143,7 +143,10 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
       }
       updatedReservationPromise
         .then((res: any) => {
-          console.log(res)
+          // update the reservation state in App
+          this.props.setReservation(res.data)
+          // close modal
+          this.setState({ showChangeEndTimeModal: false })
         })
         .catch((e: any) => {
           console.error(e)
@@ -168,7 +171,7 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
     // construct the data object
     const data = {
       "reservation": {
-        "end_time": JSON.stringify(end_time_UTC)
+        "end_time": end_time_UTC
       }
     }
 
@@ -185,7 +188,10 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
 
     updatedReservationPromise
       .then((res: any) => {
-        console.log(res)
+        // update reservation state in App component
+        this.props.setReservation(null)
+        // close modal
+        this.setState({ showEndReservationModal: false })
       })
       .catch((e: any) => {
         console.error(e)
@@ -218,6 +224,7 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
    * Display or hide the modal which allows a user to change the end-time of a specific reservation
    */
   toggleChangeEndTimeModal = () => {
+    console.log(this.props.reservation)
     this.setState(prevState => {
       return { showChangeEndTimeModal: !prevState.showChangeEndTimeModal }
     })
@@ -227,6 +234,7 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
    * Display or hide the modal which allows a user to end a reservation before it expires automatically
    */
   toggleEndReservationModal = () => {
+    console.log(this.props.reservation)
     this.setState(prevState => {
       return { showEndReservationModal: !prevState.showEndReservationModal }
     })

@@ -91,7 +91,7 @@ function getExpiredReservationsAuth(token) {
 function updateReservationAuth(reservationID, token, data) {
   return axios({
     method: "patch",
-    url: urlHostname + "/update-reservation/" + reservationID + "/",
+    url: urlHostname + "/update-reservation-auth/" + reservationID + "/",
     headers: {
       "Authorization": `Token ${token}`
     },
@@ -109,7 +109,7 @@ function updateReservationAuth(reservationID, token, data) {
 function updateReservationUnauth(reservationID, email, data) {
   return axios({
     method: "patch",
-    url: urlHostname + "/update-reservation/" + reservationID + "/" + email + "/",
+    url: urlHostname + "/update-reservation-unauth/" + reservationID + "/" + email + "/",
     data: data
   })
 }

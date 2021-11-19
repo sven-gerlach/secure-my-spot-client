@@ -137,6 +137,7 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
             <h3>Rate / min</h3>
             <p>${ratePerMinuteRounded.toFixed(2)}</p>
             <h3>Reservation Length (minutes)</h3>
+            {/* todo: add validation to set min value to e.g. 5min */}
             <input
               type="number"
               required
