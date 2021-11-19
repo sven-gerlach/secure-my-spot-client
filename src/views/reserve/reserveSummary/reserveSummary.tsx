@@ -14,7 +14,7 @@ import { getObjectFromStorage, storeObjectInStorage } from "../../../utils/stora
 // Import interfaces
 import {
   IParkingSpot,
-  Ireservation,
+  IReservation,
 } from "../../../types";
 
 // Interfaces
@@ -24,7 +24,7 @@ interface IProps {
   enqueueNewAlert(variant: string, heading: string, message: string): void,
   setReservation(reservation: object): void,
   clearSetAvailableParkingSpotsInterval(): void,
-  reservation: Ireservation
+  reservation: IReservation
 }
 
 interface IRouteParams {
@@ -137,6 +137,7 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
             <h3>Rate / min</h3>
             <p>${ratePerMinuteRounded.toFixed(2)}</p>
             <h3>Reservation Length (minutes)</h3>
+            {/* todo: add validation to set min value to e.g. 5min */}
             <input
               type="number"
               required

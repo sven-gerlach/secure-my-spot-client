@@ -14,7 +14,7 @@ export interface IAlert {
   message: string,
 }
 
-export interface Ireservation {
+export interface IReservation {
   id: number,
   user?: number,
   email: string,

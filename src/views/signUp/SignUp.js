@@ -66,6 +66,7 @@ class SignUpView extends Component {
             <input
               type="email"
               name="email"
+              autoComplete="username"
               placeholder="e-Mail"
               required
               autoFocus
@@ -79,6 +80,7 @@ class SignUpView extends Component {
               role="textbox"
               type="password"
               name="password"
+              autoComplete="new-password"
               placeholder="Password"
               required
               value={this.state.password}
@@ -91,6 +93,7 @@ class SignUpView extends Component {
               role="textbox"
               type="password"
               name="passwordConfirmation"
+              autoComplete="new-password"
               placeholder="Confirm Password"
               required
               value={this.state.passwordConfirmation}

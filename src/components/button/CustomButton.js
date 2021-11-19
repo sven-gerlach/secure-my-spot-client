@@ -9,25 +9,24 @@ import React, { Component } from "react"
 class CustomButton extends Component {
   handleClick = (event) => {
     event.preventDefault()
-    const buttonText = event.target.innerHTML
 
-    // button is either effecting redirection to another route or submitting data to the API
-    if (buttonText === "Submit") {
+    // if button has a handleSubmit function then invoke that function
+    if (this.props.handleSubmit) {
       this.props.handleSubmit(event)
     }
-    else {
-      let target = this.props.urlTarget
-      this.props.history.push(target)
+
+    // if button has a urlTarget, then push that target onto the history
+    if (this.props.urlTarget) {
+      this.props.history.push(this.props.urlTarget)
     }
   }
 
   render() {
-    let buttonText = this.props.buttonText
     return (
       <button
         onClick={this.handleClick}
         type="button">
-        {buttonText}
+        {this.props.buttonText}
       </button>
     )
   }

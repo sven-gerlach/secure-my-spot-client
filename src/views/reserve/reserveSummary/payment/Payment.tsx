@@ -7,12 +7,12 @@ import { Button, Modal } from "react-bootstrap";
 
 // import utils
 import {
-  createParkingSpotReservationUnauthUser,
-  createParkingSpotReservationAuthUser
-} from "../../../../httpRequests/parkingSpots";
+  createReservationUnauthUser,
+  createReservationAuthUser
+} from "../../../../httpRequests/reservation";
 
 // import interfaces
-import { Ireservation } from "../../../../types";
+import { IReservation } from "../../../../types";
 
 interface IProps {
   reservationLength: string,
@@ -20,12 +20,14 @@ interface IProps {
   user: { email: string, token: string },
   setReservation(reservation: object): void,
   clearSetAvailableParkingSpotsInterval(): void,
-  reservation: Ireservation,
+  reservation: IReservation,
 }
 
 interface IState {
   email: string,
-  showModal: boolean,
+  showSuccessModal: boolean,
+  showFailureModal: boolean,
+  paymentErrorMessage: string,
 }
 
 
@@ -34,7 +36,9 @@ class Payment extends Component<RouteComponentProps & IProps, IState> {
     super(props)
     this.state = {
       email: "",
-      showModal: false
+      showSuccessModal: false,
+      showFailureModal: false,
+      paymentErrorMessage: "",
     }
   }
 
@@ -59,15 +63,25 @@ class Payment extends Component<RouteComponentProps & IProps, IState> {
     }
 
     // send http post request to api to create a new reservation resource
-    createParkingSpotReservationUnauthUser(this.props.parkingSpotId, data)
-      .then(res => {
+    createReservationUnauthUser(this.props.parkingSpotId, data)
+      .then((res: { data: object; }) => {
         // call setReservation in App view, which stores reservation in App state and stores it in local storage
         this.props.setReservation(res.data)
-
+        // reset the email field
+        this.setState({ email: "" })
         // show successful payment modal
-        this.setState({showModal: true})
+        this.setState({showSuccessModal: true})
       })
-      .catch(e => console.log(e))
+      .catch((e: { response: { data: { [x: string]: any[]; }; }; }) => {
+        this.setState({
+          paymentErrorMessage: e.response.data["email"][0]
+        }, () => {
+          // display the payment failure modal
+          this.toggleFailureModal()
+          // reset the email field
+          this.setState({ email: "" })
+        })
+      })
   }
 
   handlePaymentAuthUser = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -84,22 +98,38 @@ class Payment extends Component<RouteComponentProps & IProps, IState> {
     }
 
     // send http post request to create new reservation resource
-    createParkingSpotReservationAuthUser(this.props.parkingSpotId, this.props.user.token, data)
-      .then(res => {
+    createReservationAuthUser(this.props.parkingSpotId, this.props.user.token, data)
+      .then((res: { data: object; }) => {
+        // call setReservation in App view, which stores reservation in App state and stores it in local storage
+        this.props.setReservation(res.data)
         // show successful payment modal
-        this.setState({showModal: true})
+        this.setState({showSuccessModal: true})
       })
-      .catch(e => console.log(e))
+      .catch((e: { response: { data: { [x: string]: any[]; }; }; }) => {
+        this.setState({
+          paymentErrorMessage: e.response.data["email"][0]
+        }, () => {
+          // display the payment failure modal
+          this.toggleFailureModal()
+        })
+      })
   }
 
-  toggleModal = () => {
+  toggleSuccessModal = () => {
     this.setState( state => {
-      return {showModal: !state.showModal}
+      return {showSuccessModal: !state.showSuccessModal}
+    })
+  }
+
+  toggleFailureModal = () => {
+    this.setState( state => {
+      return {showFailureModal: !state.showFailureModal}
     })
   }
 
   render() {
     const { reservation, user } = this.props
+    const { paymentErrorMessage } = this.state
 
     let inputJSX = <></>
     if (!user) {
@@ -112,10 +142,10 @@ class Payment extends Component<RouteComponentProps & IProps, IState> {
       )
     }
 
-    // this JSX element drives the body content of the reservation confirmation modal
-    let reservationModalBodyJSX = <></>
+    // this JSX element drives the body content of the payment success modal
+    let paymentSuccessModalBodyJSX
     if (reservation) {
-      reservationModalBodyJSX = (
+      paymentSuccessModalBodyJSX = (
         <>
           <p>
             Congratulations! Your reservation was successful. We have sent you an email with your reservation details,
@@ -136,7 +166,13 @@ class Payment extends Component<RouteComponentProps & IProps, IState> {
       )
     }
     else {
-      reservationModalBodyJSX = <p>Please wait...</p>
+      paymentSuccessModalBodyJSX = <p>Please wait...</p>
+    }
+
+    // this JSX element contains the body content for the payment failure modal
+    let paymentFailureModalBodyJSX
+    if (paymentErrorMessage) {
+      paymentFailureModalBodyJSX = <p>{paymentErrorMessage}</p>
     }
 
     return (
@@ -146,9 +182,10 @@ class Payment extends Component<RouteComponentProps & IProps, IState> {
         <button
           onClick={this.props.user ? this.handlePaymentAuthUser : this.handlePaymentUnauthUser}
         >Confirm Payment</button>
+
         {/* Payment Success Modal: displays the reservation confirmation */}
         <Modal
-          show={this.state.showModal}
+          show={this.state.showSuccessModal}
           backdrop={"static"}
           centered={true}
           keyboard={false}
@@ -159,11 +196,31 @@ class Payment extends Component<RouteComponentProps & IProps, IState> {
             <Modal.Title>Booking Confirmation</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            {reservationModalBodyJSX}
+            {paymentSuccessModalBodyJSX}
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="primary" onClick={this.toggleModal}>
+            <Button variant="primary" onClick={this.toggleSuccessModal}>
               My Reservations
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        {/* Payment Failure Modal: displays the reason why the payment did not succeed */}
+        <Modal
+          show={this.state.showFailureModal}
+          backdrop={"static"}
+          centered={true}
+          keyboard={false}
+        >
+          <Modal.Header>
+            <Modal.Title>Oops...Something Went Wrong!</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {paymentFailureModalBodyJSX}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="warning" onClick={this.toggleFailureModal}>
+              Ok
             </Button>
           </Modal.Footer>
         </Modal>

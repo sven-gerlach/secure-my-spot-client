@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 
 // import utility functions
 import { signOutRequest } from "../../httpRequests/auth";
+import { removeObjectFromStorage } from "../../utils/storage";
 
 
 class Header extends Component {
@@ -36,6 +37,8 @@ class Header extends Component {
       .then((event) => {
         // reset user state to null which then automatically deletes the hashed user object from local storage
         this.props.setUser(null)
+        // clear reservation in local storage
+        removeObjectFromStorage("reservation", "local")
         // redirect to landing page
         this.props.history.push("/")
       })
