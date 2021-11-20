@@ -96,7 +96,7 @@ function updateReservationAuth(reservationID, token, data) {
       "Authorization": `Token ${token}`,
       'Content-Type': 'application/json',
     },
-    data: data
+    data: data,
   })
 }
 
@@ -111,10 +111,10 @@ function updateReservationUnauth(reservationID, email, data) {
   return axios({
     method: "patch",
     url: urlHostname + "/update-reservation-unauth/" + reservationID + "/" + email + "/",
-    data: data,
     headers: {
     'Content-Type': 'application/json',
-    }
+    },
+    data: data,
   })
 }
 

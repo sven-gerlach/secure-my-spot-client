@@ -88,7 +88,7 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
       let endTimeString = ""
       if (this.state.reservationForModal) {
         const parsedEndTime = DateTime.fromISO(this.state.reservationForModal.end_time)
-        endTimeString = parsedEndTime.toLocaleString({ hour: "numeric", minute: "2-digit" })
+        endTimeString = parsedEndTime.toLocaleString({ hour: "2-digit", minute: "2-digit" })
       }
       this.setState({ reservationEndTimeForModal: endTimeString })
     })
@@ -206,7 +206,7 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
     // call API
     getReservationUnauth(this.state.reservationIdField, this.state.emailField)
       .then((res: { data: IReservation | null; }) => {
-        console.log(res)
+        // todo: loading another but still current reservation causes the end_time input field to be displayed incorrectly
         this.props.setReservation(res.data)
       })
       .catch((e: any) => console.error(e))
@@ -373,7 +373,7 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
           <Form.Control
             type="time"
             name="reservationEndTimeForModal"
-            min={DateTime.now().toLocaleString({ hour: "numeric", minute: "2-digit" })}
+            min={DateTime.now().toLocaleString({ hour: "2-digit", minute: "2-digit" })}
             value={this.state.reservationEndTimeForModal}
             onChange={this.handleInputValueChange}
           />
