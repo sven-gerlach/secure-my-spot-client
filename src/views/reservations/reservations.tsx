@@ -224,7 +224,6 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
    * Display or hide the modal which allows a user to change the end-time of a specific reservation
    */
   toggleChangeEndTimeModal = () => {
-    console.log(this.props.reservation)
     this.setState(prevState => {
       return { showChangeEndTimeModal: !prevState.showChangeEndTimeModal }
     })
@@ -234,7 +233,6 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
    * Display or hide the modal which allows a user to end a reservation before it expires automatically
    */
   toggleEndReservationModal = () => {
-    console.log(this.props.reservation)
     this.setState(prevState => {
       return { showEndReservationModal: !prevState.showEndReservationModal }
     })
