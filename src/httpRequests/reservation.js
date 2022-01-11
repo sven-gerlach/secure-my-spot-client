@@ -109,7 +109,7 @@ function updateReservationAuth(reservationID, token, data) {
  */
 function updateReservationUnauth(reservationID, email, data) {
   return axios({
-    method: "patch",
+    method: "put",
     url: urlHostname + "/update-reservation-unauth/" + reservationID + "/" + email + "/",
     headers: {
     'Content-Type': 'application/json',
