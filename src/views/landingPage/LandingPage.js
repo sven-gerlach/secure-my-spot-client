@@ -15,26 +15,6 @@ class LandingPage extends Component {
       <>
         <PageTitle titleText="[Landing Page]" />
         <P>We offer a convenient way to locate, reserve, and pay for on-street parking in New York.</P>
-        <Button
-          variant={"primary"}
-          onClick={() => {
-            testGetMethod()
-              .then(res => console.log(res))
-              .catch(e => console.error(e))
-          }}
-        >
-          Test Get Method
-        </Button>
-        <Button
-          variant={"primary"}
-          onClick={() => {
-            testPatchMethod()
-              .then(res => console.log(res))
-              .catch(e => console.error(e))
-          }}
-        >
-          Test Patch Method
-        </Button>
       </>
     )
   }
