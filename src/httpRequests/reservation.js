@@ -118,6 +118,13 @@ function updateReservationUnauth(reservationID, email, data) {
   })
 }
 
+function testGetMethod() {
+  return axios({
+    method: "get",
+    url: urlHostname + "/test-patch-method/"
+  })
+}
+
 function testPatchMethod() {
   return axios({
     method: "patch",
@@ -133,5 +140,6 @@ export {
   getExpiredReservationsAuth,
   updateReservationAuth,
   updateReservationUnauth,
+  testGetMethod,
   testPatchMethod,
 }

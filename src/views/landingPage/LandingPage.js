@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import PageTitle from "../../components/pageTitle/PageTitle";
 import { P } from "./landingPage.styles"
 import { Button } from "react-bootstrap";
-import { testPatchMethod } from "../../httpRequests/reservation";
+import { testGetMethod, testPatchMethod } from "../../httpRequests/reservation";
 
 
 /** Class representing the landing page view
@@ -18,7 +18,16 @@ class LandingPage extends Component {
         <Button
           variant={"primary"}
           onClick={() => {
-            console.log("click")
+            testGetMethod()
+              .then(res => console.log(res))
+              .catch(e => console.error(e))
+          }}
+        >
+          Test Get Method
+        </Button>
+        <Button
+          variant={"primary"}
+          onClick={() => {
             testPatchMethod()
               .then(res => console.log(res))
               .catch(e => console.error(e))
