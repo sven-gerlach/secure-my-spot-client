@@ -10,6 +10,8 @@
  * It also provides the option to amend any current reservations.
  */
 
+// todo: split module into two components -> 1) auth and 2) unauth
+
 // Import
 import React, { Component } from "react";
 import { RouteComponentProps } from "react-router-dom";
@@ -35,6 +37,7 @@ import Reservation from "./reservation/reservation";
 
 // import interfaces
 import { IReservation } from "../../types";
+import camelcaseKeys from "camelcase-keys";
 
 
 interface IProps {
@@ -84,10 +87,10 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
     this.setState({ reservationForModal: reservation }, () => {
       // set the time string in state, using format "hh:mm". This is needed for the modal that offers the user the option
       // to change the end-time of the reservation
-      // parse end_time and generate string in format hh:mm
+      // parse endTime and generate string in format hh:mm
       let endTimeString = ""
       if (this.state.reservationForModal) {
-        const parsedEndTime = DateTime.fromISO(this.state.reservationForModal.end_time)
+        const parsedEndTime = DateTime.fromISO(this.state.reservationForModal.endTime)
         endTimeString = parsedEndTime.toLocaleString({ hour: "2-digit", minute: "2-digit" })
       }
       this.setState({ reservationEndTimeForModal: endTimeString })
@@ -115,8 +118,8 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
     else {
       this.setState({ formValidated: true })
 
-      // set the end_time in local time
-      const end_time = DateTime.fromObject(
+      // set the endTime in local time
+      const endTime = DateTime.fromObject(
         {
           hour: Number(reservationEndTimeForModal.substr(0,2)),
           minute: Number(reservationEndTimeForModal.substr(3,2))
@@ -125,14 +128,14 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
           zone: "America/New_York"
         })
 
-      // construct the data object with the end_time converted to UTC
+      // construct the data object with the endTime converted to UTC
       const data = {
         "reservation": {
-          "end_time": end_time.toUTC()
+          "end_time": endTime.toUTC()
         }
       }
 
-      // call the api to update the reservation with the new end_time, api end-point is subject to whether the user is
+      // call the api to update the reservation with the new endTime, api end-point is subject to whether the user is
       // authenticated
       let updatedReservationPromise
       if (user) {
@@ -144,7 +147,10 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
       updatedReservationPromise
         .then((res: any) => {
           // update the reservation state in App
-          this.props.setReservation(res.data)
+          const data = camelcaseKeys(res.data)
+          console.log("Cancel reservation 1")
+          console.log(res)
+          this.props.setReservation(data)
           // close modal
           this.setState({ showChangeEndTimeModal: false })
         })
@@ -162,20 +168,20 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
     const { user } = this.props
     const { reservationForModal } = this.state
 
-    // set the end_time to now
-    const end_time = DateTime.now()
+    // set the endTime to now
+    const endTime = DateTime.now()
 
-    // convert end_time to UTC
-    const end_time_UTC = end_time.toUTC()
+    // convert endTime to UTC
+    const endTimeUTC = endTime.toUTC()
 
     // construct the data object
     const data = {
       "reservation": {
-        "end_time": end_time_UTC
+        "end_time": endTimeUTC
       }
     }
 
-    // call the api to update the reservation with the new end_time, api end-point is subject to whether the user is
+    // call the api to update the reservation with the new endTime, api end-point is subject to whether the user is
     // authenticated
     let updatedReservationPromise
 
@@ -189,6 +195,7 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
     updatedReservationPromise
       .then((res: any) => {
         // update reservation state in App component
+        console.log("Cancel reservation 2")
         this.props.setReservation(null)
         // close modal
         this.setState({ showEndReservationModal: false })
@@ -206,8 +213,10 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
     // call API
     getReservationUnauth(this.state.reservationIdField, this.state.emailField)
       .then((res: { data: IReservation | null; }) => {
-        // todo: loading another but still current reservation causes the end_time input field to be displayed incorrectly
-        this.props.setReservation(res.data)
+        // todo: loading another but still current reservation causes the endTime input field to be displayed incorrectly
+        const data = camelcaseKeys(res.data!)
+        console.log("Cancel reservation 3")
+        this.props.setReservation(data)
       })
       .catch((e: any) => console.error(e))
   }
@@ -244,12 +253,14 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
   handleActiveReservationsAuth = () => {
     if (this.props.user) {
       // set reservation in local storage to null
+      console.log("Cancel reservation 4")
       this.props.setReservation(null)
 
       // retrieve active reservations from API
       getActiveReservationsAuth(this.props.user.token)
         .then((res: { data: any; }) => {
-          this.setState({ reservations: res.data })
+          const data = camelcaseKeys(res.data)
+          this.setState({ reservations: data })
         })
         .catch((e: any) => {
           console.error(e)
@@ -264,7 +275,8 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
     if (this.props.user) {
       getExpiredReservationsAuth(this.props.user.token)
         .then((res: { data: any; }) => {
-          this.setState({ reservations: res.data })
+          const data = camelcaseKeys(res.data)
+          this.setState({ reservations: data })
         })
         .catch((e: any) => {
           console.error(e)
@@ -274,6 +286,8 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
 
   render() {
     const { reservation, user } = this.props
+
+    console.log(this.props)
 
     let reservationJSX: JSX.Element[] | JSX.Element = <></>
     let authUserButtonJSX: JSX.Element = <></>

@@ -46,12 +46,14 @@ class App extends Component {
     // if reservation is not null, set a timeout and enqueue it
     if (this.state.reservation) {
       // create timeout to remove reservation from local storage
+      console.log(this.state)
       const now = Date.now()
-      const end_time = Date.parse(this.state.reservation.end_time)
-      const delay = end_time - now
+      const endTime = Date.parse(this.state.reservation.endTime)
+      const delay = endTime - now
 
       // set timeout
       const timeoutID = setTimeout(() => {
+        console.log("Cancel reservation 7")
         this.setReservation(null)
       }, delay)
 
@@ -97,13 +99,14 @@ class App extends Component {
 
         // create the delay time for the timeout
         const now = Date.now()
-        const end_time = Date.parse(reservation.end_time)
-        const delay = end_time - now
+        const endTime = Date.parse(reservation.endTime)
+        const delay = endTime - now
 
         // create timeout to remove reservation from local storage if, and only if, the delay is strictly positive
         let timeoutID
         if (delay > 0) {
           timeoutID = setTimeout(() => {
+            console.log("Cancel reservation 8")
             this.setReservation(null)
             // todo: add an alert or a modal that informs the user that the current reservation has expired
           }, delay)

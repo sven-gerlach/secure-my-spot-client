@@ -1,5 +1,5 @@
 import axios from "axios";
-import urlHostname from "./urlConfig";
+import urlHostnameAPI from "./urlConfigAPI";
 
 
 /**
@@ -11,7 +11,7 @@ import urlHostname from "./urlConfig";
 function signUpRequest(data) {
   return axios({
     method: "post",
-    url: urlHostname + "/sign-up/",
+    url: urlHostnameAPI + "/sign-up/",
     data: {
       "credentials": {
         "email": data.email,
@@ -30,7 +30,7 @@ function signUpRequest(data) {
 function signInRequest(data) {
   return axios({
     method: "post",
-    url: urlHostname + "/sign-in/",
+    url: urlHostnameAPI + "/sign-in/",
     data: {
       "credentials": {
         "email": data.email,
@@ -48,7 +48,7 @@ function signInRequest(data) {
 function signOutRequest(token) {
   return axios({
     method: "delete",
-    url: urlHostname + "/sign-out",
+    url: urlHostnameAPI + "/sign-out",
     headers: {
       "Authorization": `Token ${token}`
     }

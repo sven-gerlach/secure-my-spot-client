@@ -4,10 +4,12 @@
 
 // import
 import React, { Component } from "react";
-import { RouteComponentProps } from "react-router-dom";
 
 // import custom components
 import CustomButton from "../../../components/button/CustomButton";
+
+// import utils
+import camelcaseKeys from "camelcase-keys";
 
 // import interfaces
 import { IReservation } from "../../../types";
@@ -21,12 +23,12 @@ interface IProps {
 
 class Reservation extends Component<IProps> {
   /**
-   * @return: boolean -> returns true if current time < end_time
+   * @return: boolean -> returns true if current time < endTime
    */
   isReservationActive () {
-    const time_now = Date.now()
-    const end_time = Date.parse(this.props.reservation.end_time)
-    return end_time > time_now
+    const timeNow = Date.now()
+    const endTime = Date.parse(this.props.reservation.endTime)
+    return endTime > timeNow
   }
 
   render () {
@@ -60,11 +62,11 @@ class Reservation extends Component<IProps> {
         <h3>Reservation ID:</h3>
         <p>{reservation.id}</p>
         <h3>Parking Spot:</h3>
-        <p>{reservation.parking_spot}</p>
+        <p>{reservation.parkingSpot}</p>
         <h3>Start Time:</h3>
-        <p>{reservation.start_time}</p>
+        <p>{reservation.startTime}</p>
         <h3>End Time:</h3>
-        <p>{reservation.end_time}</p>
+        <p>{reservation.endTime}</p>
         {this.isReservationActive() ? buttonJSX : ""}
       </>
     )

@@ -1,7 +1,9 @@
+/**
+ * Module for all http requests associated with the reservation endpoints
+ */
+
 import axios from "axios";
-import urlHostname from "./urlConfig";
-import urlConfig from "./urlConfig";
-import { string } from "yup";
+import urlHostnameAPI from "./urlConfigAPI";
 
 
 /**
@@ -13,7 +15,7 @@ import { string } from "yup";
 function createReservationUnauthUser(parkingSpotId, data) {
   return axios({
     method: "post",
-    url: urlConfig + "/reservation-unauth/" + parkingSpotId + "/",
+    url: urlHostnameAPI + "/reservation-unauth/" + parkingSpotId + "/",
     data: data
   })
 }
@@ -28,7 +30,7 @@ function createReservationUnauthUser(parkingSpotId, data) {
 function createReservationAuthUser(parkingSpotId, token, data) {
   return axios({
     method: "post",
-    url: urlConfig + "/reservation-auth/" + parkingSpotId + "/",
+    url: urlHostnameAPI + "/reservation-auth/" + parkingSpotId + "/",
     headers: {
       "Authorization": `Token ${token}`
     },
@@ -45,7 +47,7 @@ function createReservationAuthUser(parkingSpotId, token, data) {
 function getReservationUnauth(reservationID, email) {
   return axios({
     method: "get",
-    url: urlHostname + "/reservation-unauth/" + reservationID + "/" + email + "/"
+    url: urlHostnameAPI + "/reservation-unauth/" + reservationID + "/" + email + "/"
   })
 }
 
@@ -57,7 +59,7 @@ function getReservationUnauth(reservationID, email) {
 function getActiveReservationsAuth(token) {
   return axios({
     method: "get",
-    url: urlHostname + "/reservation-auth/",
+    url: urlHostnameAPI + "/reservation-auth/",
     headers: {
       "Authorization": `Token ${token}`
     },
@@ -72,7 +74,7 @@ function getActiveReservationsAuth(token) {
 function getExpiredReservationsAuth(token) {
   return axios({
     method: "get",
-    url: urlHostname + "/expired-reservations-auth",
+    url: urlHostnameAPI + "/expired-reservations-auth",
     headers: {
       "Authorization": `Token ${token}`
     },
@@ -81,7 +83,7 @@ function getExpiredReservationsAuth(token) {
 
 
 /**
- * Provide either email (unauthenticated) or token (authenticated user) to either change the end_time (stored in data)
+ * Provide either email (unauthenticated) or token (authenticated user) to either change the endTime (stored in data)
  * or if data attribute is null end the reservation immediately.
  * @param reservationID
  * @param token
@@ -91,7 +93,7 @@ function getExpiredReservationsAuth(token) {
 function updateReservationAuth(reservationID, token, data) {
   return axios({
     method: "patch",
-    url: urlHostname + "/update-reservation-auth/" + reservationID + "/",
+    url: urlHostnameAPI + "/update-reservation-auth/" + reservationID + "/",
     headers: {
       "Authorization": `Token ${token}`,
       'Content-Type': 'application/json',
@@ -110,25 +112,11 @@ function updateReservationAuth(reservationID, token, data) {
 function updateReservationUnauth(reservationID, email, data) {
   return axios({
     method: "patch",
-    url: urlHostname + "/update-reservation-unauth/" + reservationID + "/" + email + "/",
+    url: urlHostnameAPI + "/update-reservation-unauth/" + reservationID + "/" + email + "/",
     headers: {
     'Content-Type': 'application/json',
     },
     data: data,
-  })
-}
-
-function testGetMethod() {
-  return axios({
-    method: "get",
-    url: urlHostname + "/test-patch-method/"
-  })
-}
-
-function testPatchMethod() {
-  return axios({
-    method: "patch",
-    url: urlHostname + "/test-patch-method/"
   })
 }
 
@@ -140,6 +128,4 @@ export {
   getExpiredReservationsAuth,
   updateReservationAuth,
   updateReservationUnauth,
-  testGetMethod,
-  testPatchMethod,
 }

@@ -28,8 +28,10 @@ COPY . .
 # command as react will include all env vars at build time)
 ARG REACT_APP_SESSION_ENCRYPTION_KEY
 ARG REACT_APP_GOOGLE_MAPS_KEY
+ARG REACT_APP_STRIPE_API_TEST_KEY
 ENV REACT_APP_SESSION_ENCRYPTION_KEY $REACT_APP_SESSION_ENCRYPTION_KEY
 ENV REACT_APP_GOOGLE_MAPS_KEY $REACT_APP_GOOGLE_MAPS_KEY
+ENV REACT_APP_STRIPE_API_TEST_KEY $REACT_APP_STRIPE_API_TEST_KEY
 
 # make React create build directory (app/build) with production build of the app at container compile-time
 RUN npm run build
