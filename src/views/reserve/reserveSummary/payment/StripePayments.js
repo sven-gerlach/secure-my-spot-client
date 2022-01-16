@@ -28,6 +28,7 @@ export default function StripePayments(props) {
         setClientSecret(res.data.clientSecret)
       })
       .catch(e => console.error(e))
+    // eslint-disable-next-line
   }, []);
 
   const appearance = {
