@@ -1,6 +1,7 @@
 setup:
   config:
-    REACT_APP_TEST: result
+    env_file: .env.dev
+    REACT_APP_TEST: "result"
 build:
   docker:
     web: Dockerfile
