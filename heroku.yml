@@ -1,6 +1,6 @@
 setup:
   config:
-    REACT_APP_TEST: "test"
+    REACT_APP_TEST: result
 build:
   docker:
     web: Dockerfile
