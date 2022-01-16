@@ -168,6 +168,7 @@ class App extends Component {
   }
 
   render() {
+    console.log(process.env.REACT_APP_TEST)
     return (
       // this div captures any click events and closes the header if it was in an open state
       <Div onClick={(event) => this.handleBackgroundClick(event)}>
