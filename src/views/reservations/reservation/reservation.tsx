@@ -8,9 +8,6 @@ import React, { Component } from "react";
 // import custom components
 import CustomButton from "../../../components/button/CustomButton";
 
-// import utils
-import camelcaseKeys from "camelcase-keys";
-
 // import interfaces
 import { IReservation } from "../../../types";
 
