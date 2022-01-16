@@ -18,9 +18,10 @@ export interface IReservation {
   id: number,
   user?: number,
   email: string,
-  parking_spot: number,
+  parkingSpot: number,
   rate: string,
   paid: boolean,
-  start_time: string,
-  end_time: string
+  startTime: string,
+  endTime: string,
+  stripePaymentIntentId: string,
 }

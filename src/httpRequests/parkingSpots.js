@@ -1,5 +1,5 @@
 import axios from "axios";
-import urlConfig from "./urlConfig";
+import urlConfig from "./urlConfigAPI";
 
 
 function getAllAvailableParkingSpots() {

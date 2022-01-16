@@ -5,7 +5,7 @@ import { Route, RouteComponentProps } from "react-router-dom";
 // import components
 import CustomButton from "../../../components/button/CustomButton";
 import { Button, Modal } from "react-bootstrap";
-import Payment from "./payment/Payment";
+import StripePayments from "./payment/StripePayments";
 
 // import utils
 import { isEqual, round } from "lodash";
@@ -16,6 +16,8 @@ import {
   IParkingSpot,
   IReservation,
 } from "../../../types";
+import { createReservationAuthUser, createReservationUnauthUser } from "../../../httpRequests/reservation";
+import camelcaseKeys from "camelcase-keys";
 
 // Interfaces
 interface IProps {
@@ -35,6 +37,7 @@ interface IState {
   showModal: boolean,
   reservationLength: string,
   parkingSpot: IParkingSpot,
+  email: string,
 }
 
 
@@ -45,14 +48,13 @@ interface IState {
  * User input: reservationLength, alertSubscription
  */
 class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams>, IState> {
-  // parkingSpot: IParkingSpot
-
   constructor(props: IProps & RouteComponentProps<IRouteParams>) {
     super(props);
     this.state = {
       showModal: false,
       reservationLength: "",
-      parkingSpot: getObjectFromStorage("parkingSpot", "session") as IParkingSpot
+      parkingSpot: getObjectFromStorage("parkingSpot", "session") as IParkingSpot,
+      email: "",
     }
   }
 
@@ -105,11 +107,72 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
   }
 
   /**
-   * Handle change of reservation length input field
+   * Handle change of input fields
    */
   handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const key = e.target.name
     const value = e.target.value
-    this.setState({ reservationLength: value })
+    this.setState({ [key]: value } as Pick<IState, "reservationLength" | "email">)
+  }
+
+  handlePaymentClick = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    // stop getting and setting available parking spots to prevent the reservation of a parking spot causing the
+    // "unavailable parking-spot" modal to pop up
+    this.props.clearSetAvailableParkingSpotsInterval()
+
+    if (this.props.user) {
+      // send reservationLength to API
+
+      const data = {
+        "reservation": {
+          "reservation_length": this.state.reservationLength
+        }
+      }
+
+      // make http post request to create new reservation resource
+      createReservationAuthUser(this.state.parkingSpot.id, this.props.user.token, data)
+        .then((res: { data: object; }) => {
+          // convert object keys to camelCase
+          const data = camelcaseKeys(res.data)
+          // call setReservation in App view, which stores reservation in App state and stores it in local storage
+          console.log("Cancel reservation 5")
+          this.props.setReservation(data)
+        })
+        .catch((e: { response: { data: { [x: string]: any[]; }; }; }) => {
+          console.error(e)
+        })
+    } else {
+      // send reservationLength and email to API
+
+      const data = {
+        "reservation": {
+          "email": this.state.email,
+          "reservation_length": this.state.reservationLength
+        }
+      }
+
+      // make http post request to create a new reservation resource
+      createReservationUnauthUser(this.state.parkingSpot.id, data)
+        .then((res: { data: object; }) => {
+          // convert object keys to camelCase
+          const data = camelcaseKeys(res.data)
+          // call setReservation in App view, which stores reservation in App state and stores it in local storage
+          console.log(data)
+          console.log("Cancel reservation 6")
+          this.props.setReservation(data)
+        })
+        .then((res: any) => {
+          this.props.history.push(`/reserve/${this.props.reservation.id}/payment`)
+        })
+        .catch((e: { response: { data: { [x: string]: any[]; }; }; }) => {
+          console.error(e)
+        })
+        .finally(() => {
+          // reset the email field
+          this.setState({ email: "" })
+        })
+    }
   }
 
   render() {
@@ -139,24 +202,41 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
             <h3>Reservation Length (minutes)</h3>
             {/* todo: add validation to set min value to e.g. 5min */}
             <input
-              type="number"
-              required
+              name={"reservationLength"}
+              type={"number"}
               value={this.state.reservationLength}
               onChange={this.handleChange}
+              required
             />
             <h3>Estimated Total Cost ($)</h3>
             <p>${totalReservationCost.toFixed(2)}</p>
+            {!this.props.user && (
+              <input
+                name={"email"}
+                value={this.state.email}
+                onChange={this.handleChange}
+                placeholder="e-Mail"
+                required
+              />
+            )}
           </div>
           <div>
-            <CustomButton history={this.props.history} buttonText="Back" urlTarget="/reserve" />
-            <CustomButton history={this.props.history} buttonText="Payment" urlTarget={`/reserve/${parkingSpot.id}/payment`} />
+            <CustomButton
+              history={this.props.history}
+              buttonText="Back"
+              urlTarget="/reserve"
+            />
+            <CustomButton
+              history={this.props.history}
+              buttonText="Payment"
+              handleSubmit={this.handlePaymentClick}
+            />
           </div>
         </Route>
         <Route path="/reserve/:id/payment">
-          <Payment
+          <StripePayments
             {...this.props}
-            reservationLength={this.state.reservationLength}
-            parkingSpotId={parkingSpot.id}
+            email={this.state.email}
           />
         </Route>
         {/* Modal: displays an alert that currently viewed parking spot can no longer be reserved, leading the user back

@@ -16,6 +16,9 @@ import Map from "./Map/Map";
 import { round } from "lodash";
 import { getAllAvailableParkingSpots } from "../../httpRequests/parkingSpots";
 
+// import utils
+import camelcaseKeys from "camelcase-keys";
+
 
 /**
  * Component for the reserve view. This component is stateful, explicitly it stores the user's location and all
@@ -53,8 +56,9 @@ class ReserveView extends Component {
   setAvailableParkingSpots = availableParkingSpots => {
     getAllAvailableParkingSpots()
       .then(res => {
+        const data = camelcaseKeys(res.data)
         this.setState({
-          availableParkingSpots: res.data
+          availableParkingSpots: data
         })
       })
       .catch(error => {

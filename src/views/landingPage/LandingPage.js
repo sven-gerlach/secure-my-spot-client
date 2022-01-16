@@ -3,8 +3,6 @@ import React, { Component } from "react";
 // import containers
 import PageTitle from "../../components/pageTitle/PageTitle";
 import { P } from "./landingPage.styles"
-import { Button } from "react-bootstrap";
-import { testGetMethod, testPatchMethod } from "../../httpRequests/reservation";
 
 
 /** Class representing the landing page view
