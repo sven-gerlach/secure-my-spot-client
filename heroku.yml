@@ -1,4 +1,3 @@
-setup:
 build:
   config:
     env_file: .env.dev
