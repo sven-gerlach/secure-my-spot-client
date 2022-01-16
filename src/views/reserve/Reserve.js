@@ -75,6 +75,7 @@ class ReserveView extends Component {
   }
 
   render() {
+    console.log(process.env.REACT_APP_GOOGLE_MAPS_KEY)
     return (
       <>
         <Route exact path="/reserve">
