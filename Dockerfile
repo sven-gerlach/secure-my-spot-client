@@ -52,6 +52,11 @@ COPY --from=build /app/build /usr/share/nginx/html
 # replace the contents of nginx' default.conf with nginx-setup.conf
 COPY nginx-setup.conf /etc/nginx/conf.d/default.conf
 
+ENV REACT_APP_SESSION_ENCRYPTION_KEY $REACT_APP_SESSION_ENCRYPTION_KEY
+ENV REACT_APP_GOOGLE_MAPS_KEY $REACT_APP_GOOGLE_MAPS_KEY
+ENV REACT_APP_STRIPE_API_TEST_KEY $REACT_APP_STRIPE_API_TEST_KEY
+ENV REACT_APP_TEST TEST
+
 # use bash stream editor to replace PORT inside default.conf with Heroku's $PORT param at run-time
 # Since the PORT is only stipulated by Heroku at run-time and not when the container is built CMD must be used
 # -i -> in-place
