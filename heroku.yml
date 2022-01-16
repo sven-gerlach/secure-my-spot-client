@@ -1,8 +1,6 @@
 setup:
   config:
-    REACT_APP_SESSION_ENCRYPTION_KEY: testcase
-    REACT_APP_GOOGLE_MAPS_KEY: ${REACT_APP_GOOGLE_MAPS_KEY}
-    REACT_APP_STRIPE_API_TEST_KEY: ${REACT_APP_STRIPE_API_TEST_KEY}
+    REACT_APP_TEST: "test"
 build:
   docker:
     web: Dockerfile

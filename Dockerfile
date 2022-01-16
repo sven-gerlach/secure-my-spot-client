@@ -26,12 +26,12 @@ COPY . .
 # template from akhileshns/heroku-deploy
 # 4) collect the arg inside the Dockerfile and pass the arg onto an ENV var (this must happen before the react build
 # command as react will include all env vars at build time)
-ARG REACT_APP_SESSION_ENCRYPTION_KEY
-ARG REACT_APP_GOOGLE_MAPS_KEY
-ARG REACT_APP_STRIPE_API_TEST_KEY
-ENV REACT_APP_SESSION_ENCRYPTION_KEY $REACT_APP_SESSION_ENCRYPTION_KEY
-ENV REACT_APP_GOOGLE_MAPS_KEY $REACT_APP_GOOGLE_MAPS_KEY
-ENV REACT_APP_STRIPE_API_TEST_KEY $REACT_APP_STRIPE_API_TEST_KEY
+#ARG REACT_APP_SESSION_ENCRYPTION_KEY
+#ARG REACT_APP_GOOGLE_MAPS_KEY
+#ARG REACT_APP_STRIPE_API_TEST_KEY
+#ENV REACT_APP_SESSION_ENCRYPTION_KEY $REACT_APP_SESSION_ENCRYPTION_KEY
+#ENV REACT_APP_GOOGLE_MAPS_KEY $REACT_APP_GOOGLE_MAPS_KEY
+#ENV REACT_APP_STRIPE_API_TEST_KEY $REACT_APP_STRIPE_API_TEST_KEY
 
 # make React create build directory (app/build) with production build of the app at container compile-time
 RUN npm run build
@@ -52,11 +52,6 @@ COPY --from=build /app/build /usr/share/nginx/html
 # replace the contents of nginx' default.conf with nginx-setup.conf
 COPY nginx-setup.conf /etc/nginx/conf.d/default.conf
 
-ENV REACT_APP_SESSION_ENCRYPTION_KEY $REACT_APP_SESSION_ENCRYPTION_KEY
-ENV REACT_APP_GOOGLE_MAPS_KEY $REACT_APP_GOOGLE_MAPS_KEY
-ENV REACT_APP_STRIPE_API_TEST_KEY $REACT_APP_STRIPE_API_TEST_KEY
-ENV REACT_APP_TEST TEST
-
 # use bash stream editor to replace PORT inside default.conf with Heroku's $PORT param at run-time
 # Since the PORT is only stipulated by Heroku at run-time and not when the container is built CMD must be used
 # -i -> in-place
@@ -66,4 +61,4 @@ ENV REACT_APP_TEST TEST
 # alternatively to sed, envsubst apk could be used and might actually be a cleaner solution
 # https://developer.okta.com/blog/2020/06/24/heroku-docker-react#create-a-dockerfile-and-nginx-configuration
 # https://nickjanetakis.com/blog/using-envsubst-to-merge-environment-variables-into-config-files
-CMD sed -i -e 's/PORT/'"$PORT"'/g' /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'
+CMD sed -i -e 's/PORT/'"$PORT"'/g' /etc/nginx/conf.d/default.conf -REACT_APP_SESSION_ENCRYPTION_KEY=$REACT_APP_SESSION_ENCRYPTION_KEY && nginx -g 'daemon off;'
