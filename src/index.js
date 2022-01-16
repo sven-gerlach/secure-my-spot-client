@@ -1,4 +1,5 @@
 import { initialiseLogRocket } from "./config/configLogRocket";
+import dotenv from "dotenv";
 import "./config/configLogRocket"
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -13,6 +14,9 @@ import { BrowserRouter } from "react-router-dom";
 // initialising a XMLHTTPRequest every time the configLogRocket module is loaded
 initialiseLogRocket()
 
+// initialise dotenv
+dotenv.config()
+console.log(process.env)
 
 ReactDOM.render(
   <React.StrictMode>
