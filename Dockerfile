@@ -61,4 +61,4 @@ COPY nginx-setup.conf /etc/nginx/conf.d/default.conf
 # alternatively to sed, envsubst apk could be used and might actually be a cleaner solution
 # https://developer.okta.com/blog/2020/06/24/heroku-docker-react#create-a-dockerfile-and-nginx-configuration
 # https://nickjanetakis.com/blog/using-envsubst-to-merge-environment-variables-into-config-files
-CMD sed -i -e 's/PORT/'"$PORT"'/g' /etc/nginx/conf.d/default.conf -REACT_APP_SESSION_ENCRYPTION_KEY=$REACT_APP_SESSION_ENCRYPTION_KEY && nginx -g 'daemon off;'
+CMD sed -i -e 's/PORT/'"$PORT"'/g' /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'
