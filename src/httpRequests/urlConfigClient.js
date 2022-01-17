@@ -4,7 +4,7 @@ let urlHostnameClient
 
 const urlHostnames = {
   "development": "http://localhost:3000",
-  "production": "https://https://secure-my-spot-client.herokuapp.com",
+  "production": "https://secure-my-spot-client.herokuapp.com",
 }
 
 if (window.location.hostname === "localhost") {
