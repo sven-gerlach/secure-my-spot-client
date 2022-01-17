@@ -4,6 +4,3 @@
 .DS_Store
 node_modules
 coverage
-
-# heroku.yml includes secret env vars
-heroku.yml

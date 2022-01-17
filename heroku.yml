@@ -1,0 +1,7 @@
+build:
+  config:
+    REACT_APP_SESSION_ENCRYPTION_KEY: "mr9zKApoYe9p#9t3Dn$pCgHG&jPqs!D4hFaS53R3"
+    REACT_APP_GOOGLE_MAPS_KEY: "AIzaSyDv77VC7nYzdAWc1aeBxnCgphT6lwY8o2M"
+    REACT_APP_STRIPE_API_TEST_KEY: "pk_test_51JnPcWGZGl0K4mPGNvZztcVdYW3x6WsSjdJD5Gh4eNca8119mFfYxDgBP77M7BiGh5EhKyqka4BiYA04M5xGzlPf00MyrkqaqL"
+  docker:
+    web: Dockerfile
