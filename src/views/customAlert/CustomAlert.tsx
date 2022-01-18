@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Alert } from "react-bootstrap";
+import { AlertStyled } from "./CustomAlert.styles";
 
 interface IProps {
   variant: string,
@@ -13,6 +14,9 @@ interface IState {
 }
 
 
+/**
+ * Customised Bootstrap alert
+ */
 class CustomAlert extends Component<IProps, IState> {
   // number doesn't work even though setTimeout clearly returns a number
   timeoutID: any
@@ -25,7 +29,7 @@ class CustomAlert extends Component<IProps, IState> {
     this.timeoutID = null
   }
   componentDidMount() {
-    const timeoutID: ReturnType<typeof setTimeout> = setTimeout(this.handleClose, 5 * 1000)
+    const timeoutID: ReturnType<typeof setTimeout> = setTimeout(this.handleClose, 7 * 1000)
     this.timeoutID = timeoutID
   }
 
@@ -42,7 +46,7 @@ class CustomAlert extends Component<IProps, IState> {
     const { variant, heading, message } = this.props
     return (
       <>
-        <Alert
+        <AlertStyled
           show={this.state.isAlertDisplayed}
           variant={variant}
           dismissible={true}
@@ -51,7 +55,7 @@ class CustomAlert extends Component<IProps, IState> {
         >
           <Alert.Heading>{heading}</Alert.Heading>
           <p>{message}</p>
-        </Alert>
+        </AlertStyled>
       </>
     )
   }

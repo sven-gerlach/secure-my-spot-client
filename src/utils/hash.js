@@ -13,7 +13,6 @@ function getHashedPassword(password) {
 // for now, although not ideal, the .env.dev file contains the development key whilst the production key for encrypting
 // the user object and storing it in session storage is hard-coded
 const secretKey = process.env.REACT_APP_SESSION_ENCRYPTION_KEY
-console.log(secretKey)
 
 function getEncryptedObject(object) {
   return CryptoJS.AES.encrypt(JSON.stringify(object), secretKey).toString()

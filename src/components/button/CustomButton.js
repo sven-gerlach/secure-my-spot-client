@@ -1,7 +1,10 @@
 // import library modules
 import React, { Component } from "react"
+import { Button } from "react-bootstrap";
 
 /** Class representing a button
+ * @param {attribute=string} variant - bootstrap variant
+ * @param {attribute=sring} size - bootstrap size
  * @param {attribute=string} buttonText - the text represented on the button
  * @param {attribute=url} urlTarget - the url target redirected to upon clicking the button
  * @param {attribute=method} handleSubmit() - a method that handles the collection and submission of data
@@ -23,11 +26,14 @@ class CustomButton extends Component {
 
   render() {
     return (
-      <button
+      <Button
+        variant={this.props.variant}
+        size={this.props.size || ""}
         onClick={this.handleClick}
-        type="button">
+        type="button"
+      >
         {this.props.buttonText}
-      </button>
+      </Button>
     )
   }
 }

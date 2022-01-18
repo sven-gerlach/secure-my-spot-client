@@ -11,10 +11,44 @@ $orange-red-crayola: rgba(254, 95, 85, 1);
   background-attachment: fixed;
   background-origin: border-box;
   background-image: url("assets/img/car_grey.png");
-  background-color: $blue-yonder;
+  background-color: white;
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
   padding: 70px 20px 20px;
+}
 
+// Google Maps reservation popup cannot be styled using JS styled -> instead must use common CSS
+.map-info-popup-button {
+  width: 100%;
+  color: #fff;
+  background-color: #0d6efd;
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 1px solid #0d6efd;
+  padding: .375rem .75rem;
+  font-size: 12px;
+  border-radius: .25rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+
+  &:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+  }
+}
+
+.map-info-popup-text {
+  font-weight: bold;
+  color: $black-coral;
+  font-size: 12px;
+  span {
+    color: red;
+  }
 }

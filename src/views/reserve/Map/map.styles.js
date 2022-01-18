@@ -3,6 +3,7 @@ import styled from "styled-components";
 const MapDiv = styled.div`
   width: 100%;
   height: 70%;
+  border-radius: 0.25rem;
 `
 
 export default MapDiv

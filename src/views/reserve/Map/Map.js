@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { round, isEqual } from "lodash";
+import CustomButton from "../../../components/button/CustomButton";
 
 // import util functions
 import { storeObjectInStorage } from "../../../utils/storage";
@@ -107,15 +108,15 @@ class Map extends Component {
         }
       })
 
-      // create infowindow
+      // create info-window
       const infoWindow = new window.google.maps.InfoWindow()
 
-      // string content of infowindow
+      // string content of info-window
       const htmlString = `
         <div>
-          <p><b>Price ($ / hour):</b>&nbsp$${round(parkingSpot.rate, 2).toFixed(2)}</p>
-          <p><b>Price ($ / min):</b>&nbsp$${round(parkingSpot.rate / 60, 2).toFixed(2)}</p>
-          <button id="reserve-button-${parkingSpot.id}">Reserve</button>
+          <p class="map-info-popup-text"><span>${round(parkingSpot.rate, 2).toFixed(2)}</span> ($ / hour)</p>
+          <p class="map-info-popup-text">${round(parkingSpot.rate / 60, 2).toFixed(2)} ($ / min)</p>
+          <button class="map-info-popup-button" id="reserve-button-${parkingSpot.id}">Reserve</button>
         </div>
       `
 

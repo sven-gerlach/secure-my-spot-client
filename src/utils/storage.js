@@ -21,8 +21,6 @@ function getObjectFromStorage(objKey, storageType) {
     return undefined
   }
 
-  console.log(`getObjectFromStorage: ${objKey}`)
-
   // decrypt and deserialize object
   return getDecryptedObject(serializedUser)
 }
@@ -36,7 +34,6 @@ function getObjectFromStorage(objKey, storageType) {
 function storeObjectInStorage(obj, objKey, storageType) {
   // update session storage with current state to make token persistent beyond session
   // serialize and encrypt the user object
-  console.log(`storeObjectInStorage: ${objKey}`)
 
   const encryptedObj = getEncryptedObject(obj)
   if (storageType === "local") {
@@ -53,7 +50,6 @@ function storeObjectInStorage(obj, objKey, storageType) {
  * @param {string} storageType - enum "session" or "local"
  */
 function removeObjectFromStorage(objKey, storageType) {
-  console.log(`removeObjectFromStorage: ${objKey}`)
   if (storageType === "local") {
     localStorage.removeItem(objKey)
   }

@@ -109,6 +109,7 @@ class SignUpView extends Component {
         </form>
         <CustomButton
           {...this.props}
+          variant={"secondary"}
           buttonText="Back"
           urlTarget="/"
         />

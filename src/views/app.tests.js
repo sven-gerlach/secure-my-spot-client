@@ -96,7 +96,7 @@ describe("the header on small screens", () => {
     // assert that clicking on toggle button followed by clicking on header results in collapsed navbar
     userEvent.click(toggleButton)
     expect(toggleButton.classList.contains("collapsed")).toBe(false)
-    userEvent.click(screen.getByText(/Landing Page/))
+    userEvent.click(screen.getByText(/Our Service/))
     expect(toggleButton.classList.contains("collapsed")).toBe(true)
   })
 })

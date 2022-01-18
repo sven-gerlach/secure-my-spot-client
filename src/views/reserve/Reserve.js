@@ -62,7 +62,7 @@ class ReserveView extends Component {
         })
       })
       .catch(error => {
-        console.log(error)
+        console.error(error)
       })
   }
 
@@ -75,11 +75,10 @@ class ReserveView extends Component {
   }
 
   render() {
-    console.log(process.env.REACT_APP_GOOGLE_MAPS_KEY)
     return (
       <>
         <Route exact path="/reserve">
-          <PageTitle titleText="Reserve Available Parking Slots Near You" />
+          <PageTitle titleText="Find Parking Near You" />
           <Wrapper apiKey={process.env.REACT_APP_GOOGLE_MAPS_KEY}>
             <Map
               availableParkingSpots={this.state.availableParkingSpots}

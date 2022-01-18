@@ -44,6 +44,7 @@ class Reservation extends Component<IProps> {
         />
         <CustomButton
           buttonText="End Reservation"
+          variant={"warning"}
           handleSubmit={() => {
             // set the relevant reservation for the modal to use
             this.props.setReservationForModalState(reservation)

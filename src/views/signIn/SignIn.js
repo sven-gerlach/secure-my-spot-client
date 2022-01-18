@@ -72,7 +72,7 @@ class SignInView extends Component {
       .catch(e => {
         this.props.enqueueNewAlert(...messages.failedSignIn)
         this.clearSignInForm()
-        console.log(e);
+        console.error(e);
       })
   }
 
@@ -111,6 +111,7 @@ class SignInView extends Component {
         </form>
         <CustomButton
           {...this.props}
+          variant={"secondary"}
           buttonText="Back"
           urlTarget="/"
         />

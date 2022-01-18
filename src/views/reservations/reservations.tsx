@@ -148,8 +148,6 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
         .then((res: any) => {
           // update the reservation state in App
           const data = camelcaseKeys(res.data)
-          console.log("Cancel reservation 1")
-          console.log(res)
           this.props.setReservation(data)
           // close modal
           this.setState({ showChangeEndTimeModal: false })
@@ -195,7 +193,6 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
     updatedReservationPromise
       .then((res: any) => {
         // update reservation state in App component
-        console.log("Cancel reservation 2")
         this.props.setReservation(null)
         // close modal
         this.setState({ showEndReservationModal: false })
@@ -215,7 +212,6 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
       .then((res: { data: IReservation | null; }) => {
         // todo: loading another but still current reservation causes the endTime input field to be displayed incorrectly
         const data = camelcaseKeys(res.data!)
-        console.log("Cancel reservation 3")
         this.props.setReservation(data)
       })
       .catch((e: any) => console.error(e))
@@ -253,7 +249,6 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
   handleActiveReservationsAuth = () => {
     if (this.props.user) {
       // set reservation in local storage to null
-      console.log("Cancel reservation 4")
       this.props.setReservation(null)
 
       // retrieve active reservations from API
@@ -286,8 +281,6 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
 
   render() {
     const { reservation, user } = this.props
-
-    console.log(this.props)
 
     let reservationJSX: JSX.Element[] | JSX.Element = <></>
     let authUserButtonJSX: JSX.Element = <></>
@@ -352,7 +345,6 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
     else {
       unauthUserFormJSX = (
         <>
-          <h3>Search for {reservation ? "another" : "a"} reservation:</h3>
           <FloatingLabel
             controlId="floatingInput"
             label="e-Mail"

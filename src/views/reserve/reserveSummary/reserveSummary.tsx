@@ -4,7 +4,7 @@ import { Route, RouteComponentProps } from "react-router-dom";
 
 // import components
 import CustomButton from "../../../components/button/CustomButton";
-import { Button, Modal } from "react-bootstrap";
+import { Button, FloatingLabel, Form, Modal, Table } from "react-bootstrap";
 import StripePayments from "./payment/StripePayments";
 
 // import utils
@@ -18,6 +18,14 @@ import {
 } from "../../../types";
 import { createReservationAuthUser, createReservationUnauthUser } from "../../../httpRequests/reservation";
 import camelcaseKeys from "camelcase-keys";
+
+// import styles
+import {
+  TbodyStyled,
+  DivTableStyled,
+  DivFormsStyled,
+  DivButtonsStyled
+} from "./reserveSummary.styles";
 
 // Interfaces
 interface IProps {
@@ -38,6 +46,7 @@ interface IState {
   reservationLength: string,
   parkingSpot: IParkingSpot,
   email: string,
+  validated: boolean,
 }
 
 
@@ -48,13 +57,17 @@ interface IState {
  * User input: reservationLength, alertSubscription
  */
 class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams>, IState> {
+  formRef: React.RefObject<HTMLFormElement>
+
   constructor(props: IProps & RouteComponentProps<IRouteParams>) {
     super(props);
+    this.formRef = React.createRef()
     this.state = {
       showModal: false,
       reservationLength: "",
       parkingSpot: getObjectFromStorage("parkingSpot", "session") as IParkingSpot,
       email: "",
+      validated: false,
     }
   }
 
@@ -117,67 +130,82 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
 
   handlePaymentClick = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
-    // stop getting and setting available parking spots to prevent the reservation of a parking spot causing the
-    // "unavailable parking-spot" modal to pop up
-    this.props.clearSetAvailableParkingSpotsInterval()
 
-    if (this.props.user) {
-      // send reservationLength to API
+    this.setState({validated: true})
 
-      const data = {
-        "reservation": {
-          "reservation_length": this.state.reservationLength
+    const form = this.formRef.current;
+
+    if (!form?.checkValidity()) {
+      e.stopPropagation()
+    }
+    else {
+      // stop getting and setting available parking spots to prevent the reservation of a parking spot causing the
+      // "unavailable parking-spot" modal to pop up
+      this.props.clearSetAvailableParkingSpotsInterval()
+
+      if (this.props.user) {
+        // send reservationLength to API
+
+        const data = {
+          "reservation": {
+            "reservation_length": this.state.reservationLength
+          }
         }
-      }
 
-      // make http post request to create new reservation resource
-      createReservationAuthUser(this.state.parkingSpot.id, this.props.user.token, data)
-        .then((res: { data: object; }) => {
-          // convert object keys to camelCase
-          const data = camelcaseKeys(res.data)
-          // call setReservation in App view, which stores reservation in App state and stores it in local storage
-          console.log("Cancel reservation 5")
-          this.props.setReservation(data)
-        })
-        .catch((e: { response: { data: { [x: string]: any[]; }; }; }) => {
-          console.error(e)
-        })
-    } else {
-      // send reservationLength and email to API
+        // make http post request to create new reservation resource
+        createReservationAuthUser(this.state.parkingSpot.id, this.props.user.token, data)
+          .then((res: { data: object; }) => {
+            // convert object keys to camelCase
+            const data = camelcaseKeys(res.data)
+            // call setReservation in App view, which stores reservation in App state and stores it in local storage
+            this.props.setReservation(data)
+          })
+          .catch((e: { response: { data: { [x: string]: any[]; }; }; }) => {
+            this.props.enqueueNewAlert(
+              "danger",
+              "Oops...",
+              Object.values(e.response.data)[0][0]
+            )
+          })
+      } else {
+        // send reservationLength and email to API
 
-      const data = {
-        "reservation": {
-          "email": this.state.email,
-          "reservation_length": this.state.reservationLength
+        const data = {
+          "reservation": {
+            "email": this.state.email,
+            "reservation_length": this.state.reservationLength
+          }
         }
-      }
 
-      // make http post request to create a new reservation resource
-      createReservationUnauthUser(this.state.parkingSpot.id, data)
-        .then((res: { data: object; }) => {
-          // convert object keys to camelCase
-          const data = camelcaseKeys(res.data)
-          // call setReservation in App view, which stores reservation in App state and stores it in local storage
-          console.log(data)
-          console.log("Cancel reservation 6")
-          this.props.setReservation(data)
-        })
-        .then((res: any) => {
-          this.props.history.push(`/reserve/${this.props.reservation.id}/payment`)
-        })
-        .catch((e: { response: { data: { [x: string]: any[]; }; }; }) => {
-          console.error(e)
-        })
-        .finally(() => {
-          // reset the email field
-          this.setState({ email: "" })
-        })
+        // make http post request to create a new reservation resource
+        createReservationUnauthUser(this.state.parkingSpot.id, data)
+          .then((res: { data: object; }) => {
+            // convert object keys to camelCase
+            const data = camelcaseKeys(res.data)
+            // call setReservation in App view, which stores reservation in App state and stores it in local storage
+            this.props.setReservation(data)
+          })
+          .then((res: any) => {
+            this.props.history.push(`/reserve/${this.props.reservation.id}/payment`)
+          })
+          .catch((e: { response: { data: { [x: string]: any[]; }; }; }) => {
+            this.props.enqueueNewAlert(
+              "danger",
+              "Oops...",
+              Object.values(e.response.data)[0][0]
+            )
+          })
+          .finally(() => {
+            // reset the email field
+            this.setState({ email: "" })
+          })
+      }
     }
   }
 
   render() {
     const parkingSpot = this.state.parkingSpot
-    const parkingSpotGps = `Latitude: ${parkingSpot.lat} / Longitude: ${parkingSpot.lng}`
+    const parkingSpotGps = `${parkingSpot.lat} / ${parkingSpot.lng}`
     const ratePerHour = Number(parkingSpot.rate)
     const ratePerMinute = Number(parkingSpot.rate) / 60
     const ratePerMinuteRounded = round(ratePerMinute, 2)
@@ -188,49 +216,88 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
         <Route exact path="/reserve/:id">
           <div>
             <PageTitle titleText="Reservation Summary" />
-            <h3>Parking Spot ID</h3>
-            <p>{parkingSpot.id}</p>
-            <h3>GPS Coordinates</h3>
-            <p>{parkingSpotGps}</p>
-            <h3>What Three Words</h3>
-            {/* todo: action API call to WTW to convert GPS to whatthreewords */}
-            <p>[to come]</p>
-            <h3>Rate / hour</h3>
-            <p>${ratePerHour.toFixed(2)}</p>
-            <h3>Rate / min</h3>
-            <p>${ratePerMinuteRounded.toFixed(2)}</p>
-            <h3>Reservation Length (minutes)</h3>
-            {/* todo: add validation to set min value to e.g. 5min */}
-            <input
-              name={"reservationLength"}
-              type={"number"}
-              value={this.state.reservationLength}
-              onChange={this.handleChange}
-              required
-            />
-            <h3>Estimated Total Cost ($)</h3>
-            <p>${totalReservationCost.toFixed(2)}</p>
-            {!this.props.user && (
-              <input
-                name={"email"}
-                value={this.state.email}
-                onChange={this.handleChange}
-                placeholder="e-Mail"
-                required
+            <DivTableStyled>
+              <Table borderless size={"sm"} className={"mb-0"}>
+                <TbodyStyled>
+                  <tr>
+                    <td>Parking Spot ID</td>
+                    <td>{parkingSpot.id}</td>
+                  </tr>
+                  <tr>
+                    <td>GPS</td>
+                    <td>{parkingSpotGps}</td>
+                  </tr>
+                  <tr>
+                    <td>$ / hr</td>
+                    <td>{ratePerHour.toFixed(2)}</td>
+                  </tr>
+                  <tr>
+                    <td>$ / min</td>
+                    <td>{ratePerMinuteRounded.toFixed(2)}</td>
+                  </tr>
+                  <tr>
+                    <td>$</td>
+                    <td>{totalReservationCost.toFixed(2)}</td>
+                  </tr>
+                </TbodyStyled>
+              </Table>
+            </DivTableStyled>
+            <DivFormsStyled>
+              <Form
+                noValidate
+                validated={this.state.validated}
+                ref={this.formRef}
+              >
+                <FloatingLabel
+                  controlId="floatingMinutes"
+                  label="reservation length (minutes)"
+                  className="mb-3"
+                >
+                  <Form.Control
+                    type="number"
+                    name={"reservationLength"}
+                    value={this.state.reservationLength}
+                    onChange={this.handleChange}
+                    placeholder="0"
+                    min={"5"}
+                    max={"240"}
+                    required
+                  />
+                  <Form.Control.Feedback type={"invalid"}>
+                    Desired reservation length must be between 5 and 240 minutes
+                  </Form.Control.Feedback>
+                </FloatingLabel>
+                {!this.props.user &&
+                  <FloatingLabel controlId={"floatingEmail"} label={"e-Mail"} >
+                    <Form.Control
+                      type={"email"}
+                      name={"email"}
+                      value={this.state.email}
+                      onChange={this.handleChange}
+                      placeholder={"name@email.com"}
+                      required
+                    />
+                    <Form.Control.Feedback type={"invalid"}>
+                      Enter a valid email address
+                    </Form.Control.Feedback>
+                  </FloatingLabel>
+                }
+              </Form>
+            </DivFormsStyled>
+            <DivButtonsStyled>
+              <CustomButton
+                variant={"secondary"}
+                history={this.props.history}
+                buttonText="Back"
+                urlTarget="/reserve"
               />
-            )}
-          </div>
-          <div>
-            <CustomButton
-              history={this.props.history}
-              buttonText="Back"
-              urlTarget="/reserve"
-            />
-            <CustomButton
-              history={this.props.history}
-              buttonText="Payment"
-              handleSubmit={this.handlePaymentClick}
-            />
+              <CustomButton
+                variant={"primary"}
+                history={this.props.history}
+                buttonText="Payment"
+                handleSubmit={this.handlePaymentClick}
+              />
+            </DivButtonsStyled>
           </div>
         </Route>
         <Route path="/reserve/:id/payment">

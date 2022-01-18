@@ -154,7 +154,7 @@ describe("Test the reserve summary component", () => {
 
     // assertions
     expect(`$${oldParkingSpot1Rate}`).not.toBe(newParkingSpot1Rate)
-    expect(screen.getByText(`$${newParkingSpot1Rate}`)).toBeInTheDocument()
+    expect(screen.getByText(`${newParkingSpot1Rate}`)).toBeInTheDocument()
     expect(storeObjectInStorage).toHaveBeenCalled()
     expect(enqueueNewAlertMock).toHaveBeenCalled()
   })

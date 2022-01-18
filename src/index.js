@@ -16,7 +16,6 @@ initialiseLogRocket()
 
 // initialise dotenv
 dotenv.config()
-console.log(process.env)
 
 ReactDOM.render(
   <React.StrictMode>

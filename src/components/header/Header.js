@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-// import styling elements
+// import React / Bootstrap elements
 import {
   Navbar,
   Container,
@@ -8,6 +8,12 @@ import {
   NavDropdown,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
+
+// import styled elements
+import {
+  NavbarBrand,
+  NavbarCollapse
+} from "./header.styles";
 
 // import utility functions
 import { signOutRequest } from "../../httpRequests/auth";
@@ -90,17 +96,17 @@ class Header extends Component {
         <Navbar bg="light" expand="lg" fixed="top" expanded={this.state.expanded}
         >
           <Container>
-            <Navbar.Brand>Secure-My-Spot</Navbar.Brand>
+            <NavbarBrand>Secure-My-Spot</NavbarBrand>
             <Navbar.Toggle
               aria-controls="basic-navbar-nav"
               onClick={(event) => this.handleNavbarCollapse(event)} />
-            <Navbar.Collapse id="basic-navbar-nav">
+            <NavbarCollapse id="basic-navbar-nav">
               <Nav className="ms-auto"
                    onClick={(event) => this.handleNavbarCollapse(event)}>
                 {user && <span className="navbar-text mr-5">Welcome, {user.email}</span>}
                 {user ? authenticatedHeaderJsx : unauthenticatedHeaderJsx}
               </Nav>
-            </Navbar.Collapse>
+            </NavbarCollapse>
           </Container>
         </Navbar>
       </>

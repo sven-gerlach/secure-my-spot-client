@@ -46,14 +46,12 @@ class App extends Component {
     // if reservation is not null, set a timeout and enqueue it
     if (this.state.reservation) {
       // create timeout to remove reservation from local storage
-      console.log(this.state)
       const now = Date.now()
       const endTime = Date.parse(this.state.reservation.endTime)
       const delay = endTime - now
 
       // set timeout
       const timeoutID = setTimeout(() => {
-        console.log("Cancel reservation 7")
         this.setReservation(null)
       }, delay)
 
@@ -106,7 +104,6 @@ class App extends Component {
         let timeoutID
         if (delay > 0) {
           timeoutID = setTimeout(() => {
-            console.log("Cancel reservation 8")
             this.setReservation(null)
             // todo: add an alert or a modal that informs the user that the current reservation has expired
           }, delay)
@@ -168,7 +165,6 @@ class App extends Component {
   }
 
   render() {
-    console.log(process.env.REACT_APP_TEST)
     return (
       // this div captures any click events and closes the header if it was in an open state
       <Div onClick={(event) => this.handleBackgroundClick(event)}>
