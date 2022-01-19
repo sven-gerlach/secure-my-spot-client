@@ -25,7 +25,7 @@ describe("the Header", () => {
     userEvent.click(getByText("Create Account"), {button: 0})
 
     // assert link forwarding works
-    expect(screen.getByRole("heading")).toHaveTextContent("Create Account")
+    expect(screen.getByRole("heading")).toHaveTextContent("Create a New Account")
   })
 
   it("shows the Sign-In page if clicked", () => {

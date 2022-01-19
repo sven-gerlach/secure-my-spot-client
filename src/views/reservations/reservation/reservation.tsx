@@ -7,9 +7,11 @@ import React, { Component } from "react";
 
 // import custom components
 import CustomButton from "../../../components/button/CustomButton";
+import { Reservation as CustomReservationSummary } from "../../../components/reservation/Reservation";
 
 // import interfaces
 import { IReservation } from "../../../types";
+import { round } from "lodash";
 
 interface IProps {
   reservation: IReservation,
@@ -54,17 +56,20 @@ class Reservation extends Component<IProps> {
         />
       </>
     )
+    const startTime = Date.parse(reservation.startTime)
+    const endTime = Date.parse(reservation.endTime)
+    // note: smallest time-delta is always a multiple of a full minute
+    const timeDeltaMinutes = (endTime - startTime) / 60000
 
     return (
       <>
-        <h3>Reservation ID:</h3>
-        <p>{reservation.id}</p>
-        <h3>Parking Spot:</h3>
-        <p>{reservation.parkingSpot}</p>
-        <h3>Start Time:</h3>
-        <p>{reservation.startTime}</p>
-        <h3>End Time:</h3>
-        <p>{reservation.endTime}</p>
+        <CustomReservationSummary
+          reservationID={reservation.id}
+          parkingSpotID={reservation.parkingSpot}
+          startTime={reservation.startTime}
+          endTime={reservation.endTime}
+          totalReservationCost={timeDeltaMinutes / round(Number(reservation.rate) / 60, 2)}
+        />
         {this.isReservationActive() ? buttonJSX : ""}
       </>
     )

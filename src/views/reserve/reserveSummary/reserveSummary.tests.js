@@ -98,6 +98,7 @@ describe("Test the reserve summary component", () => {
           <ReserveSummary
             availableParkingSpots={availableParkingSpots}
             history={props.history}
+            enqueueNewAlert={jest.fn()}
           />
         )} />
         <Route path="/reserve" render={() => <h1>Reservation Page</h1>} />

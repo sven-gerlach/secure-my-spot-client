@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { round, isEqual } from "lodash";
-import CustomButton from "../../../components/button/CustomButton";
 
 // import util functions
 import { storeObjectInStorage } from "../../../utils/storage";

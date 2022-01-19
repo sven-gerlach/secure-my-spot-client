@@ -18,6 +18,7 @@ import {
 // import utility functions
 import { signOutRequest } from "../../httpRequests/auth";
 import { removeObjectFromStorage } from "../../utils/storage";
+import messages from "../../utils/alertMessages";
 
 
 class Header extends Component {
@@ -47,8 +48,12 @@ class Header extends Component {
         removeObjectFromStorage("reservation", "local")
         // redirect to landing page
         this.props.history.push("/")
+        // enqueue alert
+        this.props.enqueueNewAlert(...messages.successfulSignOut)
       })
-      .catch(console.error)
+      .catch(e => {
+        this.props.enqueueNewAlert(...messages.failedSignOut)
+      })
   }
 
   render() {

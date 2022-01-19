@@ -4,8 +4,9 @@ import { Route, RouteComponentProps } from "react-router-dom";
 
 // import components
 import CustomButton from "../../../components/button/CustomButton";
-import { Button, FloatingLabel, Form, Modal, Table } from "react-bootstrap";
+import { Button, FloatingLabel, Form, Modal } from "react-bootstrap";
 import StripePayments from "./payment/StripePayments";
+import { Reservation } from "../../../components/reservation/Reservation";
 
 // import utils
 import { isEqual, round } from "lodash";
@@ -21,8 +22,6 @@ import camelcaseKeys from "camelcase-keys";
 
 // import styles
 import {
-  TbodyStyled,
-  DivTableStyled,
   DivFormsStyled,
   DivButtonsStyled
 } from "./reserveSummary.styles";
@@ -208,7 +207,6 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
     const parkingSpotGps = `${parkingSpot.lat} / ${parkingSpot.lng}`
     const ratePerHour = Number(parkingSpot.rate)
     const ratePerMinute = Number(parkingSpot.rate) / 60
-    const ratePerMinuteRounded = round(ratePerMinute, 2)
     const totalReservationCost = round(Number(this.state.reservationLength) * ratePerMinute, 2)
 
     return (
@@ -216,32 +214,13 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
         <Route exact path="/reserve/:id">
           <div>
             <PageTitle titleText="Reservation Summary" />
-            <DivTableStyled>
-              <Table borderless size={"sm"} className={"mb-0"}>
-                <TbodyStyled>
-                  <tr>
-                    <td>Parking Spot ID</td>
-                    <td>{parkingSpot.id}</td>
-                  </tr>
-                  <tr>
-                    <td>GPS</td>
-                    <td>{parkingSpotGps}</td>
-                  </tr>
-                  <tr>
-                    <td>$ / hr</td>
-                    <td>{ratePerHour.toFixed(2)}</td>
-                  </tr>
-                  <tr>
-                    <td>$ / min</td>
-                    <td>{ratePerMinuteRounded.toFixed(2)}</td>
-                  </tr>
-                  <tr>
-                    <td>$</td>
-                    <td>{totalReservationCost.toFixed(2)}</td>
-                  </tr>
-                </TbodyStyled>
-              </Table>
-            </DivTableStyled>
+            <Reservation
+                parkingSpotID={parkingSpot.id}
+                parkingSpotGPS={parkingSpotGps}
+                ratePerHour={ratePerHour}
+                ratePerMinute={ratePerMinute}
+                totalReservationCost={totalReservationCost}
+            />
             <DivFormsStyled>
               <Form
                 noValidate

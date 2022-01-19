@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Button, FloatingLabel, Form } from "react-bootstrap";
 
 // import components
 import PageTitle from "../../components/pageTitle/PageTitle"
@@ -20,15 +21,16 @@ class SignInView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      "email": "",
-      "password": "",
+      email: "",
+      password: "",
+      formValidated: false,
     }
   }
 
   clearSignInForm = () => {
     this.setState({
-      "email": "",
-      "password": "",
+      email: "",
+      password: "",
     })
   }
 
@@ -41,48 +43,61 @@ class SignInView extends Component {
   }
 
   handleSubmit = (event) => {
-    const data = { ...this.state }
+    event.preventDefault()
 
-    // replace password with a hashed password
-    data.password = data.password
-      ? getHashedPassword(data.password)
-      : ""
+    const form = event.currentTarget;
+    if (!form.checkValidity()) {
+      event.stopPropagation()
+      this.setState({formValidated: true})
+    }
+    else {
+      const data = { ...this.state }
 
-    // make a http request to the api with email and password
-    signInRequest(data)
-      // if authorisation is successful store the returned token in a JS object
-      .then(response => {
-        // clear state of sign-in form
-        this.clearSignInForm()
+      // replace password with a hashed password
+      data.password = data.password
+        ? getHashedPassword(data.password)
+        : ""
 
-        // save user object (email and token) in App state and store user token in session storage
-        this.props.setUser(response.data)
+      // make a http request to the api with email and password
+      signInRequest(data)
+        // if authorisation is successful store the returned token in a JS object
+        .then(response => {
+          // clear state of sign-in form
+          this.clearSignInForm()
 
-        // clear the local storage from any previous reservations (this is relevant if an unauthenticated user makes a
-        // reservation followed by an authenticated user on the same device / client
-        removeObjectFromStorage("reservation", "local")
+          // save user object (email and token) in App state and store user token in session storage
+          this.props.setUser(response.data)
 
-        // log user with LogRocket
-        logUser(response.data)
+          // clear the local storage from any previous reservations (this is relevant if an unauthenticated user makes a
+          // reservation followed by an authenticated user on the same device / client
+          removeObjectFromStorage("reservation", "local")
 
-        // redirect to /reserve
-        this.props.history.push("/reserve")
-      })
-      // if authorisation fails...
-      .catch(e => {
-        this.props.enqueueNewAlert(...messages.failedSignIn)
-        this.clearSignInForm()
-        console.error(e);
-      })
+          // log user with LogRocket
+          logUser(response.data)
+
+          // redirect to /reserve
+          this.props.history.push("/reserve")
+
+          // enqueue success message
+          this.props.enqueueNewAlert(...messages.successfulSignIn)
+        })
+        // if authorisation fails...
+        .catch(e => {
+          this.props.enqueueNewAlert(...messages.failedSignIn)
+          this.clearSignInForm()
+          console.error(e)
+        })
+    }
+
   }
 
   render() {
     return (
       <>
         <PageTitle titleText="Sign-In" />
-        <form>
-          <div>
-            <input
+        <Form noValidate validated={this.state.formValidated} onSubmit={this.handleSubmit}>
+          <FloatingLabel label={"e-Mail"} className={"mb-3"} >
+            <Form.Control
               type="email"
               name="email"
               autoComplete="username"
@@ -92,9 +107,12 @@ class SignInView extends Component {
               value={this.state.email}
               onChange={this.handleChange}
             />
-          </div>
-          <div>
-            <input
+            <Form.Control.Feedback type={"invalid"} >
+              Enter a valid e-Mail
+            </Form.Control.Feedback>
+          </FloatingLabel>
+          <FloatingLabel label={"password"} className={"mb-3"} >
+            <Form.Control
               type="password"
               name="password"
               autoComplete="current-password"
@@ -103,18 +121,12 @@ class SignInView extends Component {
               value={this.state.password}
               onChange={this.handleChange}
             />
-          </div>
-          <CustomButton
-            buttonText="Submit"
-            handleSubmit={this.handleSubmit}
-          />
-        </form>
-        <CustomButton
-          {...this.props}
-          variant={"secondary"}
-          buttonText="Back"
-          urlTarget="/"
-        />
+            <Form.Control.Feedback type={"invalid"} >
+              Enter your confidential password
+            </Form.Control.Feedback>
+          </FloatingLabel>
+          <Button type={"submit"} >Submit</Button>
+        </Form>
       </>
     )
   }

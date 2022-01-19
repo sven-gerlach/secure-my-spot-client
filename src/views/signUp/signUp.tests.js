@@ -14,22 +14,33 @@ jest.mock("../../httpRequests/auth")
 
 //reset all mock functions at the end of the test suite
 afterAll(() => {
-  jest.resetAllMocks()
+  jest.clearAllMocks()
 })
 
 describe("SignUpView", () => {
   beforeEach(() => {
     // assign a mock function to signUpRequest, returning a resolved promise
-    signUpRequest.mockImplementation(() => Promise.resolve()).mockName("signUpRequest")
+    // https://www.robinwieruch.de/axios-jest/
+    signUpRequest.mockImplementation(() => Promise.resolve({ data: { email: "sample@email.com", token: "a_secure_token" } })).mockName("signUpRequest")
 
     // mock browser history
     const historyMock = createBrowserHistory()
+
+    // mock enqueueNewAlert function
+    const enqueueNewAlertMock = jest.fn()
+
+    // mock setNewUser function
+    const setUserMock = jest.fn()
 
     // render the SignUpView
     render(
       <BrowserRouter>
         <Route render={() => (
-          <SignUpView history={historyMock} />
+          <SignUpView
+            history={historyMock}
+            setUser={setUserMock}
+            enqueueNewAlert={enqueueNewAlertMock}
+          />
         )} />
         <Route
           path="/"
@@ -48,14 +59,6 @@ describe("SignUpView", () => {
     jest.clearAllMocks()
   })
 
-  describe("press the back-button", () => {
-    test("brings the user back to \"/\"", () => {
-      userEvent.click(screen.getByRole("button", { name: "Back" }))
-      expect(screen.getByText("will be rendered")).toBeInTheDocument()
-      expect(screen.queryByText("will not be rendered")).toBeNull()
-    })
-  })
-
   describe("typing in the input fields", () => {
     test("changes the input field values to the typed string", () => {
       // type something into all three input fields
@@ -72,8 +75,13 @@ describe("SignUpView", () => {
 
   describe("click submit button", () => {
     test("call signUpRequest function", () => {
+      // type valid inputs into all three input fields
+      userEvent.type(screen.getByPlaceholderText("e-Mail"), "sample@email.com")
+      userEvent.type(screen.getByPlaceholderText("Password"), "some password")
+      userEvent.type(screen.getByPlaceholderText("Confirm Password"), "some password")
+
       // click submit button
-      userEvent.click(screen.getByRole("button", { name: "Submit" }))
+      userEvent.click(screen.getByRole("button", { name: "Sign Up" }))
 
       // assert that mock implementation of signUpRequest has been called
       expect(signUpRequest).toHaveBeenCalled()
@@ -81,7 +89,7 @@ describe("SignUpView", () => {
 
     test("reset input field values to empty string",() => {
       // click submit button
-      userEvent.click(screen.getByRole("button", { name: "Submit" }))
+      userEvent.click(screen.getByRole("button", { name: "Sign Up" }))
 
       // assert that all three input fields have display value of ""
       expect(screen.getByPlaceholderText("e-Mail")).toHaveDisplayValue("")

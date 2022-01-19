@@ -56,6 +56,9 @@ describe("the header", () => {
         // mock a setUser function
         const setUserMock = jest.fn()
 
+        // mock the enqueueNewAlert function
+        const enqueueNewAlertMock = jest.fn()
+
         // render the header
         render(
           <BrowserRouter>
@@ -63,6 +66,7 @@ describe("the header", () => {
               history={historyMock}
               user={userMock}
               setUser={setUserMock}
+              enqueueNewAlert={enqueueNewAlertMock}
             />
             <Route path="/" render={() => <h1>This result only shows if redirection was successful</h1>} />
           </BrowserRouter>
@@ -73,6 +77,7 @@ describe("the header", () => {
         // click on account followed by clicking on sign-out link
         await waitFor(() => {
           expect(setUserMock).toHaveBeenCalledTimes(1)
+          expect(enqueueNewAlertMock).toHaveBeenCalledTimes(1)
           expect(screen.getByText(/redirection was successful/)).toBeInTheDocument()
         })
       })

@@ -24,26 +24,6 @@ jest.mock("../../config/configLogRocket", () => ({ logUser: jest.fn() }))
 
 
 describe("sign-in view", () => {
-  describe("if back button is clicked", () => {
-    test("user is sent back to main page", () => {
-      // mock setUser function
-      const setUserMock = jest.fn().mockName("setUser")
-
-      render(
-        <BrowserRouter>
-          <Route render={(props) => (
-            <SignIn {...props} setUser={setUserMock} />
-          )}/>
-          <Route path="/" render={() => <p>a new page</p>} />
-        </BrowserRouter>
-      )
-
-      // assert that clicking the back button will redirect to the main page
-      userEvent.click(screen.getByText("Back"))
-      expect(screen.getByText("a new page")).toBeInTheDocument()
-    })
-  })
-
   describe("typing in the input fields", () => {
     test("changes the field values", () => {
       render(<SignIn />)
@@ -77,10 +57,16 @@ describe("sign-in view", () => {
         })
       })
 
+      const enqueueNewAlertMock = jest.fn()
+
       // render signIn with setUserMock
       render(
         <BrowserRouter>
-          <SignIn setUser={setUserMock} history={historyMock} />
+          <SignIn
+            setUser={setUserMock}
+            history={historyMock}
+            enqueueNewAlert={enqueueNewAlertMock}
+          />
           <Route path="/reserve" render={() => <p>reservations</p>} />
         </BrowserRouter>
       )

@@ -15,7 +15,6 @@ import { createStripePaymentIntent } from "../../../../httpRequests/payment";
 
 
 // This is your test publishable API key.
-console.log(process.env.REACT_APP_STRIPE_API_TEST_KEY)
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_API_TEST_KEY);
 
 export default function StripePayments(props) {

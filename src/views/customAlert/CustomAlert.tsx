@@ -29,7 +29,7 @@ class CustomAlert extends Component<IProps, IState> {
     this.timeoutID = null
   }
   componentDidMount() {
-    const timeoutID: ReturnType<typeof setTimeout> = setTimeout(this.handleClose, 7 * 1000)
+    const timeoutID: ReturnType<typeof setTimeout> = setTimeout(this.handleClose, 10 * 1000)
     this.timeoutID = timeoutID
   }
 

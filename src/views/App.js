@@ -190,6 +190,7 @@ class App extends Component {
             user={this.state.user}
             setUser={this.setUser}
             ref={this.headerRef}
+            enqueueNewAlert={this.enqueueNewAlert}
           />
         )}/>
 
@@ -198,7 +199,11 @@ class App extends Component {
 
         {/* Sign-up view */}
         <Route path="/create-account" render={(props) => (
-          <SignUpView {...props} />
+          <SignUpView
+            {...props}
+            setUser={this.setUser}
+            enqueueNewAlert={this.enqueueNewAlert}
+          />
         )}/>
 
         {/* Sign-in view */}
@@ -225,6 +230,7 @@ class App extends Component {
         <Route path="/reservations" render={(props) => (
           <ReservationsView
             {...props}
+            enqueueNewAlert={this.enqueueNewAlert}
             reservation={this.state.reservation}
             setReservation={this.setReservation}
             user={this.state.user}

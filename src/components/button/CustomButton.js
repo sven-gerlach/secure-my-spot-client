@@ -25,14 +25,21 @@ class CustomButton extends Component {
   }
 
   render() {
+    const {
+      variant="primary",
+      size=undefined,
+      type="button",
+      buttonText="Click Me",
+    } = this.props
+
     return (
       <Button
-        variant={this.props.variant}
-        size={this.props.size || ""}
+        variant={variant}
+        size={size}
         onClick={this.handleClick}
-        type="button"
+        type={type}
       >
-        {this.props.buttonText}
+        {buttonText}
       </Button>
     )
   }

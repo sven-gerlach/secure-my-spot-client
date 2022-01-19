@@ -12,7 +12,7 @@
 
 // todo: split module into two components -> 1) auth and 2) unauth
 
-// Import
+// Import React
 import React, { Component } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { DateTime } from "luxon";
@@ -35,12 +35,19 @@ import {
 } from "../../httpRequests/reservation";
 import Reservation from "./reservation/reservation";
 
+// import utils
+import messages from "../../utils/alertMessages";
+
+// import styled components
+import { ButtonStyled, FormStyled } from "./reservations.styles";
+
 // import interfaces
 import { IReservation } from "../../types";
 import camelcaseKeys from "camelcase-keys";
 
 
 interface IProps {
+  enqueueNewAlert: (variant: string, heading: string, message: string) => void,
   user?: { email: string, token: string },
   reservation: IReservation
   setReservation: (reservation: IReservation | null) => void
@@ -206,15 +213,29 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
    * Retrieve a reservation for an unauthenticated user, given the provided email and the reservationID
    * @param e
    */
-  handleRetrieveReservationUnauth = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // call API
-    getReservationUnauth(this.state.reservationIdField, this.state.emailField)
-      .then((res: { data: IReservation | null; }) => {
-        // todo: loading another but still current reservation causes the endTime input field to be displayed incorrectly
-        const data = camelcaseKeys(res.data!)
-        this.props.setReservation(data)
-      })
-      .catch((e: any) => console.error(e))
+  handleRetrieveReservationUnauth = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    const form = e.currentTarget;
+    if (!form.checkValidity()) {
+      e.stopPropagation()
+      this.setState({formValidated: true})
+    }
+    else {
+      this.setState({formValidated: false})
+      // call API
+      getReservationUnauth(this.state.reservationIdField, this.state.emailField)
+        .then((res: { data: IReservation | null; }) => {
+          // todo: loading another but still current reservation causes the endTime input field to be displayed incorrectly
+          const data = camelcaseKeys(res.data!)
+          this.props.setReservation(data)
+        })
+        .catch((e: any) => {
+          if (e.response.status === 404) {
+            this.props.enqueueNewAlert(...messages.notFound404)
+          }
+        })
+    }
   }
 
   handleInputValueChange = (e:React.ChangeEvent<HTMLInputElement>) => {
@@ -344,7 +365,7 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
     // active or not, that matches the email and reservation id
     else {
       unauthUserFormJSX = (
-        <>
+        <FormStyled noValidate validated={this.state.formValidated} onSubmit={this.handleRetrieveReservationUnauth}>
           <FloatingLabel
             controlId="floatingInput"
             label="e-Mail"
@@ -355,7 +376,9 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
               name="emailField"
               placeholder="a"
               onChange={this.handleInputValueChange}
+              required
             />
+            <Form.Control.Feedback type={"invalid"}>Enter a valid email address</Form.Control.Feedback>
           </FloatingLabel>
           <FloatingLabel controlId="floatingPassword" label="Reservation ID">
             <Form.Control
@@ -363,12 +386,14 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
               placeholder="a"
               name="reservationIdField"
               onChange={this.handleInputValueChange}
+              required
             />
+            <Form.Control.Feedback type={"invalid"}>Enter a valid reservation ID</Form.Control.Feedback>
           </FloatingLabel>
-          <Button variant="primary" type="submit" onClick={this.handleRetrieveReservationUnauth}>
+          <ButtonStyled variant="primary" type="submit">
             Find
-          </Button>
-        </>
+          </ButtonStyled>
+        </FormStyled>
       )
     }
 
