@@ -39,7 +39,11 @@ import Reservation from "./reservation/reservation";
 import messages from "../../utils/alertMessages";
 
 // import styled components
-import { ButtonStyled, FormStyled } from "./reservations.styles";
+import {
+  ButtonStyled,
+  FormStyled,
+  H2Styled,
+} from "./reservations.styles";
 
 // import interfaces
 import { IReservation } from "../../types";
@@ -58,7 +62,8 @@ interface IState {
   reservationForModal: IReservation | null,
   reservationEndTimeForModal: string,
   showChangeEndTimeModal: boolean,
-  formValidated: boolean,
+  changeEndTimeFormValidated: boolean,
+  findReservationFormValidated: boolean,
   showEndReservationModal: boolean,
   emailField: string,
   reservationIdField: string,
@@ -75,7 +80,8 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
       reservationForModal: null,
       reservationEndTimeForModal: "",
       showChangeEndTimeModal: false,
-      formValidated: false,
+      changeEndTimeFormValidated: false,
+      findReservationFormValidated: false,
       showEndReservationModal: false,
       emailField: "",
       reservationIdField: "",
@@ -109,6 +115,8 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
    * @param e
    */
   handleChangeEndTime = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+
     const {
       reservationForModal,
       reservationEndTimeForModal
@@ -119,11 +127,10 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
     // grab the form element from the formRef and check for validation
     const form = this.formRef.current
     if (form?.checkValidity() === false) {
-      e.preventDefault()
       e.stopPropagation()
+      this.setState({ changeEndTimeFormValidated: true })
     }
     else {
-      this.setState({ formValidated: true })
 
       // set the endTime in local time
       const endTime = DateTime.fromObject(
@@ -219,16 +226,18 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
     const form = e.currentTarget;
     if (!form.checkValidity()) {
       e.stopPropagation()
-      this.setState({formValidated: true})
+      this.setState({findReservationFormValidated: true})
     }
     else {
-      this.setState({formValidated: false})
       // call API
       getReservationUnauth(this.state.reservationIdField, this.state.emailField)
         .then((res: { data: IReservation | null; }) => {
           // todo: loading another but still current reservation causes the endTime input field to be displayed incorrectly
           const data = camelcaseKeys(res.data!)
           this.props.setReservation(data)
+          // reset form
+          this.setState({findReservationFormValidated: false, emailField: "", reservationIdField: ""})
+          this.props.enqueueNewAlert(...messages.reservationFound)
         })
         .catch((e: any) => {
           if (e.response.status === 404) {
@@ -365,41 +374,48 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
     // active or not, that matches the email and reservation id
     else {
       unauthUserFormJSX = (
-        <FormStyled noValidate validated={this.state.formValidated} onSubmit={this.handleRetrieveReservationUnauth}>
-          <FloatingLabel
-            controlId="floatingInput"
-            label="e-Mail"
-            className="mb-3"
-          >
-            <Form.Control
-              type="email"
-              name="emailField"
-              placeholder="a"
-              onChange={this.handleInputValueChange}
-              required
-            />
-            <Form.Control.Feedback type={"invalid"}>Enter a valid email address</Form.Control.Feedback>
-          </FloatingLabel>
-          <FloatingLabel controlId="floatingPassword" label="Reservation ID">
-            <Form.Control
-              type="text"
-              placeholder="a"
-              name="reservationIdField"
-              onChange={this.handleInputValueChange}
-              required
-            />
-            <Form.Control.Feedback type={"invalid"}>Enter a valid reservation ID</Form.Control.Feedback>
-          </FloatingLabel>
-          <ButtonStyled variant="primary" type="submit">
-            Find
-          </ButtonStyled>
-        </FormStyled>
+        <>
+          {reservation && (
+            <H2Styled>Find Another Reservation</H2Styled>
+          )}
+          <FormStyled noValidate validated={this.state.findReservationFormValidated} onSubmit={this.handleRetrieveReservationUnauth}>
+            <FloatingLabel
+              controlId="floatingInput"
+              label="e-Mail"
+              className="mb-3"
+            >
+              <Form.Control
+                type="email"
+                name="emailField"
+                placeholder="a"
+                onChange={this.handleInputValueChange}
+                value={this.state.emailField}
+                required
+              />
+              <Form.Control.Feedback type={"invalid"}>Enter a valid email address</Form.Control.Feedback>
+            </FloatingLabel>
+            <FloatingLabel controlId="floatingPassword" label="Reservation ID">
+              <Form.Control
+                type="text"
+                placeholder="a"
+                name="reservationIdField"
+                onChange={this.handleInputValueChange}
+                value={this.state.reservationIdField}
+                required
+              />
+              <Form.Control.Feedback type={"invalid"}>Enter a valid reservation ID</Form.Control.Feedback>
+            </FloatingLabel>
+            <ButtonStyled variant="primary" type="submit">
+              Find
+            </ButtonStyled>
+          </FormStyled>
+        </>
       )
     }
 
     const changeEndTimeModalBodyJSX = (
       <>
-        <Form noValidate validated={this.state.formValidated} ref={this.formRef} >
+        <Form noValidate validated={this.state.changeEndTimeFormValidated} ref={this.formRef} >
           <Form.Label>End-Time</Form.Label>
           <Form.Control
             type="time"
@@ -439,7 +455,7 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
           keyboard={false}
         >
           <Modal.Header>
-            <Modal.Title>Change Your Reservation End-Time</Modal.Title>
+            <Modal.Title>Set a New End-Time</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             {changeEndTimeModalBodyJSX}
@@ -468,7 +484,7 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
             {endReservationModalBodyJSX}
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="warning" onClick={this.handleEndReservation}>
+            <Button variant="danger" onClick={this.handleEndReservation}>
               Confirm
             </Button>
             <Button variant="secondary" onClick={this.toggleEndReservationModal}>

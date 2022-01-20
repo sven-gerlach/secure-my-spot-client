@@ -15,6 +15,7 @@ import ReservationsView from "./reservations/reservations";
 
 // import components
 import Header from "../components/header/Header";
+import ChangePwView from "./changePw/ChangePw";
 
 // Import utility functions
 import {
@@ -212,6 +213,15 @@ class App extends Component {
             {...props}
             setUser={this.setUser}
             enqueueNewAlert={this.enqueueNewAlert}
+          />
+        )}/>
+
+        {/* Change password view */}
+        <Route path={"/change-password"} render={(props) => (
+          <ChangePwView
+            {...props}
+            enqueueNewAlert={this.enqueueNewAlert}
+            user={this.state.user}
           />
         )}/>
 

@@ -130,12 +130,10 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
   handlePaymentClick = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
 
-    this.setState({validated: true})
-
     const form = this.formRef.current;
-
     if (!form?.checkValidity()) {
       e.stopPropagation()
+      this.setState({validated: true})
     }
     else {
       // stop getting and setting available parking spots to prevent the reservation of a parking spot causing the

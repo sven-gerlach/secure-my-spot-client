@@ -13,6 +13,9 @@ import { Reservation as CustomReservationSummary } from "../../../components/res
 import { IReservation } from "../../../types";
 import { round } from "lodash";
 
+// import styled components
+import { DivStyled } from "./reservation.styles";
+
 interface IProps {
   reservation: IReservation,
   toggleChangeEndTimeModal: () => void,
@@ -34,7 +37,7 @@ class Reservation extends Component<IProps> {
     const { reservation } = this.props
 
     const buttonJSX = (
-      <>
+      <DivStyled>
         <CustomButton
           buttonText="Change End-Time"
           handleSubmit={() => {
@@ -46,7 +49,7 @@ class Reservation extends Component<IProps> {
         />
         <CustomButton
           buttonText="End Reservation"
-          variant={"warning"}
+          variant={"danger"}
           handleSubmit={() => {
             // set the relevant reservation for the modal to use
             this.props.setReservationForModalState(reservation)
@@ -54,7 +57,7 @@ class Reservation extends Component<IProps> {
             this.props.toggleEndReservationModal()
           }}
         />
-      </>
+      </DivStyled>
     )
     const startTime = Date.parse(reservation.startTime)
     const endTime = Date.parse(reservation.endTime)

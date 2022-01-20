@@ -55,8 +55,26 @@ function signOutRequest(token) {
   })
 }
 
+/**
+ * Changing the password of an authenticated and authorized user
+ * @param token
+ * @param data
+ * @return {AxiosPromise}
+ */
+function sendChangePasswordRequest(token, data) {
+  return axios({
+    method: "patch",
+    url: urlHostnameAPI + "/change-pw/",
+    headers: {
+      "Authorization": `Token ${token}`
+    },
+    data: data
+  })
+}
+
 export {
   signUpRequest,
   signInRequest,
   signOutRequest,
+  sendChangePasswordRequest,
 }

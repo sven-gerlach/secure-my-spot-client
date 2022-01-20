@@ -34,11 +34,26 @@ const messages: IMessages = {
     "Oops...",
     "Something went wrong. You are still signed in. Please try again."
   ],
+  successfulChangePassword: [
+    "success",
+    "Successfully Changed Password",
+    "You have successfully changed your password."
+  ],
+  failedChangePassword: [
+    "warning",
+    "Oops...",
+    "Something went wrong. Your password has not changed. Please try again."
+  ],
   notFound404: [
     "warning",
     "Not Found",
     "This reservation does not exist"
   ],
+  reservationFound: [
+    "success",
+    "Reservation Found",
+    "This reservation has been located and displayed."
+  ]
 }
 
 export default messages

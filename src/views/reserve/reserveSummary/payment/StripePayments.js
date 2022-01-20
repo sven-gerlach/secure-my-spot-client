@@ -13,6 +13,8 @@ import CheckoutForm from "./CheckoutForm";
 // import utils
 import { createStripePaymentIntent } from "../../../../httpRequests/payment";
 
+// import styling
+import "./stripe.css"
 
 // This is your test publishable API key.
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_API_TEST_KEY);
