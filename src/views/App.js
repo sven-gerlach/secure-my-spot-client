@@ -17,6 +17,9 @@ import ReservationsView from "./reservations/reservations";
 import Header from "../components/header/Header";
 import ChangePwView from "./changePw/ChangePw";
 
+// import styled components
+import Div from "./app.styles"
+
 // Import utility functions
 import {
   getObjectFromStorage,
@@ -24,8 +27,6 @@ import {
   removeObjectFromStorage,
 } from "../utils/storage";
 
-// import styles
-import Div from "./app.styles"
 
 
 /** class encompassing all views

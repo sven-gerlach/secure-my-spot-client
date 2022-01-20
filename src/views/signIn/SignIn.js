@@ -3,7 +3,6 @@ import { Button, FloatingLabel, Form } from "react-bootstrap";
 
 // import components
 import PageTitle from "../../components/pageTitle/PageTitle"
-import CustomButton from "../../components/button/CustomButton";
 
 // import helper functions
 import { signInRequest } from "../../httpRequests/auth";
