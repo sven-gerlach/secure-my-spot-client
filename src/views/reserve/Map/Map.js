@@ -1,11 +1,15 @@
+// import React / Bootstrap
 import React, { Component } from "react";
-import { round, isEqual } from "lodash";
 
 // import util functions
 import { storeObjectInStorage } from "../../../utils/storage";
+import { round, isEqual } from "lodash";
 
 // import styles
-import MapDiv from "./map.styles";
+import {
+  MapDiv,
+  SpinnerStyled
+} from "./map.styles";
 import { MarkerClusterer } from "@googlemaps/markerclusterer"
 import parkingSign from "../../../assets/img/parking_sign_icon.png"
 
@@ -265,9 +269,15 @@ class Map extends Component {
 
   render() {
     return (
-      <MapDiv
-        ref={this.mapRef}
-      />
+      <>
+        <MapDiv ref={this.mapRef}>
+        </MapDiv>
+        {this.props.isSpinnerDisplayed && (
+          <SpinnerStyled animation="border" role="status" variant={"primary"}>
+            <span className="visually-hidden">Loading...</span>
+          </SpinnerStyled>
+        )}
+      </>
     )
   }
 }

@@ -53,6 +53,11 @@ const messages: IMessages = {
     "success",
     "Reservation Found",
     "This reservation has been located and displayed."
+  ],
+  failedRetrievalAvailableSpots: [
+    "warning",
+    "Oops...",
+    "Could not load currently available parking spots."
   ]
 }
 

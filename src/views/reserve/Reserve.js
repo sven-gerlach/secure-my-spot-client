@@ -18,6 +18,7 @@ import { getAllAvailableParkingSpots } from "../../httpRequests/parkingSpots";
 
 // import utils
 import camelcaseKeys from "camelcase-keys";
+import messages from "../../utils/alertMessages";
 
 
 /**
@@ -29,7 +30,8 @@ class ReserveView extends Component {
     super(props);
     this.state = {
       userLocation: { lat: 40.754287, lng: -73.988412 },
-      availableParkingSpots: null
+      availableParkingSpots: null,
+      isSpinnerDisplayed: false,
     }
   }
 
@@ -47,6 +49,8 @@ class ReserveView extends Component {
         })
       })
     }
+    // start spinner
+    this.setState({isSpinnerDisplayed: true})
     // retrieve available parking spots from API immediately
     this.setAvailableParkingSpots()
     // and set up an interval api request to retrieve available parking spots every 5 seconds
@@ -62,8 +66,9 @@ class ReserveView extends Component {
         })
       })
       .catch(error => {
-        console.error(error)
+        this.props.enqueueNewAlert(...messages.failedRetrievalAvailableSpots)
       })
+      .finally(() => this.setState({isSpinnerDisplayed: false}))
   }
 
   clearSetAvailableParkingSpotsInterval = () => {
@@ -84,6 +89,7 @@ class ReserveView extends Component {
               availableParkingSpots={this.state.availableParkingSpots}
               userLocation={this.state.userLocation}
               history={this.props.history}
+              isSpinnerDisplayed={this.state.isSpinnerDisplayed}
             />
           </Wrapper>
         </Route>

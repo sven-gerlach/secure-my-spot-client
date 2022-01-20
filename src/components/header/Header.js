@@ -81,7 +81,6 @@ class Header extends Component {
         <Nav.Link as={Link} to="/reserve">Reserve</Nav.Link>
         <Nav.Link as={Link} to="/reservations">My Reservations</Nav.Link>
         <NavDropdown title="Account" id="basic-nav-dropdown">
-          <NavDropdown.Item as={Link} to="/my-detail">My Detail</NavDropdown.Item>
           <NavDropdown.Item as={Link} to="/change-password">Change Password</NavDropdown.Item>
           <NavDropdown.Divider />
           <NavDropdown.Item
