@@ -43,6 +43,8 @@ import {
   ButtonStyled,
   FormStyled,
   H2Styled,
+  H3Styled,
+  DivStyled,
 } from "./reservations.styles";
 
 // import interfaces
@@ -347,7 +349,7 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
           )
         }
         else {
-          reservationJSX = <p>No reservations available...</p>
+          reservationJSX = <p>No active reservations available...</p>
         }
       }
     }
@@ -357,16 +359,18 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
     if (user) {
       authUserButtonJSX = (
         <>
-          <h3>Not what you are looking for?</h3>
-          <p>Alternatively, you can display all of your active or expired reservations.</p>
-          <CustomButton
-            buttonText="Active"
-            handleSubmit={this.handleActiveReservationsAuth}
-          />
-          <CustomButton
-            buttonText="Expired"
-            handleSubmit={this.handleExpiredReservationsAuth}
-          />
+          <H3Styled>Not what you are looking for?</H3Styled>
+          <p>You can also display all of your active or expired reservations.</p>
+          <DivStyled>
+            <CustomButton
+              buttonText="Active"
+              handleSubmit={this.handleActiveReservationsAuth}
+            />
+            <CustomButton
+              buttonText="Expired"
+              handleSubmit={this.handleExpiredReservationsAuth}
+            />
+          </DivStyled>
         </>
       )
     }

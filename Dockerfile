@@ -46,6 +46,13 @@ FROM nginx
 # https://hub.docker.com/_/nginx
 COPY --from=build /app/build /usr/share/nginx/html
 
+ARG REACT_APP_SESSION_ENCRYPTION_KEY
+ARG REACT_APP_GOOGLE_MAPS_KEY
+ARG REACT_APP_STRIPE_API_TEST_KEY
+ENV REACT_APP_SESSION_ENCRYPTION_KEY $REACT_APP_SESSION_ENCRYPTION_KEY
+ENV REACT_APP_GOOGLE_MAPS_KEY $REACT_APP_GOOGLE_MAPS_KEY
+ENV REACT_APP_STRIPE_API_TEST_KEY $REACT_APP_STRIPE_API_TEST_KEY
+
 # by default nginx listens to port 80
 # however, Heroku provides the PORT as an environment variable and which is subject to change
 # specify the root (index.html) and the port which nginx needs to listen on in nginx-setup.conf

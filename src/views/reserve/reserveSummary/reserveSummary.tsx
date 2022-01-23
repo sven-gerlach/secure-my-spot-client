@@ -157,6 +157,9 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
             // call setReservation in App view, which stores reservation in App state and stores it in local storage
             this.props.setReservation(data)
           })
+          .then((res: any) => {
+            this.props.history.push(`/reserve/${this.props.reservation.id}/payment`)
+          })
           .catch((e: { response: { data: { [x: string]: any[]; }; }; }) => {
             this.props.enqueueNewAlert(
               "danger",
@@ -165,8 +168,7 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
             )
           })
       } else {
-        // send reservationLength and email to API
-
+        // create data object to be sent to API
         const data = {
           "reservation": {
             "email": this.state.email,
@@ -280,7 +282,7 @@ class ReserveSummary extends Component<IProps & RouteComponentProps<IRouteParams
         <Route path="/reserve/:id/payment">
           <StripePayments
             {...this.props}
-            email={this.state.email}
+            email={this.props.user ? this.props.user.email : this.state.email}
           />
         </Route>
         {/* Modal: displays an alert that currently viewed parking spot can no longer be reserved, leading the user back

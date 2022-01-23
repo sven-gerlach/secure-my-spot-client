@@ -270,8 +270,7 @@ class Map extends Component {
   render() {
     return (
       <>
-        <MapDiv ref={this.mapRef}>
-        </MapDiv>
+        <MapDiv ref={this.mapRef} />
         {this.props.isSpinnerDisplayed && (
           <SpinnerStyled animation="border" role="status" variant={"primary"}>
             <span className="visually-hidden">Loading...</span>

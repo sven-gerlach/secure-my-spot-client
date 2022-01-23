@@ -17,8 +17,24 @@ const H2Styled = styled.h2`
   color: ${colorThemes.blackCoral};
 `
 
+const H3Styled = styled.h3`
+  margin-top: 30px;
+`
+
+const DivStyled = styled.div`
+  display: flex;
+  gap: 20px;
+  padding-bottom: 30px;
+  
+  button {
+    flex: 1 1 0;
+  }
+`
+
 export {
   FormStyled,
   ButtonStyled,
   H2Styled,
+  H3Styled,
+  DivStyled,
 }

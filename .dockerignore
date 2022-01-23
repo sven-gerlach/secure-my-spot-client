@@ -13,3 +13,6 @@ docker-compose-dev.yml
 docker-compose-prod.yml
 heroku.yml
 README.md
+
+# this file contains all the ENVs necessary for the api
+create_docker_image.sh
