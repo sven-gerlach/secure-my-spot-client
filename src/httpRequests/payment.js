@@ -2,14 +2,18 @@
  * Module for all http requests associated with Stripe payment endpoints
  */
 
-import urlConfig from "./urlConfigAPI";
 import axios from "axios";
+import urlHostnameAPI from "./urlConfigAPI";
 
-
-function createStripePaymentIntent(data) {
+/**
+ *
+ * @param data
+ * @return {AxiosPromise}
+ */
+function createStripeSetupIntent(data) {
   return axios({
     method: "post",
-    url: urlConfig + "/create-payment-intent/",
+    url: urlHostnameAPI + "/create-payment-intent-unauth/",
     headers: {
       "Content-Type": "application/json"
     },
@@ -17,6 +21,19 @@ function createStripePaymentIntent(data) {
   })
 }
 
+
+function sendReservationConfirmationToAPI(reservationID, email) {
+  return axios({
+    method: "get",
+    url: urlHostnameAPI + "/confirm-successful-setup-intent-unauth" + "/" + reservationID + "/" + email + "/",
+    headers: {
+      "Content-Type": "application/json"
+    },
+  })
+}
+
+
 export {
-  createStripePaymentIntent,
+  createStripeSetupIntent,
+  sendReservationConfirmationToAPI,
 }

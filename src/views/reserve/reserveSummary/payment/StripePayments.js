@@ -6,12 +6,16 @@
 import React, { useState, useEffect } from "react";
 
 // Stripe imports
-import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
-import CheckoutForm from "./CheckoutForm";
+import { loadStripe } from "@stripe/stripe-js";
+import SetupForm from "./SetupForm";
 
 // import utils
-import { createStripePaymentIntent } from "../../../../httpRequests/payment";
+import { createStripeSetupIntent } from "../../../../httpRequests/payment";
+import {
+  sendAuthDeleteRequestToAPI,
+  sendUnauthDeleteRequestToAPI
+} from "../../../../httpRequests/reservation";
 
 // import styling
 import "./stripe.css"
@@ -23,15 +27,32 @@ export default function StripePayments(props) {
   const [clientSecret, setClientSecret] = useState("");
 
   useEffect(() => {
-    // Create PaymentIntent as soon as the page loads
+    // Create SetupIntent as soon as the page loads
     const data = { email: props.email, reservation_id: props.reservation.id }
-    createStripePaymentIntent(data)
+    createStripeSetupIntent(data)
       .then(res => {
         setClientSecret(res.data.clientSecret)
       })
       .catch(e => console.error(e))
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    // if user navigates away from the page, cancel the reservation of the parking slot
+    return () => {
+      // make API call to release reserved parking spot
+      if (props.user) {
+        sendAuthDeleteRequestToAPI(props.reservation.id, props.user.token)
+      }
+      else {
+        sendUnauthDeleteRequestToAPI(props.reservation.id, props.reservation.email)
+      }
+
+      // reset reservation state to null
+      props.setReservation(null)
+    }
+    // eslint-disable-next-line
+  }, [])
 
   const appearance = {
     theme: 'stripe',
@@ -45,7 +66,7 @@ export default function StripePayments(props) {
     <div className="StripePayments">
       {clientSecret && (
         <Elements options={options} stripe={stripePromise}>
-          <CheckoutForm />
+          <SetupForm enqueueNewAlert={props.enqueueNewAlert} />
         </Elements>
       )}
     </div>

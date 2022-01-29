@@ -34,9 +34,14 @@ import {
   updateReservationUnauth,
 } from "../../httpRequests/reservation";
 import Reservation from "./reservation/reservation";
+import PaymentStatus from "../reserve/reserveSummary/payment/PaymentStatus";
 
 // import utils
 import messages from "../../utils/alertMessages";
+
+// Stripe imports
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 // import styled components
 import {
@@ -50,7 +55,6 @@ import {
 // import interfaces
 import { IReservation } from "../../types";
 import camelcaseKeys from "camelcase-keys";
-
 
 interface IProps {
   enqueueNewAlert: (variant: string, heading: string, message: string) => void,
@@ -70,6 +74,8 @@ interface IState {
   emailField: string,
   reservationIdField: string,
 }
+
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_API_TEST_KEY as string)
 
 class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
   formRef: React.RefObject<HTMLFormElement>
@@ -311,6 +317,15 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
     }
   }
 
+  /**
+   * Returns the redirect status from the url string or null if no such query string is available
+   */
+  getStripeRedirectStatus = () => {
+    return new URLSearchParams(window.location.search).get(
+      'redirect_status'
+    );
+  }
+
   render() {
     const { reservation, user } = this.props
 
@@ -449,6 +464,11 @@ class ReservationsView extends Component<RouteComponentProps & IProps, IState> {
         {reservationJSX}
         {authUserButtonJSX}
         {unauthUserFormJSX}
+        {this.props.reservation && this.getStripeRedirectStatus() && (
+          <Elements stripe={stripePromise} >
+            <PaymentStatus {...this.props} />
+          </Elements>
+        )}
 
         {/* todo: refactor -> create one modal component */}
         {/* Change end-time modal */}

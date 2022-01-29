@@ -58,7 +58,22 @@ const messages: IMessages = {
     "warning",
     "Oops...",
     "Could not load currently available parking spots."
-  ]
+  ],
+  stripePaymentSuccess: [
+    "success",
+    "Success...",
+    "Your payment method has been securely stored and your reservation is confirmed."
+  ],
+  stripePaymentProcessing: [
+    "warning",
+    "Payment is Processing...",
+    "The provided payment method is being processed. Your reservation will confirm after successful processing."
+  ],
+  stripePaymentFailure: [
+    "warning",
+    "Payment Method Failed",
+    "Please try again to register a valid payment method. Your reservation has not been confirmed."
+  ],
 }
 
 export default messages

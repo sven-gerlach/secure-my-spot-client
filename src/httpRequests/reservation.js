@@ -120,6 +120,39 @@ function updateReservationUnauth(reservationID, email, data) {
   })
 }
 
+/**
+ *
+ * @param reservationID
+ * @param token
+ * @return {AxiosPromise}
+ */
+function sendAuthDeleteRequestToAPI(reservationID, token) {
+  return axios({
+    method: "delete",
+    url: urlHostnameAPI + "/delete-reservation-auth/" + reservationID + "/",
+    headers: {
+      "Authorization": `Token ${token}`,
+      'Content-Type': 'application/json',
+    },
+  })
+}
+
+/**
+ *
+ * @param reservationID
+ * @param email
+ * @return {AxiosPromise}
+ */
+function sendUnauthDeleteRequestToAPI(reservationID, email) {
+  return axios({
+    method: "delete",
+    url: urlHostnameAPI + "/delete-reservation-unauth/" + reservationID + "/" + email + "/",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+}
+
 export {
   createReservationUnauthUser,
   createReservationAuthUser,
@@ -128,4 +161,6 @@ export {
   getExpiredReservationsAuth,
   updateReservationAuth,
   updateReservationUnauth,
+  sendAuthDeleteRequestToAPI,
+  sendUnauthDeleteRequestToAPI,
 }
