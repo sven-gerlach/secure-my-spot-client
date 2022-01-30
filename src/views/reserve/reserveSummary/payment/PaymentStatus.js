@@ -3,9 +3,12 @@
 import React, {useEffect} from 'react';
 import {useStripe} from '@stripe/react-stripe-js';
 import messages from "../../../../utils/alertMessages";
-import { sendReservationConfirmationToAPI } from "../../../../httpRequests/payment";
+import {
+  sendReservationConfirmationToAPIAuth,
+  sendReservationConfirmationToAPIUnauth
+} from "../../../../httpRequests/payment";
 
-const PaymentStatus = ({ enqueueNewAlert, reservation }) => {
+const PaymentStatus = ({ enqueueNewAlert, reservation, ...props }) => {
   const stripe = useStripe();
 
   useEffect(() => {
@@ -35,7 +38,12 @@ const PaymentStatus = ({ enqueueNewAlert, reservation }) => {
           case 'succeeded':
             enqueueNewAlert(...messages.stripePaymentSuccess)
             // send a request to the api to send out the reservation confirmation email
-            sendReservationConfirmationToAPI(reservation.id, reservation.email)
+            if (props.user) {
+              sendReservationConfirmationToAPIAuth(reservation.id, props.user.token)
+            }
+            else {
+              sendReservationConfirmationToAPIUnauth(reservation.id, reservation.email)
+            }
             break;
 
           case 'processing':

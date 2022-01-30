@@ -11,7 +11,10 @@ import { loadStripe } from "@stripe/stripe-js";
 import SetupForm from "./SetupForm";
 
 // import utils
-import { createStripeSetupIntent } from "../../../../httpRequests/payment";
+import {
+  createStripeSetupIntentAuth,
+  createStripeSetupIntentUnauth,
+} from "../../../../httpRequests/payment";
 import {
   sendAuthDeleteRequestToAPI,
   sendUnauthDeleteRequestToAPI
@@ -28,8 +31,12 @@ export default function StripePayments(props) {
 
   useEffect(() => {
     // Create SetupIntent as soon as the page loads
-    const data = { email: props.email, reservation_id: props.reservation.id }
-    createStripeSetupIntent(data)
+    console.log(props)
+    const { reservation, email, user } = props
+    const createStripeSetupIntentPromise = user
+      ? createStripeSetupIntentAuth(reservation.id, user.token)
+      : createStripeSetupIntentUnauth(reservation.id, email)
+    createStripeSetupIntentPromise
       .then(res => {
         setClientSecret(res.data.clientSecret)
       })

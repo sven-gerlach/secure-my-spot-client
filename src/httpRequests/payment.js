@@ -5,27 +5,70 @@
 import axios from "axios";
 import urlHostnameAPI from "./urlConfigAPI";
 
+
 /**
  *
- * @param data
+ * @param reservationId
+ * @param token
  * @return {AxiosPromise}
  */
-function createStripeSetupIntent(data) {
+function createStripeSetupIntentAuth(reservationId, token) {
   return axios({
     method: "post",
-    url: urlHostnameAPI + "/create-payment-intent-unauth/",
+    url: urlHostnameAPI + "/create-payment-intent-auth/" + reservationId + "/",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      "Authorization": `Token ${token}`,
     },
-    data: data,
   })
 }
 
 
-function sendReservationConfirmationToAPI(reservationID, email) {
+/**
+ *
+ * @param reservationId
+ * @param token
+ * @return {AxiosPromise}
+ */
+function sendReservationConfirmationToAPIAuth(reservationId, token) {
   return axios({
     method: "get",
-    url: urlHostnameAPI + "/confirm-successful-setup-intent-unauth" + "/" + reservationID + "/" + email + "/",
+    url: urlHostnameAPI + "/confirm-successful-setup-intent-auth/" + reservationId + "/",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Token ${token}`,
+    },
+  })
+}
+
+
+/**
+ *
+ * @param reservationId
+ * @param email
+ * @return {AxiosPromise}
+ */
+function createStripeSetupIntentUnauth(reservationId, email) {
+  return axios({
+    method: "post",
+    url: urlHostnameAPI + "/create-payment-intent-unauth/" + reservationId + "/" + email + "/",
+    headers: {
+      "Content-Type": "application/json"
+    },
+  })
+}
+
+
+/**
+ *
+ * @param reservationID
+ * @param email
+ * @return {AxiosPromise}
+ */
+function sendReservationConfirmationToAPIUnauth(reservationId, email) {
+  return axios({
+    method: "get",
+    url: urlHostnameAPI + "/confirm-successful-setup-intent-unauth/" + reservationId + "/" + email + "/",
     headers: {
       "Content-Type": "application/json"
     },
@@ -34,6 +77,8 @@ function sendReservationConfirmationToAPI(reservationID, email) {
 
 
 export {
-  createStripeSetupIntent,
-  sendReservationConfirmationToAPI,
+  createStripeSetupIntentAuth,
+  sendReservationConfirmationToAPIAuth,
+  createStripeSetupIntentUnauth,
+  sendReservationConfirmationToAPIUnauth,
 }
