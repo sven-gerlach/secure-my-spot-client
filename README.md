@@ -25,6 +25,7 @@
 | Coverage              |     x     |    x     |
 | Crypto.js             |     x     |          |
 | CSS/SCSS              |     x     |          |
+| Docker                |     x     |    x     |
 | Dotenv                |     x     |          |
 | Django                |           |    x     |
 | Django Rest Framework |           |    x     |
