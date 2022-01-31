@@ -12,6 +12,7 @@ import {
 } from "./map.styles";
 import { MarkerClusterer } from "@googlemaps/markerclusterer"
 import parkingSign from "../../../assets/img/parking_sign_icon.png"
+import { Button, Modal } from "react-bootstrap";
 
 // todo: No api keys warning in deployed app
 class Map extends Component {
@@ -20,6 +21,19 @@ class Map extends Component {
     this.map = null
     this.markers = []
     this.mapRef = React.createRef()
+    this.newYorkMapBounds = {
+      north: 40.86,
+      south: 40.56,
+      west: -74.21,
+      east: -73.746,
+    }
+    this.newYorkDummyLocation = {
+      lat: 40.76424,
+      lng: -73.99079,
+    }
+    this.state = {
+      showModal: false,
+    }
   }
 
   /**
@@ -34,7 +48,12 @@ class Map extends Component {
       clickableIcons: false,
       mapId: "121750dd1eb03810",
       restriction: {
-        latLngBounds: { north: 40.86, south: 40.56, west: -74.21, east: -73.746 }
+        latLngBounds: {
+          north: this.newYorkMapBounds.north,
+          south: this.newYorkMapBounds.south,
+          west: this.newYorkMapBounds.west,
+          east: this.newYorkMapBounds.east,
+        }
       },
       streetViewControl: false,
       tilt: 0,
@@ -84,11 +103,36 @@ class Map extends Component {
     // retrieve user's current location and set location marker
     this.getMyLocation()
       .then((location) => {
-        myLocationMarker.setPosition(location);
+        if (this.isUserLocationInNewYork(location)) {
+          myLocationMarker.setPosition(location);
+        }
+        else {
+          // if user's location is not in New York create a Google Maps LatLng class of a New York position and impose
+          // that instead. This is done to allow users not located in New York to still experience the map features and
+          // the reservation flow
+          const newYorkLocation = new window.google.maps.LatLng(
+            this.newYorkDummyLocation.lat, this.newYorkDummyLocation.lng
+          )
+          myLocationMarker.setPosition(newYorkLocation)
+        }
       })
       .catch(e => {
         console.error(e)
       })
+  }
+
+  /**
+   * Returns true if the user's current GPS position is within the bounds of the New York map as stipulated by the
+   * instance variable newYorkMapBounds
+   * @param location
+   * @return {boolean}
+   */
+  isUserLocationInNewYork(location) {
+    // create LatLngBounds rectangle of New York map
+    const southWestLatLng = new window.google.maps.LatLng(this.newYorkMapBounds.south, this.newYorkMapBounds.west)
+    const northEastLatLng = new window.google.maps.LatLng(this.newYorkMapBounds.north, this.newYorkMapBounds.east)
+    const newYorkMap = new window.google.maps.LatLngBounds(southWestLatLng, northEastLatLng)
+    return newYorkMap.contains(location)
   }
 
   /**
@@ -199,7 +243,15 @@ class Map extends Component {
     controlUI.addEventListener("click", () => {
       this.getMyLocation()
         .then(location => {
-          map.panTo(location);
+          if (this.isUserLocationInNewYork(location)) {
+            map.panTo(location);
+          }
+          else {
+            const newYorkLocation = new window.google.maps.LatLng(
+              this.newYorkDummyLocation.lat, this.newYorkDummyLocation.lng
+            )
+            map.panTo(newYorkLocation)
+          }
         })
         .catch(e => console.error)
     });
@@ -235,6 +287,14 @@ class Map extends Component {
         this.markerClusterer.addMarkers(this.markers)
         this.markerClusterer.render()
       }
+
+    // if user is not located in New York City display modal
+    this.getMyLocation()
+      .then(location => {
+        if (!this.isUserLocationInNewYork(location)) {
+          this.toggleModal()
+        }
+      })
   }
 
   componentDidUpdate = (prevProps) => {
@@ -267,6 +327,12 @@ class Map extends Component {
     })
   }
 
+  toggleModal = () => {
+    this.setState( prevState => {
+      return {showModal: !prevState.showModal}
+    })
+  }
+
   render() {
     return (
       <>
@@ -276,6 +342,24 @@ class Map extends Component {
             <span className="visually-hidden">Loading...</span>
           </SpinnerStyled>
         )}
+
+        {/* Modal: display alert that user is currently not located in New York */}
+        <Modal
+          show={this.state.showModal}
+          backdrop={"static"}
+          centered={true}
+          keyboard={false}
+        >
+          <Modal.Header>
+            <Modal.Title>Not in New York City?</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>It would appear you are currently located outside of New York City. To allow you to browse the map and reserve available parking spots you have been allocated a dummy GPS location in New York City.</Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" onClick={this.toggleModal}>
+              OK
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </>
     )
   }
