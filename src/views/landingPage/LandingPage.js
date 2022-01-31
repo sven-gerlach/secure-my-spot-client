@@ -16,7 +16,7 @@ class LandingPage extends Component {
         <PageTitle titleText="Our Service" />
         <Div>
           <P>We offer a convenient way for you to locate, reserve, and pay for on-street parking in New York City.</P>
-          <P>You can use our service without having to create an account. Should you wish to become a recurring customer we recommend creating an account as that will make your reservation and payment experience a little more convenient.</P>
+          <P>You can use our service without having to create an account. Should you wish to become a recurring customer we recommend creating an account as that will make your reservation and payment experience more convenient.</P>
         </Div>
       </>
     )
