@@ -65,17 +65,17 @@
 - [Kanban](https://github.com/sven-gerlach/secure-my-spot-api/projects/1)
 
 ## User Stories
--[ ] Reserve a road-side parking spot which is unoccupied
--[ ] Release / cancel reservation for parking spot (only pay for time used)
--[ ] Find all available parking spots nearby
--[ ] Reserve available parking spots (before physically driving there)
--[ ] Flat-rate prices, pro-rated on a minute-by-minute basis
--[ ] Database consistency must guarantee a reservation cannot be made more than once at a time
--[ ] Checkout / pay for reservation
+- [ ] Reserve a road-side parking spot which is unoccupied
+- [ ] Release / cancel reservation for parking spot (only pay for time used)
+- [ ] Find all available parking spots nearby
+- [ ] Reserve available parking spots (before physically driving there)
+- [ ] Flat-rate prices, pro-rated on a minute-by-minute basis
+- [ ] Database consistency must guarantee a reservation cannot be made more than once at a time
+- [ ] Checkout / pay for reservation
 
 ## ERD
 ![ERD Image](./development/Wireframe.PNG)
 
 ## Next Steps
--[ ] Replace polling of backend for all available parking spots with a websocket implementation
--[ ] Send user verification email after sign-up and after unauthenticated users enter their email before reserving a parking spot
+- [ ] Replace polling of backend for all available parking spots with a websocket implementation
+- [ ] Send user verification email after sign-up and after unauthenticated users enter their email before reserving a parking spot
