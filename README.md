@@ -45,6 +45,7 @@
 | Luxon                 |     x     |          |
 | Model Bakery          |           |    x     |
 | Moment                |     x     |          |
+| Nginx                 |     x     |          |
 | Pipenv                |           |    x     |
 | PostgreSQL            |           |    x     |
 | Pytest                |           |    x     |
