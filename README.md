@@ -18,41 +18,52 @@
 | Technology            | Front-End | Back-End |
 |:----------------------|:---------:|:--------:|
 | Axios                 |     x     |          |
+| Black                 |           |    x     |
 | Bootstrap             |     x     |          |
 | Camelcase             |     x     |          |
+| Celery                |           |    x     |
+| Coverage              |     x     |    x     |
 | Crypto.js             |     x     |          |
 | CSS/SCSS              |     x     |          |
 | Dotenv                |     x     |          |
 | Django                |           |    x     |
 | Django Rest Framework |           |    x     |
-| Faker                 |     x     |          |
-| Google Maps           |     x     |          |
+| Factory Boy           |           |    x     |
+| Faker                 |     x     |    x     |
+| Flake8                |           |    x     |
+| Google Maps Api       |     x     |          |
+| Gunicorn              |           |    x     |
 | Heroku                |           |    x     |
 | HTML5                 |     x     |          |
 | Husky                 |     x     |          |
+| iSort                 |           |    x     |
 | JavaScript            |     x     |          |
 | Jest                  |     x     |          |
 | Lodash                |     x     |          |
 | Logrocket             |     x     |          |
 | Luxon                 |     x     |          |
+| Model Bakery          |           |    x     |
 | Moment                |     x     |          |
+| Pipenv                |           |    x     |
 | PostgreSQL            |           |    x     |
 | Pytest                |           |    x     |
+| Redis                 |           |    x     |
 | React                 |     x     |          |
 | React Router-Dom      |     x     |          |
 | TypeScript            |     x     |          |
-| Stripe                |     x     |    x     |
+| Stripe Api            |     x     |    x     |
 | Styled Components     |     x     |          |
+| Whitenoise            |           |    x     |
 
 ## Set-up & Installation for Local Development
 1. Fork and clone the repo
 2. Run `npm i`
-3. Create `.env.dev` file, place it inside the project root directory (same level as Dockerfile), and declare the following environment variables:
-   1. REACT_APP_SESSION_ENCRYPTION_KEY 
+3. Create `.env.dev` file, placing it inside the project root directory (same level as Dockerfile), and declare the following environment variables:
+   1. REACT_APP_SESSION_ENCRYPTION_KEY
    2. REACT_APP_GOOGLE_MAPS_KEY
    3. REACT_APP_STRIPE_API_TEST_KEY
-4. Start the Docker container with `docker-compose -f docker-compose-dev.yml up -d --build` (assumes Docker is installed)
-5. The app is running on `localhost: 3000`
+4. Start the Docker container with `docker-compose -f docker-compose-dev.yml up -d --build` (Docker must be installed)
+5. The app is running on `localhost:3000/`
 
 ## Links
 ### Front-end
@@ -79,3 +90,5 @@
 ## Next Steps
 - [ ] Replace polling of backend for all available parking spots with a websocket implementation
 - [ ] Send user verification email after sign-up and after unauthenticated users enter their email before reserving a parking spot
+- [ ] Allow users to securely store their payment details for future use, facilitating a fast check-out
+- [ ] Implement parking spot filter (e.g. 300m radius) -> back-end filter already exists
