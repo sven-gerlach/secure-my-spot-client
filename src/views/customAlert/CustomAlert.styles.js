@@ -3,7 +3,7 @@ import { Alert } from "react-bootstrap";
 
 
 const AlertStyled = styled(Alert)`
-  position: absolute;
+  position: fixed;
   width: 100%;
   bottom: 0;
   left: 0;

@@ -31,7 +31,6 @@ export default function StripePayments(props) {
 
   useEffect(() => {
     // Create SetupIntent as soon as the page loads
-    console.log(props)
     const { reservation, email, user } = props
     const createStripeSetupIntentPromise = user
       ? createStripeSetupIntentAuth(reservation.id, user.token)

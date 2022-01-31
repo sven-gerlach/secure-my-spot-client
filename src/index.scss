@@ -8,6 +8,8 @@ $orange-red-crayola: rgba(254, 95, 85, 1);
 #root {
   width: 100vw;
   height: 100vh;
+  display: flex;
+  justify-content: center;
   background-attachment: fixed;
   background-origin: border-box;
   background-image: url("assets/img/car_grey.png");

@@ -11,23 +11,23 @@ interface IMessages {
 const messages: IMessages = {
   successfulSignUp: [
     "success",
-    "Successful Sign-Up",
-    "Congratulation! You are signed up as well as signed in."
+    "Success",
+    "Congratulations! Your account has been created. You are signed in."
   ],
   successfulSignIn: [
     "success",
-    "Successful Sign-In",
+    "Success",
     "Welcome back. You are signed in."
   ],
   failedSignIn: [
     "warning",
-    "Failed Authentication",
+    "Failure",
     "Wrong authentication details. Please try again.",
   ],
   successfulSignOut: [
     "success",
-    "Successful Sign-Out",
-    "You have been successfully signed out. Come back soon!"
+    "Success",
+    "You are signed out. We will miss you!"
   ],
   failedSignOut: [
     "warning",
@@ -36,8 +36,8 @@ const messages: IMessages = {
   ],
   successfulChangePassword: [
     "success",
-    "Successfully Changed Password",
-    "You have successfully changed your password."
+    "Success",
+    "Your password has been changed."
   ],
   failedChangePassword: [
     "warning",
@@ -51,8 +51,8 @@ const messages: IMessages = {
   ],
   reservationFound: [
     "success",
-    "Reservation Found",
-    "This reservation has been located and displayed."
+    "Success",
+    "Reservation has been found and displayed."
   ],
   failedRetrievalAvailableSpots: [
     "warning",
@@ -61,18 +61,38 @@ const messages: IMessages = {
   ],
   stripePaymentSuccess: [
     "success",
-    "Success...",
+    "Success",
     "Your payment method has been securely stored and your reservation is confirmed."
   ],
   stripePaymentProcessing: [
     "warning",
-    "Payment is Processing...",
+    "Processing...",
     "The provided payment method is being processed. Your reservation will confirm after successful processing."
   ],
   stripePaymentFailure: [
     "warning",
-    "Payment Method Failed",
+    "Failed",
     "Please try again to register a valid payment method. Your reservation has not been confirmed."
+  ],
+  changeReservationTimeSuccess: [
+    "success",
+    "Success",
+    "Your reservation has been amended."
+  ],
+  changeReservationTimeFailure: [
+    "warning",
+    "Failure",
+    "Your reservation has not been amended."
+  ],
+  endReservationSuccess: [
+    "success",
+    "Success",
+    "Your reservation has ended."
+  ],
+  endReservationFailure: [
+    "warning",
+    "Failure",
+    "Your reservation could not be ended."
   ],
 }
 

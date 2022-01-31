@@ -57,7 +57,8 @@ const PaymentStatus = ({ enqueueNewAlert, reservation, ...props }) => {
             break;
         }
       });
-  }, [enqueueNewAlert, stripe]);
+    // eslint-disable-next-line
+  }, [stripe]);
 
   return <></>
 };
