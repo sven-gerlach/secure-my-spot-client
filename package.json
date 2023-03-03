@@ -20,7 +20,7 @@
     "lodash": "^4.17.21",
     "logrocket": "^2.1.1",
     "logrocket-react": "^4.0.1",
-    "luxon": "^2.1.1",
+    "luxon": "^2.5.2",
     "moment": "^2.29.1",
     "react": "^17.0.2",
     "react-bootstrap": "^2.0.0-rc.0",
