@@ -31,18 +31,13 @@ services:
       # Without this env variable hot-reloading will not work
       # source: https://mherman.org/blog/dockerizing-a-react-app/
       - CHOKIDAR_USEPOLLING="true"
-
-    # loading .env.dev required for local dev container and for testing run on Github actions
-    # the latter requires .env.dev to be on Github repo
-    # for production, ideally index.js reads Heroku config vars using dotenv but for some reason that does not work at
-    # the moment
-    env_file:
-      - .env.dev
+      - REACT_APP_GOOGLE_MAPS_KEY=${REACT_APP_GOOGLE_MAPS_KEY}
+      - REACT_APP_SESSION_ENCRYPTION_KEY=${REACT_APP_SESSION_ENCRYPTION_KEY}
+      - REACT_APP_STRIPE_API_TEST_KEY=${REACT_APP_STRIPE_API_TEST_KEY}
 
     # specify bind-mount volume such that any changes in the host's (build-context) src folder are reflected / replicated
     # inside the container -> amendments to the website are immediately reflected in the container, avoiding the need
     # to re-start the container after every change to the app
-
     volumes:
       - .:/app
       - ./node_modules:/app/node_modules

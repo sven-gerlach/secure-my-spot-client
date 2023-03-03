@@ -60,12 +60,13 @@
 ## Set-up & Installation for Local Development
 1. Fork and clone the repo
 2. Run `npm i`
-3. Create `.env.dev` file, placing it inside the project root directory (same level as Dockerfile), and declare the following environment variables:
-   1. REACT_APP_SESSION_ENCRYPTION_KEY
-   2. REACT_APP_GOOGLE_MAPS_KEY
-   3. REACT_APP_STRIPE_API_TEST_KEY
-4. Start the Docker container with `docker-compose -f docker-compose-dev.yml up -d --build` (Docker must be installed)
-5. The app is running on `localhost:3000/`
+3. Environment variables need to be injected using Doppler. Please ensure you have installed and authenticated Doppler as per their [documentation](https://docs.doppler.com/docs/install-cli).
+4. Run `doppler setup` which will connect to the relevant environment configuration as per the [doppler.yaml](./doppler.yaml). The following environment variables should be set:
+   - REACT_APP_SESSION_ENCRYPTION_KEY
+   - REACT_APP_GOOGLE_MAPS_KEY
+   - REACT_APP_STRIPE_API_TEST_KEY
+5. Start the Docker container with `doppler run -- docker-compose -f docker-compose-dev.yml up -d --build` (Docker must be installed)
+6. The app is running on `localhost:3000/`
 
 ## Links
 ### Front-end
@@ -78,13 +79,13 @@
 - [Kanban](https://github.com/sven-gerlach/secure-my-spot-api/projects/1)
 
 ## User Stories
-- [ ] Reserve a road-side parking spot which is unoccupied
-- [ ] Release / cancel reservation for parking spot (only pay for time used)
-- [ ] Find all available parking spots nearby
-- [ ] Reserve available parking spots (before physically driving there)
-- [ ] Flat-rate prices, pro-rated on a minute-by-minute basis
-- [ ] Database consistency must guarantee a reservation cannot be made more than once at a time
-- [ ] Checkout / pay for reservation
+- [x] Reserve a road-side parking spot which is unoccupied
+- [x] Release / cancel reservation for parking spot (only pay for time used)
+- [x] Find all available parking spots nearby
+- [x] Reserve available parking spots (before physically driving there)
+- [x] Flat-rate prices, pro-rated on a minute-by-minute basis
+- [x] Database consistency must guarantee a reservation cannot be made more than once at a time
+- [x] Checkout / pay for reservation
 
 ## ERD
 ![ERD Image](./development/Wireframe.PNG)
