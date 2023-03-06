@@ -68,9 +68,13 @@
 5. Start the Docker container with `doppler run -- docker-compose -f docker-compose-dev.yml up -d --build` (Docker must be installed)
 6. The app is running on `localhost:3000/`
 
+## Deployment
+The app is deployed with AWS Amplify. A CI/CD pipeline has been set up for the main branch such that any change to that branch leads to auto-deployment.
+> **Note**: environment variables (see above) need to be manually sourced from Doppler and entered into the Amplify platform
+
 ## Links
 ### Front-end
-- [Deployed app](https://secure-my-spot-client.herokuapp.com)
+- [Deployed app](https://main.d105uookrugx2t.amplifyapp.com/)
 - [Github repo](https://github.com/sven-gerlach/secure-my-spot-client)
 - [Kanban](https://github.com/sven-gerlach/secure-my-spot-client/projects/1)
 ### Back-end

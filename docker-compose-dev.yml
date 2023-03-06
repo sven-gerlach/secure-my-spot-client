@@ -9,7 +9,7 @@ version: "3.8"
 
 services:
   # specify the React app service
-  react-app:
+  spa:
     # specify configuration options at container build-time
     build:
       # specify build-context as the client folder
@@ -18,10 +18,10 @@ services:
       dockerfile: Dockerfile.dev
 
     # given the build specifications, the image line specifies the tag of the newly created image
-    image: react-app:dev
+    image: spa
 
     # specify container name
-    container_name: react-app-dev
+    container_name: spa
 
     # mapping host port 3000 to container port 3000, such that any request on host port 3000 is passed to container port 3000
     ports:
@@ -39,5 +39,7 @@ services:
     # inside the container -> amendments to the website are immediately reflected in the container, avoiding the need
     # to re-start the container after every change to the app
     volumes:
-      - .:/app
-      - ./node_modules:/app/node_modules
+      - local:/app
+
+volumes:
+  local:
