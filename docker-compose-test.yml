@@ -34,6 +34,7 @@ services:
       - REACT_APP_GOOGLE_MAPS_KEY=${REACT_APP_GOOGLE_MAPS_KEY}
       - REACT_APP_SESSION_ENCRYPTION_KEY=${REACT_APP_SESSION_ENCRYPTION_KEY}
       - REACT_APP_STRIPE_API_TEST_KEY=${REACT_APP_STRIPE_API_TEST_KEY}
+      - REACT_APP_API_HOST=${REACT_APP_API_HOST}
 
     # specify bind-mount volume such that any changes in the host's (build-context) src folder are reflected / replicated
     # inside the container -> amendments to the website are immediately reflected in the container, avoiding the need

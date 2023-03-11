@@ -5,6 +5,7 @@
 .prettierignore
 .prettierrc.json
 .DS_Store
+.docker
 node_modules
 coverage
 Dockerfile
@@ -16,3 +17,6 @@ README.md
 
 # this file contains all the ENVs necessary for the api
 create_docker_image.sh
+
+# Python cache
+**/__pycache__/

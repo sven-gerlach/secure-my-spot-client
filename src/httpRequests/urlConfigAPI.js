@@ -1,17 +1,9 @@
 /* Configure the hostname part of the api url subject to the environment the client is executed in */
 
-let urlHostnameAPI
+let urlHostnameAPI = process.env.REACT_APP_API_HOST
 
-const urlHostnames = {
-  "development": "http://localhost:3001",
-  "production": "https://secure-my-spot-api.herokuapp.com",
-}
-
-if (window.location.hostname === "localhost") {
-  urlHostnameAPI = urlHostnames.development
-}
-else {
-  urlHostnameAPI = urlHostnames.production
+if (!urlHostnameAPI) {
+  throw new Error('The REACT_APP_API_HOST environment variable is undefined. Please provide the correct API URL.')
 }
 
 export default urlHostnameAPI

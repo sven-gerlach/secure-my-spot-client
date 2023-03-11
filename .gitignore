@@ -7,3 +7,6 @@ coverage
 
 # this file contains all the ENVs necessary for the api
 create_docker_image.sh
+
+# Python cache
+**/__pycache__/
