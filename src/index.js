@@ -8,10 +8,6 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from "react-router-dom";
 
 
-// initialise Log Rocket -> enclosing the initialisation inside a function is necessary to avoid the test suite
-// initialising a XMLHTTPRequest every time the configLogRocket module is loaded
-initialiseLogRocket()
-
 // initialise dotenv
 dotenv.config()
 

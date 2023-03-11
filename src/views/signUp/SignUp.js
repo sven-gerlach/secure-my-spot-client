@@ -9,7 +9,6 @@ import PageTitle from "../../components/pageTitle/PageTitle";
 import { signUpRequest } from "../../httpRequests/auth";
 import { getHashedPassword } from "../../utils/hash";
 import { removeObjectFromStorage } from "../../utils/storage";
-import { logUser } from "../../config/configLogRocket";
 import messages from "../../utils/alertMessages";
 
 
@@ -63,9 +62,6 @@ class SignUpView extends Component {
           // clear the local storage from any previous reservations (this is relevant if an unauthenticated user makes a
           // reservation followed by an authenticated user on the same device / client
           removeObjectFromStorage("reservation", "local")
-
-          // log user with LogRocket
-          logUser(res.data)
 
           // redirect to /reserve
           this.props.history.push("/reserve")
