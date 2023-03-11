@@ -1,6 +1,4 @@
-import { initialiseLogRocket } from "./config/configLogRocket";
 import dotenv from "dotenv";
-import "./config/configLogRocket"
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.css'

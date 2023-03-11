@@ -41,7 +41,6 @@
 | JavaScript            |     x     |          |
 | Jest                  |     x     |          |
 | Lodash                |     x     |          |
-| Logrocket             |     x     |          |
 | Luxon                 |     x     |          |
 | Model Bakery          |           |    x     |
 | Moment                |     x     |          |
