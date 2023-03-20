@@ -1,17 +1,9 @@
 /* Configure the hostname part of the api url subject to the environment the client is executed in */
 
-let urlHostnameClient
+let urlHostnameClient = process.env.REACT_APP_CLIENT_HOST
 
-const urlHostnames = {
-  "development": "http://localhost:3000",
-  "production": "https://secure-my-spot-client.herokuapp.com",
-}
-
-if (window.location.hostname === "localhost") {
-  urlHostnameClient = urlHostnames.development
-}
-else {
-  urlHostnameClient = urlHostnames.production
+if (!urlHostnameClient) {
+  throw new Error('The REACT_APP_CLIENT_HOST environment variable is undefined. Please provide the correct CLIENT URL.')
 }
 
 export default urlHostnameClient
