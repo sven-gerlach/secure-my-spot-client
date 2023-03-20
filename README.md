@@ -1,6 +1,6 @@
 # Secure-My-Spot: Front-End
 
-## \#TLDR
+## TLDR
 - This application offers a convenient way for users to locate, reserve, and pay for on-street parking in New York City
 - The app is a Dockerised JavaScript / TypeScript front-end application based on the React library
 - Nginx server delivers all public resources when deployed on Heroku or Google Cloud
@@ -15,46 +15,47 @@
 - Jest and React testing library have been used for unit testing / test-driven-development
 
 ## Technologies used for the Front- and Back-End
-| Technology            | Front-End | Back-End |
-|:----------------------|:---------:|:--------:|
-| Axios                 |     x     |          |
-| Black                 |           |    x     |
-| Bootstrap             |     x     |          |
-| Camelcase             |     x     |          |
-| Celery                |           |    x     |
-| Coverage              |     x     |    x     |
-| Crypto.js             |     x     |          |
-| CSS/SCSS              |     x     |          |
-| Docker                |     x     |    x     |
-| Dotenv                |     x     |          |
-| Django                |           |    x     |
-| Django Rest Framework |           |    x     |
-| Factory Boy           |           |    x     |
-| Faker                 |     x     |    x     |
-| Flake8                |           |    x     |
-| Google Maps Api       |     x     |          |
-| Gunicorn              |           |    x     |
-| Heroku                |           |    x     |
-| HTML5                 |     x     |          |
-| Husky                 |     x     |          |
-| iSort                 |           |    x     |
-| JavaScript            |     x     |          |
-| Jest                  |     x     |          |
-| Lodash                |     x     |          |
-| Luxon                 |     x     |          |
-| Model Bakery          |           |    x     |
-| Moment                |     x     |          |
-| Nginx                 |     x     |          |
-| Pipenv                |           |    x     |
-| PostgreSQL            |           |    x     |
-| Pytest                |           |    x     |
-| Redis                 |           |    x     |
-| React                 |     x     |          |
-| React Router-Dom      |     x     |          |
-| TypeScript            |     x     |          |
-| Stripe Api            |     x     |    x     |
-| Styled Components     |     x     |          |
-| Whitenoise            |           |    x     |
+| Technology              | Front-End | Back-End |
+|:------------------------|:---------:|:--------:|
+| Axios                   |     x     |          |
+| Black                   |           |    x     |
+| Bootstrap               |     x     |          |
+| Camelcase               |     x     |          |
+| Celery                  |           |    x     |
+| Certbot / Let's Encrypt |           |    x     |
+| Coverage                |     x     |    x     |
+| Crypto.js               |     x     |          |
+| CSS/SCSS                |     x     |          |
+| Docker                  |     x     |    x     |
+| Dotenv                  |     x     |          |
+| Django                  |           |    x     |
+| Django Rest Framework   |           |    x     |
+| Factory Boy             |           |    x     |
+| Faker                   |     x     |    x     |
+| Flake8                  |           |    x     |
+| Google Maps Api         |     x     |          |
+| Gunicorn                |           |    x     |
+| Heroku                  |           |    x     |
+| HTML5                   |     x     |          |
+| Husky                   |     x     |          |
+| iSort                   |           |    x     |
+| JavaScript              |     x     |          |
+| Jest                    |     x     |          |
+| Lodash                  |     x     |          |
+| Luxon                   |     x     |          |
+| Model Bakery            |           |    x     |
+| Moment                  |     x     |          |
+| Nginx                   |     x     |    x     |
+| Pipenv                  |           |    x     |
+| PostgreSQL              |           |    x     |
+| Pytest                  |           |    x     |
+| Redis                   |           |    x     |
+| React                   |     x     |          |
+| React Router-Dom        |     x     |          |
+| TypeScript              |     x     |          |
+| Stripe Api              |     x     |    x     |
+| Styled Components       |     x     |          |
+| Whitenoise              |           |    x     |
 
 ## Set-up & Installation for Local Development
 1. Fork and clone the repo
@@ -64,6 +65,8 @@
    - REACT_APP_SESSION_ENCRYPTION_KEY
    - REACT_APP_GOOGLE_MAPS_KEY
    - REACT_APP_STRIPE_API_TEST_KEY
+   - REACT_APP_API_HOST
+   - REACT_APP_CLIENT_HOST
 5. Start the Docker container with `doppler run -- docker-compose -f docker-compose-dev.yml up -d --build` (Docker must be installed)
 6. The app is running on `localhost:3000/`
 
@@ -73,11 +76,11 @@ The app is deployed with AWS Amplify. A CI/CD pipeline has been set up for the m
 
 ## Links
 ### Front-end
-- [Deployed app](https://main.d105uookrugx2t.amplifyapp.com/)
+- [Deployed app](https://www.secure-my-spot.spa.sigmagamma.app)
 - [Github repo](https://github.com/sven-gerlach/secure-my-spot-client)
 - [Kanban](https://github.com/sven-gerlach/secure-my-spot-client/projects/1)
 ### Back-end
-- [Deployed app](https://secure-my-spot-api.herokuapp.com/admin/login/?next=/admin/)
+- [Deployed app](https://secure-my-spot.api.sigmagamma.app)
 - [Github repo](https://github.com/sven-gerlach/secure-my-spot-api)
 - [Kanban](https://github.com/sven-gerlach/secure-my-spot-api/projects/1)
 
