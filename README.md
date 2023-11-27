@@ -71,7 +71,12 @@
 6. The app is running on `localhost:3000/`
 
 ## Deployment
-The app is deployed with AWS Amplify. A CI/CD pipeline has been set up for the main branch such that any change to that branch leads to auto-deployment.
+
+### Render
+The app is deployed on [Render](https://secure-my-spot.sigmagamma.app). A CI/CD pipeline has been set up for the main branch such that any change to that branch leads to auto-deployment.
+
+### AWS Amplify
+The app used to be deployed on AWS Amplify. A CI/CD pipeline has been set up for the main branch such that any change to that branch leads to auto-deployment.
 > **Note**: environment variables (see above) need to be manually sourced from Doppler and entered into the Amplify platform
 
 ## Links

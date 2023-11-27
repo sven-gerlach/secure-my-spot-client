@@ -34,6 +34,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:dev": "doppler run -- npm run start",
     "build": "react-scripts build",
     "test": "react-scripts test --watchAll --testMatch **/src/**/*.tests.js",
     "test:coverage": "CI=true react-scripts test --env=jsdom --coverage --testMatch **/src/**/*.tests.js",
